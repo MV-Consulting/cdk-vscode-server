@@ -6,7 +6,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: '2.165.0',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.5.0',
-  name: '@mavogel/vscode-server',
+  name: 'cdk-vscode-server',
+  packageName: '@mavogel/cdk-vscode-server',
   projenrcTs: true,
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   npmAccess: NpmAccess.PUBLIC, /* The npm access level to use when releasing this module. */
@@ -40,7 +41,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '@aws-cdk/integ-tests-alpha@^2.165.0-alpha.0',
     '@types/jsdom',
   ],
-  packageName: 'cdk-vscode-server',
   // experimentalIntegRunner: true,
   // manual integ test setup
   tsconfigDev: {

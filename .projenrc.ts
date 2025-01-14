@@ -8,7 +8,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   jsiiVersion: '~5.5.0',
   name: 'vscode-server',
   projenrcTs: true,
-  repositoryUrl: 'https://github.com/mv-consulting/cdk-vscode-server.git',
+  repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   npmAccess: NpmAccess.PUBLIC, /* The npm access level to use when releasing this module. */
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
   gitignore: [

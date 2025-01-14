@@ -19,5 +19,5 @@
 **Environment**
 - `node --version`:
 - `npx cdk --version`:
-- version of the construct: `x.x.x.`
+- version of the construct: `x.x.x`
   

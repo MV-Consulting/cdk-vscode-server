@@ -1,5 +1,5 @@
 {
-  "name": "cdk-vscode-server",
+  "name": "@mavogel/cdk-vscode-server",
   "description": "Running VS Code Server on AWS",
   "repository": {
     "type": "git",

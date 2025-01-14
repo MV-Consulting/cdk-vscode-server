@@ -71,7 +71,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
 **Environment**
 - \`node --version\`:
 - \`npx cdk --version\`:
-- version of the construct: \`x.x.x.\`
+- version of the construct: \`x.x.x\`
   `],
   // NOTE: issue templates are not supported yet. See https://github.com/projen/projen/pull/3648
 });

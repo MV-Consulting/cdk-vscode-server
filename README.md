@@ -1,6 +1,6 @@
-[![Build Status](https://github.com/mv-consulting/cdk-vscode-server/actions/workflows/build.yml/badge.svg)](https://github.com/mv-consulting/cdk-vscode-server/actions/workflows/build.yml)
+[![Build Status](https://github.com/MV-Consulting/cdk-vscode-server/actions/workflows/build.yml/badge.svg)](https://github.com/MV-Consulting/cdk-vscode-server/actions/workflows/build.yml)
 [![ESLint Code Formatting](https://img.shields.io/badge/code_style-eslint-brightgreen.svg)](https://eslint.org)
-[![Latest release](https://img.shields.io/github/release/mv-consulting/cdk-vscode-server.svg)](https://github.com/mv-consulting/cdk-vscode-server/releases)
+[![Latest release](https://img.shields.io/github/release/MV-Consulting/cdk-vscode-server.svg)](https://github.com/MV-Consulting/cdk-vscode-server/releases)
 
 # cdk-vscode-server
 

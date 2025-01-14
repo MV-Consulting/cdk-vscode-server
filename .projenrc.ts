@@ -6,11 +6,20 @@ const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: '2.165.0',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.5.0',
-  name: 'vscode-server',
+  name: '@mavogel/vscode-server',
   projenrcTs: true,
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   npmAccess: NpmAccess.PUBLIC, /* The npm access level to use when releasing this module. */
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
+  autoApproveOptions: {
+    allowedUsernames: ['mavogel'],
+  },
+  autoApproveUpgrades: true,
+  depsUpgradeOptions: {
+    workflowOptions: {
+      labels: ['auto-approve'],
+    },
+  },
   gitignore: [
     'tmp',
     '.codegpt',

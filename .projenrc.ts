@@ -65,8 +65,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
 - version of the construct: \`x.x.x.\`
   `],
   // NOTE: issue templates are not supported yet. See https://github.com/projen/projen/pull/3648
-  // TODO tmp
-  releaseToNpm: false,
 });
 
 project.package.setScript('integ-test', 'integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed');

@@ -1,0 +1,510 @@
+{
+  "version": "38.0.1",
+  "artifacts": {
+    "IntegTestStackAl2023.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "IntegTestStackAl2023.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "IntegTestStackAl2023": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "IntegTestStackAl2023.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/79908ece8dd8986278df780532f28b213201185648edfe351e9bf6317c4a918e.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "IntegTestStackAl2023.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "IntegTestStackAl2023.assets"
+      ],
+      "metadata": {
+        "/IntegTestStackAl2023/IntegVSCodeServer/password-secret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerpasswordsecret202A5DB3"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleDefaultPolicy2641E2C6"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SecretRetrieverOnEventHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRoleDefaultPolicyEC4DCEA0"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventCF035CA3"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SecretRetrieverCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpc93DDE887"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1Subnet928029A1"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1RouteTableFD418D0B"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1RouteTableAssociation599AB80D"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1DefaultRoute36845B30"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2SubnetE381654D"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2RouteTableC264EFB4"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2RouteTableAssociationC62A1999"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/publicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2DefaultRouteEAD8BC23"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcIGW960F6D83"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcVPCGWA7CDED90"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcRestrictDefaultSecurityGroupCustomResourceF6EA8ED1"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-to-server-sg/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercftoserversgFFE586B0"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-to-server-sg/from {IndirectPeer}:80": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercftoserversgfromIndirectPeer80C4F51713"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-logGroup",
+            "data": true
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdLogGroup171C2803"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "installLatestAwsSdk was not specified, and defaults to true. You probably do not want this. Set the global context flag '@aws-cdk/customresources:installLatestAwsSdkDefault' to false to switch this behavior off project-wide, or set the property explicitly to true if you know you need to call APIs that are not in Lambda's built-in SDK version. [ack: @aws-cdk/custom-resources:installLatestAwsSdkNotSpecified]"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdF0821FFC"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/server-instance-role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstancerole7745B5BB"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/server-instance/InstanceProfile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstanceInstanceProfile6130979E"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/server-instance/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstance0A3D62D7"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/server-instance/LaunchTemplate": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstanceLaunchTemplate43932ED3"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-cache-policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfcachepolicy8F5F1F69"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/cf-distribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfdistributionFDBE873F"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/ssm-document-al2023": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerssmdocumental2023E45E1BE3"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy1CAD86C2"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/InstallerOnEventHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerOnEventHandler6FF91542"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleDefaultPolicy3E54FC3A"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/InstallerProvider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerProviderframeworkonEvent7B6C1190"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/SSMInstallerCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSSMInstallerCustomResource9F9AFE68"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/domainName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerdomainName6B9F2604"
+          }
+        ],
+        "/IntegTestStackAl2023/IntegVSCodeServer/password": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerpasswordE38D3B2C"
+          }
+        ],
+        "/IntegTestStackAl2023/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/IntegTestStackAl2023/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/IntegTestStackAl2023/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/IntegTestStackAl2023/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/IntegTestStackAl2023/AWS679f53fac002430cb0da5b7982bd2287": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-singleton",
+            "data": true
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-runtime-family",
+            "data": 0
+          }
+        ],
+        "/IntegTestStackAl2023/AWS679f53fac002430cb0da5b7982bd2287/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWS679f53fac002430cb0da5b7982bd22872D164C4C"
+          }
+        ],
+        "/IntegTestStackAl2023/SsmParameterValue:--aws--service--ami-amazon-linux-latest--al2023-ami-kernel-default-arm64:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikerneldefaultarm64C96584B6F00A464EAD1953AFF4B05118Parameter"
+          }
+        ],
+        "/IntegTestStackAl2023/login-handler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandlerServiceRole330B0B32"
+          }
+        ],
+        "/IntegTestStackAl2023/login-handler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandler99CCCCFD"
+          }
+        ],
+        "/IntegTestStackAl2023/login-handler/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandlerLogRetentionFD323A9B"
+          }
+        ],
+        "/IntegTestStackAl2023/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/IntegTestStackAl2023/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
+          }
+        ],
+        "/IntegTestStackAl2023/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
+          }
+        ],
+        "/IntegTestStackAl2023/Exports/Output{\"Ref\":\"loginhandler99CCCCFD\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+          }
+        ],
+        "/IntegTestStackAl2023/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServercfdistributionFDBE873F\",\"DomainName\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
+          }
+        ],
+        "/IntegTestStackAl2023/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD\",\"secretPasswordValue\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
+          }
+        ],
+        "/IntegTestStackAl2023/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/IntegTestStackAl2023/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "IntegTestStackAl2023"
+    },
+    "IntegSetupVSCodeOnAl2023DefaultTestDeployAssert74D8F645.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "IntegSetupVSCodeOnAl2023DefaultTestDeployAssert74D8F645.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "IntegSetupVSCodeOnAl2023DefaultTestDeployAssert74D8F645": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "IntegSetupVSCodeOnAl2023DefaultTestDeployAssert74D8F645.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/29b072499b91a1f4d8973a4a7a824e02679b674a7e345d3506360cd1834cca75.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "IntegSetupVSCodeOnAl2023DefaultTestDeployAssert74D8F645.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "IntegTestStackAl2023",
+        "IntegSetupVSCodeOnAl2023DefaultTestDeployAssert74D8F645.assets"
+      ],
+      "metadata": {
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4"
+          }
+        ],
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4Invoke4806B64D"
+          }
+        ],
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvoke493987f824f978002013a8ed7c9980f4"
+          }
+        ],
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
+          }
+        ],
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
+          }
+        ],
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

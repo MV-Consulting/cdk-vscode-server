@@ -1,0 +1,22 @@
+{
+  "version": "38.0.1",
+  "testCases": {
+    "IntegSetupVSCodeOnAl2023/DefaultTest": {
+      "stacks": [
+        "IntegTestStackAl2023"
+      ],
+      "regions": [
+        "${Token[AWS.Region.8]}"
+      ],
+      "cdkCommandOptions": {
+        "destroy": {
+          "args": {
+            "force": true
+          }
+        }
+      },
+      "assertionStack": "IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert",
+      "assertionStackName": "IntegSetupVSCodeOnAl2023DefaultTestDeployAssert74D8F645"
+    }
+  }
+}

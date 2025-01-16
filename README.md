@@ -1,13 +1,19 @@
+[![Source](https://img.shields.io/github/stars/MV-Consulting/cdk-vscode-server?logo=github&label=GitHub%20Stars)][source]
 [![Build Status](https://github.com/MV-Consulting/cdk-vscode-server/actions/workflows/build.yml/badge.svg)](https://github.com/MV-Consulting/cdk-vscode-server/actions/workflows/build.yml)
 [![ESLint Code Formatting](https://img.shields.io/badge/code_style-eslint-brightgreen.svg)](https://eslint.org)
 [![Latest release](https://img.shields.io/github/release/MV-Consulting/cdk-vscode-server.svg)](https://github.com/MV-Consulting/cdk-vscode-server/releases)
+[![GitHub](https://img.shields.io/github/license/MV-Consulting/cdk-vscode-server)][license]
+[![npm](https://img.shields.io/npm/dt/@mavogel/cdk-vscode-server?label=npm&color=orange)](https://www.npmjs.com/package/@mavogel/cdk-vscode-server)
 
 # cdk-vscode-server
 
 Running your dev IDE vscode on AWS for development and workshop purposes.
 
 > [!Note]
-> This construct is designed for workshop purposes and does not fulfill all security and authentication best practices. 
+> This construct is designed for workshop purposes and does not fulfill all security and authentication best practices.
+
+![EXPERIMENTAL](https://img.shields.io/badge/stability-experimantal-orange?style=for-the-badge)**<br>This is an early version of the package. The API will change while I
+we implement new features. Therefore make sure you use an exact version in your `package.json` before it reaches 1.0.0.**
 
 ## Table of Contents
 

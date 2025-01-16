@@ -105,15 +105,17 @@ dev.vscodedomainName6729AA39 = https://d1foo65bar4baz.cloudfront.net/?folder=/Wo
 dev.vscodepassword64FBCA12 = foobarbaz
 ```
 
-> [!Important]
-> There are issues with copy pasting into the VSCode terminal within the Firefox browser (2025-01-12)
+See the [examples](./examples) folder for more inspiration.
 
-Then open the domain name in your favorite browser and you'd see the following login screen:
+6. Then open the domain name in your favorite browser and you'd see the following login screen:
 ![vscode-server-ui-login](docs/img/vscode-server-ui-login-min.png)
 
-After entering the password, you are logged into VSCode and can start coding :tada:
+7. After entering the password, you are logged into VSCode and can start coding :tada:
 
 ![vscode-server-ui](docs/img/vscode-server-ui-min.png)
+
+> [!Important]
+> There are issues with copy pasting into the VSCode terminal within the Firefox browser (2025-01-12)
 
 ## Solution Design
 

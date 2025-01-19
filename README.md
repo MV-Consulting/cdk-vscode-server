@@ -136,53 +136,55 @@ This project was created based on the following inspiration
 - [fleet-workshop-team-stack-self.json](https://static.us-east-1.prod.workshops.aws/public/cc4aa67e-5b7a-4df1-abf7-c42502899a25/assets/fleet-workshop-team-stack-self.json): also an already synthesized cloudformation stack, which did much more as I currently implemented here. 
 - [eks-workshop-vscode-cfn.yaml](https://github.com/aws-samples/eks-workshop-v2/blob/main/lab/cfn/eks-workshop-vscode-cfn.yaml): another great baseline
 
-## Unlock the full potential of your AWS cloud infrastructure - Work with us!
 
-> [!TIP]
-> Bring your AWS Infrastructure with [MV Consulting](https://manuel-vogel.de/) to a new level. Let's raise your bar! We ship well-architected, resilient, operationally efficient, performance- and cost-optimized AWS solutions. They are designed to scale using Infrastructure as Code (IaC), DevOps best-practices and tailored to cloud-native systems for your businesses.
->
-> Our Approach:
->
-> - **Tailored AWS Solutions**: Custom-built and adapted for your unique business needs
-> - **Future-Proof Architecture**: Scalable designs that grow with you
-> - **Cloud-Native in-mind**: Modern and optimized for cloud-native usage
-> - **Empowerment Through Ownership**: Your business, your infrastructure, our expertise
->
-> Why Choose Us:
-> - 7+ Years of AWS Experience
-> - 12x AWS Certified, including Solutions Architect & DevOps Engineer Professional
-> - 5x Kubernetes Certified with proven deep knowledge and profound hands-on experience
-> - Proven Track Record + transparent open source code and Testimonials
-> - For us business drives tech and not the other way around
->
-> Ready to elevate your AWS Infrastructure?
->
-> <a href="https://manuel-vogel.de/contact"><img alt="Schedule your call" src="https://img.shields.io/badge/schedule%20your%20call-success.svg?style=for-the-badge"/></a>
-> <details><summary>☁️ <strong>Discover more about my one-person business: MV Consulting</strong></summary>
->
-> <br/>
->
-> Hi, I'm Manuel – AWS expert and founder of [MV Consulting](https://manuel-vogel.de). With over a decade of hands-on experience, I specialized myself in deploying well-architected, highly scalable and cost-effective AWS Solutions using Infrastructure as Code (IaC).
->
-> #### When you work with me, you're getting a package deal of expertise and personalized service:
->
-> - **AWS IaC Proficiency**: I bring deep AWS CDK and [terraform](https://www.terraform.io/) knowledge to the table, ensuring your infrastructure is not just maintainable and scalable, but also fully automated.
-> - **AWS Certified**: [Equipped with 12 AWS Certifications](https://www.credly.com/users/manuel-vogel/badges), including Solutions Architect & DevOps Engineer Professional, to ensure best practices across diverse cloud scenarios.
-> - **Direct Access**: You work with me, not a team of managers. Expect quick decisions and high-quality work.
-> - **Tailored Solutions**: Understanding that no two businesses are alike, I Custom-fit cloud infrastructure for your unique needs.
-> - **Cost-Effective**: I'll optimize your AWS spending without cutting corners on performance or security.
-> - **Seamless CI/CD**: I'll set up smooth CI/CD processes using GitHub Actions or Gitlab CI, making changes a breeze through Pull Requests.
->
-> *My mission is clear: I'll free you from infrastructure and automation headaches so you can focus on what truly matters – your core business.*
->
-> Ready to unlock the full potential of the AWS Cloud?
->
-> <a href="https://manuel-vogel.de/contact"><img alt="Schedule your call" src="https://img.shields.io/badge/schedule%20your%20call-success.svg?style=for-the-badge"/></a>
-> </details>
+## 🚀 Unlock the Full Potential of Your AWS Cloud Infrastructure  
 
-## Acknowledgements
+Hi, I’m Manuel, an AWS expert passionate about empowering businesses with **scalable, resilient, and cost-optimized cloud solutions**. With **MV Consulting**, I specialize in crafting **tailored AWS architectures** and **DevOps-driven workflows** that not only meet your current needs but grow with you.  
 
-Big thank you to the creators of [projen](https://github.com/projen/projen). This project stands on the shoulders of giants, made possible by their pioneering work in simplifying cloud infrastructure projects!
+---
+
+### 🌟 Why Work With Me?  
+
+✔️ **Tailored AWS Solutions:** Every business is unique, so I design custom solutions that fit your goals and challenges.  
+✔️ **Well-Architected Designs:** From scalability to security, my solutions align with AWS Well-Architected Framework.  
+✔️ **Cloud-Native Focus:** I specialize in modern, cloud-native systems that embrace the full potential of AWS.  
+✔️ **Business-Driven Tech:** Technology should serve your business, not the other way around.  
+
+---
+
+### 🛠 What I Bring to the Table  
+
+🔑 **12x AWS Certifications**  
+I’m **AWS Certified Solutions Architect and DevOps – Professional** and hold numerous additional certifications, so you can trust I’ll bring industry best practices to your projects. Feel free to explose by [badges](https://www.credly.com/users/manuel-vogel)
+
+⚙️ **Infrastructure as Code (IaC)**  
+With deep expertise in **AWS CDK** and **Terraform**, I ensure your infrastructure is automated, maintainable, and scalable.  
+
+📦 **DevOps Expertise**  
+From CI/CD pipelines with **GitHub Actions** and **GitLab CI** to container orchestration **Kubernetes** and others, I deliver workflows that are smooth and efficient.  
+
+🌐 **Hands-On Experience**  
+With over **7 years of AWS experience** and a decade in the tech world, I’ve delivered solutions for companies large and small. My open-source contributions showcase my commitment to transparency and innovation. Feel free to explore my [GitHub profile](https://github.com/mavogel)
+
+---
+
+### 💼 Let’s Build Something Great Together  
+
+I know that choosing the right partner is critical to your success. When you work with me, you’re not just contracting an engineer – you’re gaining a trusted advisor and hands-on expert who cares about your business as much as you do.  
+
+✔️ **Direct Collaboration**: No middlemen or red tape – you work with me directly.  
+✔️ **Transparent Process**: Expect open communication, clear timelines, and visible results.  
+✔️ **Real Value**: My solutions focus on delivering measurable impact for your business.  
+
+
+<a href="https://tinyurl.com/mvc-15min"><img alt="Schedule your call" src="https://img.shields.io/badge/schedule%20your%20call-success.svg?style=for-the-badge"/></a>  
+
+---
+
+## 🙌 Acknowledgements
+
+Big shoutout to the amazing team behind [Projen](https://github.com/projen/projen)!  
+Their groundbreaking work simplifies cloud infrastructure projects and inspires us every day. 💡
 
 ## Author
 

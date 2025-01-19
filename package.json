@@ -43,8 +43,8 @@
   "devDependencies": {
     "@aws-cdk/integ-runner": "^2.165.0-alpha.0",
     "@aws-cdk/integ-tests-alpha": "^2.165.0-alpha.0",
-    "@aws-sdk/client-secrets-manager": "^3.730.0",
-    "@aws-sdk/client-ssm": "^3.730.0",
+    "@aws-sdk/client-secrets-manager": "^3.731.1",
+    "@aws-sdk/client-ssm": "^3.731.1",
     "@stylistic/eslint-plugin": "^2",
     "@types/aws-lambda": "^8.10.147",
     "@types/jest": "^29.5.14",

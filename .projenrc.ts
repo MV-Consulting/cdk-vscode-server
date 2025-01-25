@@ -1,4 +1,4 @@
-import { awscdk } from 'projen';
+import { awscdk, ReleasableCommits } from 'projen';
 import { NpmAccess } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Manuel Vogel',
@@ -50,6 +50,31 @@ const project = new awscdk.AwsCdkConstructLibrary({
       'integ-tests/**/*.ts',
     ],
   },
+  // see details for each: https://github.com/cdklabs/publib
+  // Go
+  publishToGo: {
+    moduleName: 'github.com/MV-Consulting/cdk-vscode-server',
+    githubTokenSecret: 'PROJEN_GITHUB_TOKEN',
+  },
+  // see https://github.com/cdklabs/publib/issues/1305
+  // Java
+  // publishToMaven: {
+  //   javaPackage: 'io.github.mv-consulting.cdk.vscode.server',
+  //   mavenGroupId: 'io.github.mv-consulting',
+  //   mavenArtifactId: 'cdkvscodeserver',
+  // },
+
+  // Note: Microsoft Account needed
+  // C# and F# for .NET
+  // publishToNuget: {
+  //   dotNetNamespace: 'MvConsulting',
+  //   packageId: 'CdkVscodeServer',
+  // },
+  // Python
+  publishToPypi: {
+    distName: 'cdk-vscode-server',
+    module: 'cdk-vscode-server',
+  },
   pullRequestTemplateContents: [`
 **Please check if the PR fulfills these requirements**
 - [ ] The commit message describes your change
@@ -74,6 +99,47 @@ const project = new awscdk.AwsCdkConstructLibrary({
 - version of the construct: \`x.x.x\`
   `],
   // NOTE: issue templates are not supported yet. See https://github.com/projen/projen/pull/3648
+  // issueTemplates: {}
+
+  // See https://github.com/projen/projen/discussions/4040#discussioncomment-11905628
+  releasableCommits: ReleasableCommits.ofType([
+    'feat',
+    'fix',
+    'chore',
+    'refactor',
+    'perf',
+  ]),
+  githubOptions: {
+    pullRequestLintOptions: {
+      semanticTitleOptions: {
+        types: [
+          // see commit types here: https://www.conventionalcommits.org/en/v1.0.0/#summary
+          'feat',
+          'fix',
+          'chore',
+          'refactor',
+          'perf',
+          'docs',
+          'style',
+          'test',
+          'build',
+          'ci',
+        ],
+      },
+    },
+  },
+  versionrcOptions: {
+    types: [
+      { type: 'feat', section: 'Features' },
+      { type: 'fix', section: 'Bug Fixes' },
+      { type: 'chore', section: 'Chores' },
+      { type: 'docs', section: 'Docs' },
+      { type: 'style', hidden: true },
+      { type: 'refactor', hidden: true },
+      { type: 'perf', section: 'Performance' },
+      { type: 'test', hidden: true },
+    ],
+  },
 });
 
 project.package.setScript('integ-test', 'integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed');

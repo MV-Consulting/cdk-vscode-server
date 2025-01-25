@@ -1,5 +1,6 @@
 import { awscdk, ReleasableCommits } from 'projen';
 import { LambdaRuntime } from 'projen/lib/awscdk';
+import { DependabotScheduleInterval } from 'projen/lib/github';
 import { NpmAccess } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Manuel Vogel',
@@ -18,13 +19,46 @@ const project = new awscdk.AwsCdkConstructLibrary({
     awsSdkConnectionReuse: false, // doesn't exist in AWS SDK JS v3
   },
   autoApproveOptions: {
-    allowedUsernames: ['mavogel'],
+    allowedUsernames: ['dependabot', 'dependabot[bot]', 'github-bot', 'github-actions[bot]'],
+    /**
+     * The name of the secret that has the GitHub PAT for auto-approving PRs with permissions repo, workflow, write:packages
+     * Generate a new PAT (https://github.com/settings/tokens/new) and add it to your repo's secrets
+     */
+    secret: 'PROJEN_GITHUB_TOKEN',
   },
-  autoApproveUpgrades: true,
-  depsUpgradeOptions: {
-    workflowOptions: {
-      labels: ['auto-approve'],
+  dependabot: true,
+  dependabotOptions: {
+    scheduleInterval: DependabotScheduleInterval.WEEKLY,
+    labels: ['dependencies', 'auto-approve'],
+    groups: {
+      default: {
+        patterns: ['*'],
+        excludePatterns: ['aws-cdk*', 'projen'],
+      },
     },
+    ignore: [{ dependencyName: 'aws-cdk-lib' }, { dependencyName: 'aws-cdk' }],
+  },
+  // See https://github.com/projen/projen/discussions/4040#discussioncomment-11905628
+  releasableCommits: ReleasableCommits.ofType(['feat','fix','chore','refactor','perf']),
+  githubOptions: {
+    pullRequestLintOptions: {
+      semanticTitleOptions: {
+        // see commit types here: https://www.conventionalcommits.org/en/v1.0.0/#summary
+        types: ['feat', 'fix', 'chore', 'refactor', 'perf', 'docs', 'style', 'test', 'build', 'ci'],
+      },
+    },
+  },
+  versionrcOptions: {
+    types: [
+      { type: 'feat', section: 'Features' },
+      { type: 'fix', section: 'Bug Fixes' },
+      { type: 'chore', section: 'Chores' },
+      { type: 'docs', section: 'Docs' },
+      { type: 'style', hidden: true },
+      { type: 'refactor', hidden: true },
+      { type: 'perf', section: 'Performance' },
+      { type: 'test', hidden: true },
+    ],
   },
   gitignore: [
     'tmp',
@@ -105,46 +139,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
   `],
   // NOTE: issue templates are not supported yet. See https://github.com/projen/projen/pull/3648
   // issueTemplates: {}
-
-  // See https://github.com/projen/projen/discussions/4040#discussioncomment-11905628
-  releasableCommits: ReleasableCommits.ofType([
-    'feat',
-    'fix',
-    'chore',
-    'refactor',
-    'perf',
-  ]),
-  githubOptions: {
-    pullRequestLintOptions: {
-      semanticTitleOptions: {
-        types: [
-          // see commit types here: https://www.conventionalcommits.org/en/v1.0.0/#summary
-          'feat',
-          'fix',
-          'chore',
-          'refactor',
-          'perf',
-          'docs',
-          'style',
-          'test',
-          'build',
-          'ci',
-        ],
-      },
-    },
-  },
-  versionrcOptions: {
-    types: [
-      { type: 'feat', section: 'Features' },
-      { type: 'fix', section: 'Bug Fixes' },
-      { type: 'chore', section: 'Chores' },
-      { type: 'docs', section: 'Docs' },
-      { type: 'style', hidden: true },
-      { type: 'refactor', hidden: true },
-      { type: 'perf', section: 'Performance' },
-      { type: 'test', hidden: true },
-    ],
-  },
 });
 
 project.package.setScript('integ-test', 'integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed');

@@ -1,33 +1,29 @@
-import {
-  App,
-  Aspects,
-  Stack,
-} from 'aws-cdk-lib';
-import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
-import { AwsSolutionsChecks } from 'cdk-nag';
-import { VSCodeServer, VSCodeServerProps } from '../src';
-import { suppressCommonNags } from '../src/suppress-nags';
+import { App, Aspects, Stack } from "aws-cdk-lib";
+import { Annotations, Match, Template } from "aws-cdk-lib/assertions";
+import { AwsSolutionsChecks } from "cdk-nag";
+import { VSCodeServer, VSCodeServerProps } from "../src";
+import { suppressCommonNags } from "../src/suppress-nags";
 
-describe('vscode-server', () => {
-  test('vscode-server-default-props', () => {
+describe("vscode-server", () => {
+  test("vscode-server-default-props", () => {
     const app = new App();
-    const stack = new Stack(app, 'testStack', {
+    const stack = new Stack(app, "testStack", {
       env: {
-        region: 'us-east-1',
-        account: '1234',
+        region: "us-east-1",
+        account: "1234",
       },
     });
 
     const testProps: VSCodeServerProps = {};
 
-    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+    new VSCodeServer(stack, "testVSCodeServer", testProps);
 
     const template = Template.fromStack(stack);
     expect(template.toJSON()).toMatchSnapshot();
   });
 });
 
-describe('vscode-server-cdk-nag-AwsSolutions-Pack', () => {
+describe("vscode-server-cdk-nag-AwsSolutions-Pack", () => {
   let stack: Stack;
   let app: App;
   // In this case we can use beforeAll() over beforeEach() since our tests
@@ -35,14 +31,14 @@ describe('vscode-server-cdk-nag-AwsSolutions-Pack', () => {
   beforeAll(() => {
     // GIVEN
     app = new App();
-    stack = new Stack(app, 'testStack', {
+    stack = new Stack(app, "testStack", {
       env: {
-        region: 'us-east-1',
-        account: '1234',
+        region: "us-east-1",
+        account: "1234",
       },
     });
 
-    new VSCodeServer(stack, 'VSCodeServer', {});
+    new VSCodeServer(stack, "VSCodeServer", {});
     suppressCommonNags(stack);
 
     // WHEN
@@ -50,18 +46,18 @@ describe('vscode-server-cdk-nag-AwsSolutions-Pack', () => {
   });
 
   // THEN
-  test('No unsuppressed Warnings', () => {
+  test("No unsuppressed Warnings", () => {
     const warnings = Annotations.fromStack(stack).findWarning(
-      '*',
-      Match.stringLikeRegexp('AwsSolutions-.*'),
+      "*",
+      Match.stringLikeRegexp("AwsSolutions-.*"),
     );
     expect(warnings).toHaveLength(0);
   });
 
-  test('No unsuppressed Errors', () => {
+  test("No unsuppressed Errors", () => {
     const errors = Annotations.fromStack(stack).findError(
-      '*',
-      Match.stringLikeRegexp('AwsSolutions-.*'),
+      "*",
+      Match.stringLikeRegexp("AwsSolutions-.*"),
     );
     if (errors.length > 0) {
       for (const error of errors) {

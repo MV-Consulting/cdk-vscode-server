@@ -42,6 +42,8 @@ rm -rf node_modules
 yarn install
 # now build it
 yarn run build
+# also check for awscdk linting, which checks the API.md
+yarn post-eslint
 ```
 6. Commit to your fork using clear commit messages.
 7. Send us a pull request, answering any default questions in the pull request interface.

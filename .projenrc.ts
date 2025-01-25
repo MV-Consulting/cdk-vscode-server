@@ -3,7 +3,7 @@ import { NpmAccess } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Manuel Vogel',
   authorAddress: 'info@manuel-vogel.de',
-  cdkVersion: '2.165.0',
+  cdkVersion: '2.177.0',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.5.0',
   name: 'cdk-vscode-server',

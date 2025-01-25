@@ -19,6 +19,14 @@
       "type": "build"
     },
     {
+      "name": "@commitlint/cli",
+      "type": "build"
+    },
+    {
+      "name": "@commitlint/config-conventional",
+      "type": "build"
+    },
+    {
       "name": "@stylistic/eslint-plugin",
       "version": "^2",
       "type": "build"
@@ -69,6 +77,10 @@
     {
       "name": "eslint",
       "version": "^9",
+      "type": "build"
+    },
+    {
+      "name": "husky",
       "type": "build"
     },
     {

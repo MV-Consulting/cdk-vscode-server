@@ -76,10 +76,13 @@ const project = new awscdk.AwsCdkConstructLibrary({
   devDeps: [
     '@aws-sdk/client-ssm',
     '@aws-sdk/client-secrets-manager',
-    '@types/aws-lambda',
     '@aws-cdk/integ-runner@^2.177.0-alpha.0',
     '@aws-cdk/integ-tests-alpha@^2.177.0-alpha.0',
+    '@commitlint/cli',
+    '@commitlint/config-conventional',
+    '@types/aws-lambda',
     '@types/jsdom',
+    'husky',
   ],
   // experimentalIntegRunner: true,
   // manual integ test setup
@@ -142,5 +145,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // issueTemplates: {}
 });
 
+project.package.setScript('prepare', 'husky');
 project.package.setScript('integ-test', 'integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed');
 project.synth();

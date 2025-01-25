@@ -28,7 +28,7 @@ jobs:
       - name: build
         run: npx projen build
       - name: Run awslint
-        run: npx projen awslint
+        run: yarn awslint
       - name: Find mutations
         id: self_mutation
         run: |-

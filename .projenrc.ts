@@ -192,7 +192,7 @@ function updateGitHubWorkflows() {
       ...buildJobSteps.slice(0, 4),
       {
         name: "Run awslint",
-        run: "npx projen awslint",
+        run: "yarn awslint",
       },
       ...buildJobSteps.slice(4),
     ],

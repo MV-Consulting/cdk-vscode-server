@@ -1,4 +1,5 @@
 import { awscdk, ReleasableCommits } from 'projen';
+import { LambdaRuntime } from 'projen/lib/awscdk';
 import { NpmAccess } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Manuel Vogel',
@@ -12,6 +13,10 @@ const project = new awscdk.AwsCdkConstructLibrary({
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   npmAccess: NpmAccess.PUBLIC, /* The npm access level to use when releasing this module. */
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
+  lambdaOptions: {
+    runtime: new LambdaRuntime("nodejs22.x", "node22"),
+    awsSdkConnectionReuse: false, // doesn't exist in AWS SDK JS v3
+  },
   autoApproveOptions: {
     allowedUsernames: ['mavogel'],
   },

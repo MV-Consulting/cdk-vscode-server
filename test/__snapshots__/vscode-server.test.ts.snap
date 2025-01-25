@@ -91,7 +91,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
-          "S3Key": "512cf155ada4793b37a885c1aa6d9bb8f534e88bac6f63c69672d4d73df2decf.zip",
+          "S3Key": "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.zip",
         },
         "Description": "src/installer/installer.lambda.ts",
         "Handler": "index.handler",

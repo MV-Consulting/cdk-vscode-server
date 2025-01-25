@@ -5,32 +5,32 @@ const spySSM = jest.fn(() => ({
 }));
 
 // Mock the SSM client
-jest.mock('@aws-sdk/client-secrets-manager', () => ({
+jest.mock("@aws-sdk/client-secrets-manager", () => ({
   SecretsManager: spySSM,
 }));
 
 // eslint-disable-next-line import/no-unresolved
-import type { OnEventRequest } from 'aws-cdk-lib/custom-resources/lib/provider-framework/types';
-import { handler } from '../../src/secret-retriever/secret-retriever.lambda';
+import type { OnEventRequest } from "aws-cdk-lib/custom-resources/lib/provider-framework/types";
+import { handler } from "../../src/secret-retriever/secret-retriever.lambda";
 
-describe('secret-retriever lambda', () => {
+describe("secret-retriever lambda", () => {
   beforeEach(() => {
     // Reset mocks before each test
     jest.resetModules();
     jest.clearAllMocks();
   });
 
-  afterEach(() => { });
+  afterEach(() => {});
 
-  test('should handle successful Secret retrieval', async () => {
+  test("should handle successful Secret retrieval", async () => {
     const secretString = '{"username":"john","password":"foobar"}';
     spyGetSecretValue.mockImplementation(() => ({
       SecretString: secretString,
     }));
 
-    const secretArn = 'arn:123';
+    const secretArn = "arn:123";
     const event = {
-      RequestType: 'Create',
+      RequestType: "Create",
       ResourceProperties: {
         SecretArn: secretArn,
       },
@@ -45,27 +45,24 @@ describe('secret-retriever lambda', () => {
     expect(result).toEqual({
       Data: {
         secretValue: JSON.parse(secretString),
-        secretPasswordValue: 'foobar',
+        secretPasswordValue: "foobar",
       },
     });
   });
 
-  test('should fail to handle Secret retrieval', async () => {
-    const errorMessage = 'Failed to retrieve secret';
+  test("should fail to handle Secret retrieval", async () => {
+    const errorMessage = "Failed to retrieve secret";
     spyGetSecretValue.mockImplementation(() => {
       throw new Error(errorMessage);
     });
 
     const event = {
-      RequestType: 'Create',
+      RequestType: "Create",
       ResourceProperties: {
-        SecretArn: 'arn:123',
+        SecretArn: "arn:123",
       },
     } as unknown as OnEventRequest;
 
-    await expect(handler(event))
-      .rejects
-      .toThrow(errorMessage);
-
+    await expect(handler(event)).rejects.toThrow(errorMessage);
   });
 });

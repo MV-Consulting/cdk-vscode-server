@@ -61,7 +61,7 @@
       "description": "Create a JavaScript bundle from src/installer/installer.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
         }
       ]
     },
@@ -70,7 +70,7 @@
       "description": "Continuously update the JavaScript bundle from src/installer/installer.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },
@@ -79,7 +79,7 @@
       "description": "Create a JavaScript bundle from src/secret-retriever/secret-retriever.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
         }
       ]
     },
@@ -88,7 +88,7 @@
       "description": "Continuously update the JavaScript bundle from src/secret-retriever/secret-retriever.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },
@@ -268,10 +268,6 @@
         }
       ]
     },
-    "post-upgrade": {
-      "name": "post-upgrade",
-      "description": "Runs after upgrading dependencies"
-    },
     "pre-compile": {
       "name": "pre-compile",
       "description": "Prepare the project for compilation",
@@ -343,30 +339,6 @@
       "steps": [
         {
           "builtin": "release/reset-version"
-        }
-      ]
-    },
-    "upgrade": {
-      "name": "upgrade",
-      "description": "upgrade dependencies",
-      "env": {
-        "CI": "0"
-      },
-      "steps": [
-        {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@aws-sdk/client-secrets-manager,@aws-sdk/client-ssm,@types/aws-lambda,@types/jest,@types/jsdom,@types/node,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,jsii-diff,jsii-pacmak,projen,ts-jest,ts-node,typescript,node-html-parser,cdk-nag"
-        },
-        {
-          "exec": "yarn install --check-files"
-        },
-        {
-          "exec": "yarn upgrade @aws-cdk/integ-runner @aws-cdk/integ-tests-alpha @aws-sdk/client-secrets-manager @aws-sdk/client-ssm @stylistic/eslint-plugin @types/aws-lambda @types/jest @types/jsdom @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii projen ts-jest ts-node typescript node-html-parser aws-cdk-lib constructs cdk-nag"
-        },
-        {
-          "exec": "npx projen"
-        },
-        {
-          "spawn": "post-upgrade"
         }
       ]
     },

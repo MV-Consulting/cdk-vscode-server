@@ -6,6 +6,7 @@ import {
 import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
 import { AwsSolutionsChecks } from 'cdk-nag';
 import { VSCodeServer, VSCodeServerProps } from '../src';
+import { suppressCommonNags } from '../src/suppress-nags';
 
 describe('vscode-server', () => {
   test('vscode-server-default-props', () => {
@@ -42,6 +43,7 @@ describe('vscode-server-cdk-nag-AwsSolutions-Pack', () => {
     });
 
     new VSCodeServer(stack, 'VSCodeServer', {});
+    suppressCommonNags(stack);
 
     // WHEN
     Aspects.of(stack).add(new AwsSolutionsChecks({ verbose: true }));

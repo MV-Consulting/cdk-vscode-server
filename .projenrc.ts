@@ -176,7 +176,6 @@ project.package.setScript(
 updateGitHubWorkflows();
 project.synth();
 
-
 function updateGitHubWorkflows() {
   // .github/workflows/build.yml
   const buildWorkflow = project.github?.tryFindWorkflow("build");

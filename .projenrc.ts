@@ -16,7 +16,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   npmAccess: NpmAccess.PUBLIC, /* The npm access level to use when releasing this module. */
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
   lambdaOptions: {
-    runtime: new LambdaRuntime("nodejs22.x", "node22"),
+    runtime: new LambdaRuntime('nodejs22.x', 'node22'),
     awsSdkConnectionReuse: false, // doesn't exist in AWS SDK JS v3
   },
   autoApproveOptions: {
@@ -40,7 +40,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     ignore: [{ dependencyName: 'aws-cdk-lib' }, { dependencyName: 'aws-cdk' }],
   },
   // See https://github.com/projen/projen/discussions/4040#discussioncomment-11905628
-  releasableCommits: ReleasableCommits.ofType(['feat','fix','chore','refactor','perf']),
+  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'chore', 'refactor', 'perf']),
   githubOptions: {
     pullRequestLintOptions: {
       semanticTitleOptions: {

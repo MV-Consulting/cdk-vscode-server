@@ -50,6 +50,30 @@ const project = new awscdk.AwsCdkConstructLibrary({
       'integ-tests/**/*.ts',
     ],
   },
+  // see details for each: https://github.com/cdklabs/publib
+  // Go
+  publishToGo: {
+    moduleName: 'github.com/MV-Consulting/cdk-vscode-server',
+  },
+  // see https://github.com/cdklabs/publib/issues/1305
+  // Java
+  // publishToMaven: {
+  //   javaPackage: 'io.github.mv-consulting.cdk.vscode.server',
+  //   mavenGroupId: 'io.github.mv-consulting',
+  //   mavenArtifactId: 'cdkvscodeserver',
+  // },
+
+  // Note: Microsoft Account needed
+  // C# and F# for .NET
+  // publishToNuget: {
+  //   dotNetNamespace: 'MvConsulting',
+  //   packageId: 'CdkVscodeServer',
+  // },
+  // Python
+  publishToPypi: {
+    distName: 'cdk-vscode-server',
+    module: 'cdk-vscode-server',
+  },
   pullRequestTemplateContents: [`
 **Please check if the PR fulfills these requirements**
 - [ ] The commit message describes your change

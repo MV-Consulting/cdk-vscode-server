@@ -5,11 +5,12 @@ import { NpmAccess } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Manuel Vogel',
   authorAddress: 'info@manuel-vogel.de',
-  cdkVersion: '2.177.0',
+  cdkVersion: '2.177.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.5.0',
   name: 'cdk-vscode-server',
   packageName: '@mavogel/cdk-vscode-server',
+  projenVersion: '0.91.6', // Find the latest projen version here: https://www.npmjs.com/package/projen
   projenrcTs: true,
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   npmAccess: NpmAccess.PUBLIC, /* The npm access level to use when releasing this module. */

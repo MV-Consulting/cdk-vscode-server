@@ -54,6 +54,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // Go
   publishToGo: {
     moduleName: 'github.com/MV-Consulting/cdk-vscode-server',
+    githubTokenSecret: 'PROJEN_GITHUB_TOKEN'
   },
   // see https://github.com/cdklabs/publib/issues/1305
   // Java

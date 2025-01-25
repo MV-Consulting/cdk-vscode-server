@@ -1,6 +1,7 @@
 import { awscdk, ReleasableCommits } from "projen";
 import { LambdaRuntime } from "projen/lib/awscdk";
 import { DependabotScheduleInterval } from "projen/lib/github";
+import { JobStep } from "projen/lib/github/workflows-model";
 import { NpmAccess } from "projen/lib/javascript";
 const project = new awscdk.AwsCdkConstructLibrary({
   author: "Manuel Vogel",
@@ -167,9 +168,33 @@ const project = new awscdk.AwsCdkConstructLibrary({
 });
 
 project.package.setScript("prepare", "husky");
-project.package.setScript("post-eslint", "awslint");
+project.package.setScript("awslint", "awslint");
 project.package.setScript(
   "integ-test",
   "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed",
 );
+updateGitHubWorkflows();
 project.synth();
+
+
+function updateGitHubWorkflows() {
+  // .github/workflows/build.yml
+  const buildWorkflow = project.github?.tryFindWorkflow("build");
+  if (!buildWorkflow) return;
+  const buildJob = buildWorkflow.getJob("build");
+  if (!buildJob || !("steps" in buildJob)) return;
+  // TODO: figure out why wrong types
+  const getBuildSteps = buildJob.steps as unknown as () => JobStep[];
+  const buildJobSteps = getBuildSteps();
+  buildWorkflow.updateJob("build", {
+    ...buildJob,
+    steps: [
+      ...buildJobSteps.slice(0, 4),
+      {
+        name: "Run awslint",
+        run: "npx projen awslint",
+      },
+      ...buildJobSteps.slice(4),
+    ],
+  });
+}

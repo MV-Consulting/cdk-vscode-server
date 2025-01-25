@@ -34,7 +34,7 @@
     "watch": "npx projen watch",
     "projen": "npx projen",
     "prepare": "husky",
-    "post-eslint": "awslint",
+    "awslint": "awslint",
     "integ-test": "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed"
   },
   "author": {

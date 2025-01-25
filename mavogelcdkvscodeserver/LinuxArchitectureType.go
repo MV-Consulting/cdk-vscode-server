@@ -5,7 +5,9 @@ package mavogelcdkvscodeserver
 type LinuxArchitectureType string
 
 const (
+	// ARM architecture.
 	LinuxArchitectureType_ARM LinuxArchitectureType = "ARM"
+	// AMD64 architecture.
 	LinuxArchitectureType_AMD64 LinuxArchitectureType = "AMD64"
 )
 

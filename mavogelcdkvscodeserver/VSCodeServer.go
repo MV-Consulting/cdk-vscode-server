@@ -8,11 +8,14 @@ import (
 	"github.com/MV-Consulting/cdk-vscode-server/mavogelcdkvscodeserver/internal"
 )
 
+// VSCodeServer - spin it up in under 10 minutes.
 type VSCodeServer interface {
 	constructs.Construct
+	// The name of the domain the server is reachable.
 	DomainName() *string
 	// The tree node.
 	Node() constructs.Node
+	// The password to login to the server.
 	Password() *string
 	// Returns a string representation of this construct.
 	ToString() *string

@@ -1,7 +1,7 @@
 import { Stack } from 'aws-cdk-lib';
 import { NagSuppressions } from 'cdk-nag';
 
-// Here we store the nags which we can only directly 
+// Here we store the nags which we can only directly
 // address to resource and not with the common pattern.
 // This mostly happens with custom resources, with a lot
 // of generated code under the hood.

@@ -11,6 +11,9 @@ import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from './mappings';
 import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retriever';
 import { SecretRetriever } from './secret-retriever/secret-retriever';
 
+/**
+ * Properties for the VSCodeServer construct
+ */
 export interface VSCodeServerProps {
   /**
    * UserName for VSCode Server
@@ -101,8 +104,19 @@ export interface VSCodeServerProps {
  * The flavor of linux you want to run vscode server on
  */
 export enum LinuxFlavorType {
+  /**
+   * Ubuntu 22
+   */
   UBUNTU_22 = 'ubuntu22',
+
+  /**
+   * Ubuntu 24
+   */
   UBUNTU_24 = 'ubuntu24',
+
+  /**
+   * Amazon Linux 2023
+   */
   AMAZON_LINUX_2023 = 'al2023',
 }
 
@@ -110,12 +124,29 @@ export enum LinuxFlavorType {
  * The architecture of the cpu you want to run vscode server on
  */
 export enum LinuxArchitectureType {
+  /**
+   * ARM architecture
+   */
   ARM = 'arm',
+
+  /**
+   * AMD64 architecture
+   */
   AMD64 = 'amd64',
 }
 
+/**
+ * VSCodeServer - spin it up in under 10 minutes
+ */
 export class VSCodeServer extends Construct {
+  /**
+   * The name of the domain the server is reachable
+   */
   public readonly domainName: string;
+
+  /**
+   * The password to login to the server
+   */
   public readonly password: string;
 
   constructor(scope: Construct, id: string, props?: VSCodeServerProps) {

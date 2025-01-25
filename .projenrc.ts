@@ -82,6 +82,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '@commitlint/config-conventional',
     '@types/aws-lambda',
     '@types/jsdom',
+    'awslint',
     'husky',
   ],
   // experimentalIntegRunner: true,
@@ -146,5 +147,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
 });
 
 project.package.setScript('prepare', 'husky');
+project.package.setScript('post-eslint', 'awslint');
 project.package.setScript('integ-test', 'integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed');
 project.synth();

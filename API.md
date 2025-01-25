@@ -4,6 +4,8 @@
 
 ### VSCodeServer <a name="VSCodeServer" id="@mavogel/cdk-vscode-server.VSCodeServer"></a>
 
+VSCodeServer - spin it up in under 10 minutes.
+
 #### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.VSCodeServer.Initializer"></a>
 
 ```typescript
@@ -85,8 +87,8 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.domainName">domainName</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.password">password</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.domainName">domainName</a></code> | <code>string</code> | The name of the domain the server is reachable. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.password">password</a></code> | <code>string</code> | The password to login to the server. |
 
 ---
 
@@ -110,6 +112,8 @@ public readonly domainName: string;
 
 - *Type:* string
 
+The name of the domain the server is reachable.
+
 ---
 
 ##### `password`<sup>Required</sup> <a name="password" id="@mavogel/cdk-vscode-server.VSCodeServer.property.password"></a>
@@ -120,12 +124,16 @@ public readonly password: string;
 
 - *Type:* string
 
+The password to login to the server.
+
 ---
 
 
 ## Structs <a name="Structs" id="Structs"></a>
 
 ### VSCodeServerProps <a name="VSCodeServerProps" id="@mavogel/cdk-vscode-server.VSCodeServerProps"></a>
+
+Properties for the VSCodeServer construct.
 
 #### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.VSCodeServerProps.Initializer"></a>
 
@@ -322,17 +330,21 @@ The architecture of the cpu you want to run vscode server on.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType.ARM">ARM</a></code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType.AMD64">AMD64</a></code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType.ARM">ARM</a></code> | ARM architecture. |
+| <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType.AMD64">AMD64</a></code> | AMD64 architecture. |
 
 ---
 
 ##### `ARM` <a name="ARM" id="@mavogel/cdk-vscode-server.LinuxArchitectureType.ARM"></a>
 
+ARM architecture.
+
 ---
 
 
 ##### `AMD64` <a name="AMD64" id="@mavogel/cdk-vscode-server.LinuxArchitectureType.AMD64"></a>
+
+AMD64 architecture.
 
 ---
 
@@ -345,23 +357,29 @@ The flavor of linux you want to run vscode server on.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType.UBUNTU_22">UBUNTU_22</a></code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType.UBUNTU_24">UBUNTU_24</a></code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType.AMAZON_LINUX_2023">AMAZON_LINUX_2023</a></code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType.UBUNTU_22">UBUNTU_22</a></code> | Ubuntu 22. |
+| <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType.UBUNTU_24">UBUNTU_24</a></code> | Ubuntu 24. |
+| <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType.AMAZON_LINUX_2023">AMAZON_LINUX_2023</a></code> | Amazon Linux 2023. |
 
 ---
 
 ##### `UBUNTU_22` <a name="UBUNTU_22" id="@mavogel/cdk-vscode-server.LinuxFlavorType.UBUNTU_22"></a>
+
+Ubuntu 22.
 
 ---
 
 
 ##### `UBUNTU_24` <a name="UBUNTU_24" id="@mavogel/cdk-vscode-server.LinuxFlavorType.UBUNTU_24"></a>
 
+Ubuntu 24.
+
 ---
 
 
 ##### `AMAZON_LINUX_2023` <a name="AMAZON_LINUX_2023" id="@mavogel/cdk-vscode-server.LinuxFlavorType.AMAZON_LINUX_2023"></a>
+
+Amazon Linux 2023.
 
 ---
 

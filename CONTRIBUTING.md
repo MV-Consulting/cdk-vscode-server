@@ -31,19 +31,19 @@ To send us a pull request, please:
 
 1. Fork the repository.
 2. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
-3. Ensure local tests pass -> `yarn run test`
+3. Ensure local tests pass -> `npm test`
 4. The integ tests will run separately in the AWS account of the owner of the project.
-5. Build the project -> `yarn run build` to also update the `API.md` file.
+5. Build the project -> `npm build` to also update the `API.md` file.
 ```bash
 # do this within the container as we build jsii for multiple targets
 docker run -it --rm -v $(pwd):/source -w /source --user 0:0 public.ecr.aws/jsii/superchain:1-bookworm-slim-node22 bash
 # clean node_modules for fresh dependencies for the OS within the container
 rm -rf node_modules
-yarn install
+npm ci
 # now build it
-yarn run build
+npx projen build
 # also check for awscdk linting, which checks the API.md
-yarn post-eslint
+npm run awslint
 ```
 6. Commit to your fork using clear commit messages.
 7. Send us a pull request, answering any default questions in the pull request interface.

@@ -20,6 +20,10 @@ const stackUnderTest = new Stack(app, 'IntegTestStackAl2023', {
 const constructUnderTest = new VSCodeServer(stackUnderTest, 'IntegVSCodeServer', {
   instanceOperatingSystem: LinuxFlavorType.AMAZON_LINUX_2023,
   instanceVolumeSize: 20,
+  additionalTags: {
+    'IntegTest': 'True',
+    'Environement': 'IntegTestAl2023',
+  },
 })
 
 const integ = new IntegTest(app, 'IntegSetupVSCodeOnAl2023', {

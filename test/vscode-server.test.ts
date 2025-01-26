@@ -21,6 +21,27 @@ describe("vscode-server", () => {
     const template = Template.fromStack(stack);
     expect(template.toJSON()).toMatchSnapshot();
   });
+
+  test("vscode-server-custom-props", () => {
+    const app = new App();
+    const stack = new Stack(app, "testStack", {
+      env: {
+        region: "us-east-1",
+        account: "1234",
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      additionalTags: {
+        "unit-test": "True",
+      },
+    };
+
+    new VSCodeServer(stack, "testVSCodeServer", testProps);
+
+    const template = Template.fromStack(stack);
+    expect(template.toJSON()).toMatchSnapshot();
+  });
 });
 
 describe("vscode-server-cdk-nag-AwsSolutions-Pack", () => {

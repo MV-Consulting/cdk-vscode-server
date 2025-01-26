@@ -1,11 +1,18 @@
-import { CfnOutput, Duration, Stack } from "aws-cdk-lib";
+import {
+  Aspects,
+  CfnOutput,
+  Duration,
+  IAspect,
+  Stack,
+  Tags,
+} from "aws-cdk-lib";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
 import * as cfo from "aws-cdk-lib/aws-cloudfront-origins";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { NagSuppressions } from "cdk-nag";
-import { Construct } from "constructs";
+import { Construct, IConstruct } from "constructs";
 import { Installer } from "./installer/installer";
 import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from "./mappings";
 import { AwsManagedPrefixList } from "./prefixlist-retriever/prefixlist-retriever";
@@ -98,6 +105,13 @@ export interface VSCodeServerProps {
    * @default - []
    */
   readonly additionalInstanceRolePolicies?: iam.PolicyStatement[];
+
+  /**
+   * Additional tags to add to the instance
+   *
+   * @default - {}
+   */
+  readonly additionalTags?: { [key: string]: string };
 }
 
 /**
@@ -171,6 +185,11 @@ export class VSCodeServer extends Construct {
       );
     const additionalInstanceRolePolicies =
       props?.additionalInstanceRolePolicies ?? [];
+    const additionalTags = props?.additionalTags ?? {};
+    const defaultTags = { app: "vscode-server" };
+
+    const mergedTags = { ...defaultTags, ...additionalTags };
+    Aspects.of(this).add(new NodeTagger(mergedTags));
 
     let vscodePassword = props?.vscodePassword ?? "";
     if (vscodePassword == "") {
@@ -603,5 +622,22 @@ export class VSCodeServer extends Construct {
       description: "The password for the VSCode server",
       value: vscodePassword,
     });
+  }
+}
+
+/**
+ * Tags all the resources in the construct
+ */
+class NodeTagger implements IAspect {
+  private readonly tags: { [key: string]: string };
+
+  constructor(tags: { [key: string]: string }) {
+    this.tags = tags;
+  }
+
+  visit(node: IConstruct) {
+    Object.entries(this.tags).forEach(([key, value]) =>
+      Tags.of(node).add(key, value),
+    );
   }
 }

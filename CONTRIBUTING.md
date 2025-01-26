@@ -36,7 +36,7 @@ To send us a pull request, please:
 5. Build the project -> `yarn run build` to also update the `API.md` file.
 ```bash
 # do this within the container as we build jsii for multiple targets
-docker run -it --rm -v $(pwd):/source -w /source --user 0:0 public.ecr.aws/jsii/superchain:1-bookworm-slim-node20 bash
+docker run -it --rm -v $(pwd):/source -w /source --user 0:0 public.ecr.aws/jsii/superchain:1-bookworm-slim-node22 bash
 # clean node_modules for fresh dependencies for the OS within the container
 rm -rf node_modules
 yarn install

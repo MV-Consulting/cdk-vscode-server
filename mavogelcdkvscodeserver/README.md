@@ -41,7 +41,7 @@ npx projen new awscdk-app-ts --package-manager=npm
 ```
 
 1. Add `@mavogel/cdk-vscode-server` as a dependency to your project in the `.projenrc.ts` file
-2. Run `yarn run projen` to install it
+2. Run `npx projen` to install it
 3. Add the following to the `src/main.ts` file:
 
 ```go

@@ -10,7 +10,13 @@
      "IncludeSpace": false,
      "PasswordLength": 16,
      "SecretStringTemplate": "{\"username\":\"participant\"}"
-    }
+    },
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ]
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
@@ -52,6 +58,12 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
      }
     ]
    },
@@ -103,11 +115,6 @@
      "S3Key": "781ab0ab74634cdaf61539ab208ab777829ef07097ac21f95b9e15a3b1eedc1b.zip"
     },
     "Description": "src/secret-retriever/secret-retriever.lambda.ts",
-    "Environment": {
-     "Variables": {
-      "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
-     }
-    },
     "Handler": "index.handler",
     "MemorySize": 128,
     "Role": {
@@ -116,7 +123,13 @@
       "Arn"
      ]
     },
-    "Runtime": "nodejs18.x",
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ],
     "Timeout": 10
    },
    "DependsOn": [
@@ -165,6 +178,12 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
      }
     ]
    },
@@ -254,7 +273,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "4dc48ffba382f93077a1e6824599bbd4ceb6f91eb3d9442eca3b85bdb1a20b1e.zip"
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
     },
     "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider)",
     "Environment": {
@@ -283,6 +302,12 @@
       "value"
      ]
     },
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ],
     "Timeout": 900
    },
    "DependsOn": [
@@ -317,10 +342,10 @@
       "Arn"
      ]
     },
+    "ServiceTimeout": 305,
     "SecretArn": {
      "Ref": "IntegVSCodeServerpasswordsecret202A5DB3"
-    },
-    "ServiceTimeout": 305
+    }
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -333,6 +358,10 @@
     "EnableDnsSupport": true,
     "InstanceTenancy": "default",
     "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
      {
       "Key": "Name",
       "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc"
@@ -365,6 +394,10 @@
     "MapPublicIpOnLaunch": true,
     "Tags": [
      {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
       "Key": "aws-cdk:subnet-name",
       "Value": "public"
      },
@@ -396,6 +429,10 @@
    "Type": "AWS::EC2::RouteTable",
    "Properties": {
     "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
      {
       "Key": "Name",
       "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet1"
@@ -477,6 +514,10 @@
     "MapPublicIpOnLaunch": true,
     "Tags": [
      {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
       "Key": "aws-cdk:subnet-name",
       "Value": "public"
      },
@@ -508,6 +549,10 @@
    "Type": "AWS::EC2::RouteTable",
    "Properties": {
     "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
      {
       "Key": "Name",
       "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet2"
@@ -578,6 +623,10 @@
    "Type": "AWS::EC2::InternetGateway",
    "Properties": {
     "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
      {
       "Key": "Name",
       "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc"
@@ -660,6 +709,12 @@
       "IpProtocol": "-1"
      }
     ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ],
     "VpcId": {
      "Ref": "IntegVSCodeServervpc93DDE887"
     }
@@ -689,7 +744,13 @@
   "IntegVSCodeServercfprefixlistIdGetPrefixListIdLogGroup171C2803": {
    "Type": "AWS::Logs::LogGroup",
    "Properties": {
-    "RetentionInDays": 1
+    "RetentionInDays": 1,
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ]
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
@@ -718,7 +779,13 @@
       }
      ],
      "Version": "2012-10-17"
-    }
+    },
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ]
    },
    "Metadata": {
     "cdk_nag": {
@@ -1050,6 +1117,12 @@
       },
       "PolicyName": "VSCodeInstanceInlinePolicy"
      }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
     ]
    },
    "Metadata": {
@@ -1144,6 +1217,10 @@
      }
     ],
     "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
      {
       "Key": "Name",
       "Value": "VSCodeServer"
@@ -1281,7 +1358,13 @@
       }
      ],
      "PriceClass": "PriceClass_All"
-    }
+    },
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ]
    },
    "Metadata": {
     "cdk_nag": {
@@ -1577,7 +1660,13 @@
      ]
     },
     "DocumentType": "Command",
-    "Name": "vscode-server-ubuntu-IntegTestStackUbuntu22"
+    "Name": "vscode-server-ubuntu-IntegTestStackUbuntu22",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ]
    }
   },
   "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF": {
@@ -1607,6 +1696,12 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
      }
     ]
    },
@@ -1717,14 +1812,9 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "512cf155ada4793b37a885c1aa6d9bb8f534e88bac6f63c69672d4d73df2decf.zip"
+     "S3Key": "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.zip"
     },
     "Description": "src/installer/installer.lambda.ts",
-    "Environment": {
-     "Variables": {
-      "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
-     }
-    },
     "Handler": "index.handler",
     "MemorySize": 512,
     "Role": {
@@ -1733,7 +1823,13 @@
       "Arn"
      ]
     },
-    "Runtime": "nodejs18.x",
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ],
     "Timeout": 300
    },
    "DependsOn": [
@@ -1782,6 +1878,12 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
      }
     ]
    },
@@ -1871,7 +1973,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "4dc48ffba382f93077a1e6824599bbd4ceb6f91eb3d9442eca3b85bdb1a20b1e.zip"
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
     },
     "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider)",
     "Environment": {
@@ -1900,6 +2002,12 @@
       "value"
      ]
     },
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     }
+    ],
     "Timeout": 900
    },
    "DependsOn": [
@@ -2026,7 +2134,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "ee7de53d64cc9d6248fa6aa550f92358f6c907b5efd6f3298aeab1b5e7ea358a.zip"
+     "S3Key": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip"
     },
     "Timeout": 900,
     "MemorySize": 128,

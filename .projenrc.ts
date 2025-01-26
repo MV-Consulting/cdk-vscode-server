@@ -1,4 +1,4 @@
-import { awscdk, ReleasableCommits } from "projen";
+import { awscdk, javascript, ReleasableCommits } from "projen";
 import { LambdaRuntime } from "projen/lib/awscdk";
 import { DependabotScheduleInterval } from "projen/lib/github";
 import { JobStep } from "projen/lib/github/workflows-model";
@@ -12,6 +12,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   name: "cdk-vscode-server",
   packageName: "@mavogel/cdk-vscode-server",
   projenVersion: "0.91.6", // Find the latest projen version here: https://www.npmjs.com/package/projen
+  packageManager: javascript.NodePackageManager.NPM,
   projenrcTs: true,
   repositoryUrl: "https://github.com/MV-Consulting/cdk-vscode-server.git",
   npmAccess:
@@ -191,7 +192,7 @@ function updateGitHubWorkflows() {
       ...buildJobSteps.slice(0, 4),
       {
         name: "Run awslint",
-        run: "yarn awslint",
+        run: "npm run awslint",
       },
       ...buildJobSteps.slice(4),
     ],

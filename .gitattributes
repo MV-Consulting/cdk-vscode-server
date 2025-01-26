@@ -19,8 +19,8 @@
 /.projen/tasks.json linguist-generated
 /API.md linguist-generated
 /LICENSE linguist-generated
+/package-lock.json linguist-generated
 /package.json linguist-generated
 /src/installer/installer-function.ts linguist-generated
 /src/secret-retriever/secret-retriever-function.ts linguist-generated
 /tsconfig.dev.json linguist-generated
-/yarn.lock linguist-generated

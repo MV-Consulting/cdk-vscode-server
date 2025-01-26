@@ -11,6 +11,10 @@ type VSCodeServerProps struct {
 	// Default: - [].
 	//
 	AdditionalInstanceRolePolicies *[]awsiam.PolicyStatement `field:"optional" json:"additionalInstanceRolePolicies" yaml:"additionalInstanceRolePolicies"`
+	// Additional tags to add to the instance.
+	// Default: - {}.
+	//
+	AdditionalTags *map[string]*string `field:"optional" json:"additionalTags" yaml:"additionalTags"`
 	// Base path for the application to be added to Nginx sites-available list.
 	// Default: - app.
 	//

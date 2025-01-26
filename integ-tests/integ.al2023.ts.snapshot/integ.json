@@ -1,12 +1,12 @@
 {
-  "version": "38.0.1",
+  "version": "39.0.0",
   "testCases": {
     "IntegSetupVSCodeOnAl2023/DefaultTest": {
       "stacks": [
         "IntegTestStackAl2023"
       ],
       "regions": [
-        "${Token[AWS.Region.8]}"
+        "${Token[AWS.Region.6]}"
       ],
       "cdkCommandOptions": {
         "destroy": {

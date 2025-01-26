@@ -50,7 +50,10 @@ var handler = async (event, context) => {
   if (resourcePropertiesPartial.PhysicalResourceId) {
     delete resourcePropertiesPartial.PhysicalResourceId;
   }
-  console.log("ResourceProperties filtered after: %j", resourcePropertiesPartial);
+  console.log(
+    "ResourceProperties filtered after: %j",
+    resourcePropertiesPartial
+  );
   const parameters = {};
   for (const [key, value] of Object.entries(resourcePropertiesPartial)) {
     parameters[key] = [value];
@@ -58,10 +61,14 @@ var handler = async (event, context) => {
   console.log("mapped parameters: %j", parameters);
   let attemptNo = 0;
   let timeRemaining = context.getRemainingTimeInMillis();
-  console.log(`Running SSM Document '${documentName}' on EC2 instance '${instanceId}'. Logging to '${cloudWatchLogGroupName}' with parameters: '${JSON.stringify(parameters)}'`);
+  console.log(
+    `Running SSM Document '${documentName}' on EC2 instance '${instanceId}'. Logging to '${cloudWatchLogGroupName}' with parameters: '${JSON.stringify(parameters)}'`
+  );
   while (true) {
     attemptNo += 1;
-    console.log(`Attempt: ${attemptNo}. Time Remaining: ${timeRemaining / 1e3}s`);
+    console.log(
+      `Attempt: ${attemptNo}. Time Remaining: ${timeRemaining / 1e3}s`
+    );
     try {
       const response = await ssm.sendCommand({
         DocumentName: documentName,
@@ -81,23 +88,35 @@ var handler = async (event, context) => {
         case "InProgress":
           timeRemaining = context.getRemainingTimeInMillis();
           if (timeRemaining > SLEEP_MS) {
-            console.log(`Instance ${instanceId} not ready: 'InProgress'. Sleeping: ${SLEEP_MS / 1e3}s`);
+            console.log(
+              `Instance ${instanceId} not ready: 'InProgress'. Sleeping: ${SLEEP_MS / 1e3}s`
+            );
             await new Promise((resolve) => setTimeout(resolve, SLEEP_MS));
             break;
           } else {
-            throw new Error(`SSM Document ${documentName} on EC2 instance ${instanceId} timed out while lambda in progress`);
+            throw new Error(
+              `SSM Document ${documentName} on EC2 instance ${instanceId} timed out while lambda in progress`
+            );
           }
         case "Success":
           console.log(`Instance ${instanceId} successfully bootstrapped`);
           return { Data: responseData };
         case "TimedOut":
-          throw new Error(`SSM Document ${documentName} on EC2 instance ${instanceId} timed out`);
+          throw new Error(
+            `SSM Document ${documentName} on EC2 instance ${instanceId} timed out`
+          );
         case "Cancelled":
-          throw new Error(`SSM Document ${documentName} on EC2 instance ${instanceId} cancelled`);
+          throw new Error(
+            `SSM Document ${documentName} on EC2 instance ${instanceId} cancelled`
+          );
         case "Failed":
-          throw new Error(`SSM Document ${documentName} on EC2 instance ${instanceId} failed`);
+          throw new Error(
+            `SSM Document ${documentName} on EC2 instance ${instanceId} failed`
+          );
         default:
-          throw new Error(`SSM Document ${documentName} on EC2 instance ${instanceId} status ${command.Status}`);
+          throw new Error(
+            `SSM Document ${documentName} on EC2 instance ${instanceId} status ${command.Status}`
+          );
       }
       return { Data: responseData };
     } catch (error) {

@@ -186,8 +186,10 @@ export class VSCodeServer extends Construct {
     const additionalInstanceRolePolicies =
       props?.additionalInstanceRolePolicies ?? [];
     const additionalTags = props?.additionalTags ?? {};
+    const defaultTags = { app: "vscode-server" };
 
-    Aspects.of(this).add(new NodeTagger(additionalTags));
+    const mergedTags = { ...defaultTags, ...additionalTags };
+    Aspects.of(this).add(new NodeTagger(mergedTags));
 
     let vscodePassword = props?.vscodePassword ?? "";
     if (vscodePassword == "") {

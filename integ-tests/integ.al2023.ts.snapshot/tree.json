@@ -219,7 +219,7 @@
                             "Arn"
                           ]
                         },
-                        "runtime": "nodejs22.x",
+                        "runtime": "nodejs20.x",
                         "tags": [
                           {
                             "key": "app",
@@ -1166,7 +1166,7 @@
                 },
                 "constructInfo": {
                   "fqn": "constructs.Construct",
-                  "version": "10.0.5"
+                  "version": "10.4.2"
                 }
               },
               "server-instance-role": {
@@ -1668,7 +1668,7 @@
                     "path": "IntegTestStackAl2023/IntegVSCodeServer/cf-distribution/Origin1",
                     "constructInfo": {
                       "fqn": "constructs.Construct",
-                      "version": "10.0.5"
+                      "version": "10.4.2"
                     }
                   },
                   "Resource": {
@@ -2265,7 +2265,7 @@
                             "Arn"
                           ]
                         },
-                        "runtime": "nodejs22.x",
+                        "runtime": "nodejs20.x",
                         "tags": [
                           {
                             "key": "app",
@@ -2569,7 +2569,7 @@
             },
             "constructInfo": {
               "fqn": "constructs.Construct",
-              "version": "10.0.5"
+              "version": "10.4.2"
             }
           },
           "LatestNodeRuntimeMap": {
@@ -2994,7 +2994,7 @@
             },
             "constructInfo": {
               "fqn": "constructs.Construct",
-              "version": "10.0.5"
+              "version": "10.4.2"
             }
           },
           "Exports": {
@@ -3028,7 +3028,7 @@
             },
             "constructInfo": {
               "fqn": "constructs.Construct",
-              "version": "10.0.5"
+              "version": "10.4.2"
             }
           },
           "BootstrapVersion": {
@@ -3066,7 +3066,7 @@
                 "path": "IntegSetupVSCodeOnAl2023/DefaultTest/Default",
                 "constructInfo": {
                   "fqn": "constructs.Construct",
-                  "version": "10.0.5"
+                  "version": "10.4.2"
                 }
               },
               "DeployAssert": {
@@ -3086,7 +3086,7 @@
                             "path": "IntegSetupVSCodeOnAl2023/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/SdkProvider/AssertionsProvider",
                             "constructInfo": {
                               "fqn": "constructs.Construct",
-                              "version": "10.0.5"
+                              "version": "10.4.2"
                             }
                           }
                         },
@@ -3166,7 +3166,7 @@
                     },
                     "constructInfo": {
                       "fqn": "constructs.Construct",
-                      "version": "10.0.5"
+                      "version": "10.4.2"
                     }
                   },
                   "LatestNodeRuntimeMap": {
@@ -3216,7 +3216,7 @@
         "path": "Tree",
         "constructInfo": {
           "fqn": "constructs.Construct",
-          "version": "10.0.5"
+          "version": "10.4.2"
         }
       }
     },

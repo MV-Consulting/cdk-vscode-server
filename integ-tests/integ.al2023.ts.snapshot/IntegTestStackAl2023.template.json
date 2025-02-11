@@ -139,7 +139,7 @@
       "Arn"
      ]
     },
-    "Runtime": "nodejs22.x",
+    "Runtime": "nodejs20.x",
     "Tags": [
      {
       "Key": "app",
@@ -1957,7 +1957,7 @@
       "Arn"
      ]
     },
-    "Runtime": "nodejs22.x",
+    "Runtime": "nodejs20.x",
     "Tags": [
      {
       "Key": "app",

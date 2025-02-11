@@ -1,10 +1,10 @@
-import { PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { Function } from "aws-cdk-lib/aws-lambda";
-import { CustomResource, Duration, IResource } from "aws-cdk-lib/core";
-import { Provider } from "aws-cdk-lib/custom-resources";
-import { NagSuppressions } from "cdk-nag";
-import { Construct } from "constructs";
-import { SecretRetrieverFunction } from "./secret-retriever-function";
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Function } from 'aws-cdk-lib/aws-lambda';
+import { CustomResource, Duration, IResource } from 'aws-cdk-lib/core';
+import { Provider } from 'aws-cdk-lib/custom-resources';
+import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
+import { SecretRetrieverFunction } from './secret-retriever-function';
 
 export interface Secret {
   username: string;
@@ -65,7 +65,7 @@ class CustomResourceSecretRetriever extends SecretRetriever {
 
     const onEvent: Function = new SecretRetrieverFunction(
       scope,
-      "SecretRetrieverOnEventHandler",
+      'SecretRetrieverOnEventHandler',
       {
         timeout: Duration.seconds(10),
         memorySize: 128,
@@ -75,13 +75,13 @@ class CustomResourceSecretRetriever extends SecretRetriever {
       [onEvent],
       [
         {
-          id: "AwsSolutions-IAM4",
+          id: 'AwsSolutions-IAM4',
           reason:
-            "For this event handler we do not need to restrict managed policies",
+            'For this event handler we do not need to restrict managed policies',
         },
         {
-          id: "AwsSolutions-L1",
-          reason: "For this lambda the latest runtime is not needed",
+          id: 'AwsSolutions-L1',
+          reason: 'For this lambda the latest runtime is not needed',
         },
       ],
       true,
@@ -89,29 +89,29 @@ class CustomResourceSecretRetriever extends SecretRetriever {
 
     onEvent.addToRolePolicy(
       new PolicyStatement({
-        actions: ["secretsmanager:GetSecretValue"],
+        actions: ['secretsmanager:GetSecretValue'],
         resources: [this.secretArn],
       }),
     );
 
-    const provider = new Provider(scope, "SecretRetrieveProvider", {
+    const provider = new Provider(scope, 'SecretRetrieveProvider', {
       onEventHandler: onEvent,
     });
     NagSuppressions.addResourceSuppressions(
       [provider],
       [
         {
-          id: "AwsSolutions-IAM4",
+          id: 'AwsSolutions-IAM4',
           reason:
-            "For this provider we do not need to restrict managed policies",
+            'For this provider we do not need to restrict managed policies',
         },
         {
-          id: "AwsSolutions-IAM5",
-          reason: "For this provider wildcards are fine",
+          id: 'AwsSolutions-IAM5',
+          reason: 'For this provider wildcards are fine',
         },
         {
-          id: "AwsSolutions-L1",
-          reason: "For this provider the latest runtime is not needed",
+          id: 'AwsSolutions-L1',
+          reason: 'For this provider the latest runtime is not needed',
         },
       ],
       true,
@@ -119,7 +119,7 @@ class CustomResourceSecretRetriever extends SecretRetriever {
 
     const resource = new CustomResource(
       scope,
-      "SecretRetrieverCustomResource",
+      'SecretRetrieverCustomResource',
       {
         serviceToken: provider.serviceToken,
         properties: {
@@ -129,8 +129,8 @@ class CustomResourceSecretRetriever extends SecretRetriever {
       },
     );
 
-    this.secretPlaintext = resource.getAtt("secretValue").toJSON() as Secret;
-    this.secretPasswordPlaintext = resource.getAttString("secretPasswordValue");
+    this.secretPlaintext = resource.getAtt('secretValue').toJSON() as Secret;
+    this.secretPasswordPlaintext = resource.getAttString('secretPasswordValue');
     this.customResource = resource;
   }
 

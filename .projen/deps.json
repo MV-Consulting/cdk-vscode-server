@@ -157,6 +157,7 @@
     },
     {
       "name": "@mavogel/mvc-projen",
+      "version": "^0.0.4",
       "type": "runtime"
     },
     {

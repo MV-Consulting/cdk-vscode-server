@@ -22,7 +22,9 @@
     "eslint": "npx projen eslint",
     "package": "npx projen package",
     "package-all": "npx projen package-all",
+    "package:go": "npx projen package:go",
     "package:js": "npx projen package:js",
+    "package:python": "npx projen package:python",
     "post-compile": "npx projen post-compile",
     "pre-compile": "npx projen pre-compile",
     "release": "npx projen release",
@@ -33,7 +35,7 @@
     "projen": "npx projen",
     "prepare": "husky",
     "awslint": "awslint",
-    "integ-test": "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed,"
+    "integ-test": "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed"
   },
   "author": {
     "name": "Manuel Vogel",
@@ -79,7 +81,7 @@
     "constructs": "^10.0.5"
   },
   "dependencies": {
-    "@mavogel/mvc-projen": "^0.0.2",
+    "@mavogel/mvc-projen": "^0.0.4",
     "cdk-nag": "^2.35.0",
     "constructs": "^10.4.2",
     "node-html-parser": "^6.1.13"
@@ -152,7 +154,15 @@
   "stability": "experimental",
   "jsii": {
     "outdir": "dist",
-    "targets": {},
+    "targets": {
+      "python": {
+        "distName": "cdk-vscode-server",
+        "module": "cdk-vscode-server"
+      },
+      "go": {
+        "moduleName": "github.com/MV-Consulting/cdk-vscode-server"
+      }
+    },
     "tsc": {
       "outDir": "lib",
       "rootDir": "src"

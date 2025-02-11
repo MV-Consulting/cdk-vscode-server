@@ -14,7 +14,7 @@ const project = new MvcCdkConstructLibrary({
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
   deps: [
-    '@mavogel/mvc-projen',
+    '@mavogel/mvc-projen@^0.0.4',
     'constructs@^10.4.2',
     'cdk-nag',
   ],
@@ -28,30 +28,30 @@ const project = new MvcCdkConstructLibrary({
     '@types/jsdom',
   ],
   // see details for each: https://github.com/cdklabs/publib
-  // // Go
-  // publishToGo: {
-  //   moduleName: 'github.com/MV-Consulting/cdk-vscode-server',
-  //   githubTokenSecret: 'PROJEN_GITHUB_TOKEN',
+  // Go
+  publishToGo: {
+    moduleName: 'github.com/MV-Consulting/cdk-vscode-server',
+    githubTokenSecret: 'PROJEN_GITHUB_TOKEN',
+  },
+  // see https://github.com/cdklabs/publib/issues/1305
+  // Java
+  // publishToMaven: {
+  //   javaPackage: 'io.github.mv-consulting.cdk.vscode.server',
+  //   mavenGroupId: 'io.github.mv-consulting',
+  //   mavenArtifactId: 'cdkvscodeserver',
   // },
-  // // see https://github.com/cdklabs/publib/issues/1305
-  // // Java
-  // // publishToMaven: {
-  // //   javaPackage: 'io.github.mv-consulting.cdk.vscode.server',
-  // //   mavenGroupId: 'io.github.mv-consulting',
-  // //   mavenArtifactId: 'cdkvscodeserver',
-  // // },
 
-  // // Note: Microsoft Account needed
-  // // C# and F# for .NET
-  // // publishToNuget: {
-  // //   dotNetNamespace: 'MvConsulting',
-  // //   packageId: 'CdkVscodeServer',
-  // // },
-  // // Python
-  // publishToPypi: {
-  //   distName: 'cdk-vscode-server',
-  //   module: 'cdk-vscode-server',
+  // Note: Microsoft Account needed
+  // C# and F# for .NET
+  // publishToNuget: {
+  //   dotNetNamespace: 'MvConsulting',
+  //   packageId: 'CdkVscodeServer',
   // },
+  // Python
+  publishToPypi: {
+    distName: 'cdk-vscode-server',
+    module: 'cdk-vscode-server',
+  },
 });
 
 project.synth();

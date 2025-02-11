@@ -2,9 +2,13 @@
 
 * text=auto eol=lf
 *.snap linguist-generated
+/.commitlintrc.js linguist-generated
 /.eslintrc.json linguist-generated
 /.gitattributes linguist-generated
 /.github/dependabot.yml linguist-generated
+/.github/FUNDING.yaml linguist-generated
+/.github/ISSUE_TEMPLATE/bug_report.md linguist-generated
+/.github/ISSUE_TEMPLATE/feature_request.md linguist-generated
 /.github/pull_request_template.md linguist-generated
 /.github/workflows/auto-approve.yml linguist-generated
 /.github/workflows/build.yml linguist-generated
@@ -13,11 +17,13 @@
 /.gitignore linguist-generated
 /.mergify.yml linguist-generated
 /.npmignore linguist-generated
+/.prettierrc linguist-generated
 /.projen/** linguist-generated
 /.projen/deps.json linguist-generated
 /.projen/files.json linguist-generated
 /.projen/tasks.json linguist-generated
 /API.md linguist-generated
+/CONTRIBUTING.md linguist-generated
 /LICENSE linguist-generated
 /package-lock.json linguist-generated
 /package.json linguist-generated

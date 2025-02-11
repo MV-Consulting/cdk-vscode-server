@@ -20,10 +20,17 @@
     },
     {
       "name": "@commitlint/cli",
+      "version": "^19.6.1",
       "type": "build"
     },
     {
       "name": "@commitlint/config-conventional",
+      "version": "^19.6.0",
+      "type": "build"
+    },
+    {
+      "name": "@stylistic/eslint-plugin",
+      "version": "^2",
       "type": "build"
     },
     {
@@ -40,6 +47,7 @@
     },
     {
       "name": "@types/node",
+      "version": "^20",
       "type": "build"
     },
     {
@@ -54,6 +62,7 @@
     },
     {
       "name": "awslint",
+      "version": "^2.72.1",
       "type": "build"
     },
     {
@@ -66,19 +75,11 @@
       "type": "build"
     },
     {
-      "name": "eslint-config-prettier",
-      "type": "build"
-    },
-    {
       "name": "eslint-import-resolver-typescript",
       "type": "build"
     },
     {
       "name": "eslint-plugin-import",
-      "type": "build"
-    },
-    {
-      "name": "eslint-plugin-prettier",
       "type": "build"
     },
     {
@@ -88,6 +89,7 @@
     },
     {
       "name": "husky",
+      "version": "^9.1.7",
       "type": "build"
     },
     {
@@ -114,16 +116,12 @@
     },
     {
       "name": "jsii-rosetta",
-      "version": "~5.5.0",
+      "version": "~5.7.0",
       "type": "build"
     },
     {
       "name": "jsii",
-      "version": "~5.5.0",
-      "type": "build"
-    },
-    {
-      "name": "prettier",
+      "version": "~5.7.0",
       "type": "build"
     },
     {
@@ -158,7 +156,12 @@
       "type": "peer"
     },
     {
+      "name": "@mavogel/mvc-projen",
+      "type": "runtime"
+    },
+    {
       "name": "cdk-nag",
+      "version": "^2.35.0",
       "type": "runtime"
     }
   ],

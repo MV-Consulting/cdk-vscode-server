@@ -31,8 +31,6 @@ jspm_packages/
 *.tgz
 .yarn-integrity
 .cache
-tmp
-.codegpt
 /test-reports/
 junit.xml
 /coverage/
@@ -55,4 +53,12 @@ tsconfig.json
 /assets/
 !/src/installer/installer-function.ts
 !/src/secret-retriever/secret-retriever-function.ts
+tmp
+.codegpt
+!/.commitlintrc.js
+!/.github/ISSUE_TEMPLATE/bug_report.md
+!/.github/ISSUE_TEMPLATE/feature_request.md
+!/.github/FUNDING.yaml
+!/CONTRIBUTING.md
+!/.prettierrc
 !/.projenrc.ts

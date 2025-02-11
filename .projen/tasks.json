@@ -223,21 +223,6 @@
       "steps": [
         {
           "spawn": "package:js"
-        },
-        {
-          "spawn": "package:python"
-        },
-        {
-          "spawn": "package:go"
-        }
-      ]
-    },
-    "package:go": {
-      "name": "package:go",
-      "description": "Create go language bindings",
-      "steps": [
-        {
-          "exec": "jsii-pacmak -v --target go"
         }
       ]
     },
@@ -247,15 +232,6 @@
       "steps": [
         {
           "exec": "jsii-pacmak -v --target js"
-        }
-      ]
-    },
-    "package:python": {
-      "name": "package:python",
-      "description": "Create python language bindings",
-      "steps": [
-        {
-          "exec": "jsii-pacmak -v --target python"
         }
       ]
     },

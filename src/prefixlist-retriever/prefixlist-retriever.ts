@@ -1,19 +1,19 @@
-import { RemovalPolicy } from "aws-cdk-lib";
-import { IPrefixList, PrefixList } from "aws-cdk-lib/aws-ec2";
+import { RemovalPolicy } from 'aws-cdk-lib';
+import { IPrefixList, PrefixList } from 'aws-cdk-lib/aws-ec2';
 import {
   Effect,
   PolicyStatement,
   Role,
   ServicePrincipal,
-} from "aws-cdk-lib/aws-iam";
-import { LogGroup } from "aws-cdk-lib/aws-logs";
+} from 'aws-cdk-lib/aws-iam';
+import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import {
   AwsCustomResource,
   AwsCustomResourcePolicy,
   PhysicalResourceId,
-} from "aws-cdk-lib/custom-resources";
-import { NagSuppressions } from "cdk-nag";
-import { Construct } from "constructs";
+} from 'aws-cdk-lib/custom-resources';
+import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
 
 export interface AwsManagedPrefixListProps {
   /**
@@ -38,18 +38,18 @@ export class AwsManagedPrefixList extends Construct {
   ) {
     super(scope, id);
 
-    const cr = new AwsCustomResource(this, "GetPrefixListId", {
-      logGroup: new LogGroup(this, "GetPrefixListIdLogGroup", {
+    const cr = new AwsCustomResource(this, 'GetPrefixListId', {
+      logGroup: new LogGroup(this, 'GetPrefixListIdLogGroup', {
         removalPolicy: RemovalPolicy.DESTROY,
         retention: 1,
       }),
       onUpdate: {
-        service: "@aws-sdk/client-ec2",
-        action: "DescribeManagedPrefixListsCommand",
+        service: '@aws-sdk/client-ec2',
+        action: 'DescribeManagedPrefixListsCommand',
         parameters: {
           Filters: [
             {
-              Name: "prefix-list-name",
+              Name: 'prefix-list-name',
               Values: [name],
             },
           ],
@@ -61,12 +61,12 @@ export class AwsManagedPrefixList extends Construct {
       policy: AwsCustomResourcePolicy.fromStatements([
         new PolicyStatement({
           effect: Effect.ALLOW,
-          actions: ["ec2:DescribeManagedPrefixLists"],
-          resources: ["*"],
+          actions: ['ec2:DescribeManagedPrefixLists'],
+          resources: ['*'],
         }),
       ]),
-      role: new Role(this, "GetPrefixListIdRole", {
-        assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      role: new Role(this, 'GetPrefixListIdRole', {
+        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
       }),
       removalPolicy: RemovalPolicy.DESTROY,
     });
@@ -74,18 +74,18 @@ export class AwsManagedPrefixList extends Construct {
       [cr],
       [
         {
-          id: "AwsSolutions-IAM5",
-          reason: "For this provider wildcards are fine",
+          id: 'AwsSolutions-IAM5',
+          reason: 'For this provider wildcards are fine',
         },
       ],
       true,
     );
 
-    const prefixListId = cr.getResponseField("PrefixLists.0.PrefixListId");
+    const prefixListId = cr.getResponseField('PrefixLists.0.PrefixListId');
 
     this.prefixList = PrefixList.fromPrefixListId(
       this,
-      "PrefixList",
+      'PrefixList',
       prefixListId,
     );
   }

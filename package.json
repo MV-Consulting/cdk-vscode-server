@@ -22,9 +22,7 @@
     "eslint": "npx projen eslint",
     "package": "npx projen package",
     "package-all": "npx projen package-all",
-    "package:go": "npx projen package:go",
     "package:js": "npx projen package:js",
-    "package:python": "npx projen package:python",
     "post-compile": "npx projen post-compile",
     "pre-compile": "npx projen pre-compile",
     "release": "npx projen release",
@@ -59,7 +57,6 @@
     "aws-cdk-lib": "2.177.0",
     "awslint": "^2.72.1",
     "commit-and-tag-version": "^12",
-    "constructs": "10.0.5",
     "esbuild": "^0.24.2",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "^3.7.0",
@@ -72,7 +69,7 @@
     "jsii-docgen": "^10.5.0",
     "jsii-pacmak": "^1.106.0",
     "jsii-rosetta": "~5.7.0",
-    "projen": "0.91.6",
+    "projen": "0.91.8",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
@@ -84,6 +81,7 @@
   "dependencies": {
     "@mavogel/mvc-projen": "^0.0.2",
     "cdk-nag": "^2.35.0",
+    "constructs": "^10.4.2",
     "node-html-parser": "^6.1.13"
   },
   "bundledDependencies": [
@@ -154,15 +152,7 @@
   "stability": "experimental",
   "jsii": {
     "outdir": "dist",
-    "targets": {
-      "python": {
-        "distName": "cdk-vscode-server",
-        "module": "cdk-vscode-server"
-      },
-      "go": {
-        "moduleName": "github.com/MV-Consulting/cdk-vscode-server"
-      }
-    },
+    "targets": {},
     "tsc": {
       "outDir": "lib",
       "rootDir": "src"

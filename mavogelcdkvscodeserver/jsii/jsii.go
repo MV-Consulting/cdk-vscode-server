@@ -15,7 +15,7 @@ import (
 	mavogelmvcprojen "github.com/MV-Consulting/mvc-projen/mavogelmvcprojen/jsii"
 )
 
-//go:embed mavogel-cdk-vscode-server-0.0.30.tgz
+//go:embed mavogel-cdk-vscode-server-0.0.31.tgz
 var tarball []byte
 
 // Initialize loads the necessary packages in the @jsii/kernel to support the enclosing module.
@@ -28,5 +28,5 @@ func Initialize() {
 	constructs.Initialize()
 
 	// Load this library into the kernel
-	_jsii_.Load("@mavogel/cdk-vscode-server", "0.0.30", tarball)
+	_jsii_.Load("@mavogel/cdk-vscode-server", "0.0.31", tarball)
 }

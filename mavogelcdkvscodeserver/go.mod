@@ -6,7 +6,7 @@ require (
 	github.com/aws/jsii-runtime-go v1.111.0
 	github.com/MV-Consulting/mvc-projen/mavogelmvcprojen v0.0.4
 	github.com/aws/aws-cdk-go/awscdk/v2 v2.177.0
-	github.com/cdklabs/cdk-nag-go/cdknag/v2 v2.35.65
+	github.com/cdklabs/cdk-nag-go/cdknag/v2 v2.35.69
 	github.com/aws/constructs-go/constructs/v10 v10.4.2
 	github.com/projen/projen-go/projen v0.91.8 // indirect
 	github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.220 // indirect

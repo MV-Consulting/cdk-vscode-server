@@ -3,7 +3,7 @@ import { javascript } from 'projen';
 const project = new MvcCdkConstructLibrary({
   author: 'Manuel Vogel',
   authorAddress: 'info@manuel-vogel.de',
-  cdkVersion: '2.177.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib
+  cdkVersion: '2.190.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib + https://www.npmjs.com/package/@aws-cdk/integ-runner
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.7.0',
   name: 'cdk-vscode-server',
@@ -53,8 +53,8 @@ const project = new MvcCdkConstructLibrary({
     module: 'cdk-vscode-server',
   },
   gitignore: [
-    "settings.local.json",
-  ]
+    'settings.local.json',
+  ],
 });
 
 project.synth();

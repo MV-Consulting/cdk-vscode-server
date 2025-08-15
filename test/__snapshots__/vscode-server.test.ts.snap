@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`vscode-server vscode-server-custom-props 1`] = `
 {
@@ -50,7 +50,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
-          "S3Key": "ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a.zip",
+          "S3Key": "9d043014be736e8162bcc7ec5590cc6d2ff24fd0d9c73a5c5d595151c5fdad00.zip",
         },
         "Handler": "index.handler",
         "LoggingConfig": {
@@ -401,6 +401,16 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                 },
               ],
             },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "testVSCodeServerInstallerOnEventHandler7769B15E",
+                  "Arn",
+                ],
+              },
+            },
           ],
           "Version": "2012-10-17",
         },
@@ -605,6 +615,16 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                   ],
                 },
               ],
+            },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "testVSCodeServerSecretRetrieverOnEventHandler024BA1E6",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -2153,7 +2173,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
-          "S3Key": "ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a.zip",
+          "S3Key": "9d043014be736e8162bcc7ec5590cc6d2ff24fd0d9c73a5c5d595151c5fdad00.zip",
         },
         "Handler": "index.handler",
         "LoggingConfig": {
@@ -2488,6 +2508,16 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                 },
               ],
             },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "testVSCodeServerInstallerOnEventHandler7769B15E",
+                  "Arn",
+                ],
+              },
+            },
           ],
           "Version": "2012-10-17",
         },
@@ -2684,6 +2714,16 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                   ],
                 },
               ],
+            },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "testVSCodeServerSecretRetrieverOnEventHandler024BA1E6",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",

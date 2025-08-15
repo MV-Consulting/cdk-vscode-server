@@ -52,6 +52,9 @@ const project = new MvcCdkConstructLibrary({
     distName: 'cdk-vscode-server',
     module: 'cdk-vscode-server',
   },
+  gitignore: [
+    "settings.local.json",
+  ]
 });
 
 project.synth();

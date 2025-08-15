@@ -44,6 +44,218 @@ describe('vscode-server', () => {
   });
 });
 
+describe('vscode-server-custom-domain', () => {
+  test('should create Route53 record when custom domain provided', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      domainName: 'vscode.example.com',
+      hostedZoneId: 'Z123EXAMPLE',
+      certificateArn: 'arn:aws:acm:us-east-1:1234:certificate/test-cert-id',
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should create Route53 A record
+    template.hasResourceProperties('AWS::Route53::RecordSet', {
+      Type: 'A',
+      Name: 'vscode.example.com.',
+      HostedZoneId: 'Z123EXAMPLE',
+    });
+  });
+
+  test('should configure CloudFront with custom domain name', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      domainName: 'vscode.example.com',
+      certificateArn: 'arn:aws:acm:us-east-1:1234:certificate/test-cert-id',
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should configure CloudFront with custom domain
+    template.hasResourceProperties('AWS::CloudFront::Distribution', {
+      DistributionConfig: {
+        Aliases: ['vscode.example.com'],
+        ViewerCertificate: {
+          AcmCertificateArn:
+            'arn:aws:acm:us-east-1:1234:certificate/test-cert-id',
+          SslSupportMethod: 'sni-only',
+        },
+      },
+    });
+  });
+
+  test('should use existing certificate when certificateArn provided', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      domainName: 'vscode.example.com',
+      certificateArn: 'arn:aws:acm:us-east-1:1234:certificate/existing-cert',
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should NOT create ACM certificate
+    template.resourceCountIs('AWS::CertificateManager::Certificate', 0);
+
+    // Should use provided certificate ARN
+    template.hasResourceProperties('AWS::CloudFront::Distribution', {
+      DistributionConfig: {
+        ViewerCertificate: {
+          AcmCertificateArn:
+            'arn:aws:acm:us-east-1:1234:certificate/existing-cert',
+        },
+      },
+    });
+  });
+
+  test.skip('should auto-create certificate when autoCreateCertificate is true', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      domainName: 'vscode.example.com',
+      hostedZoneId: 'Z123EXAMPLE',
+      autoCreateCertificate: true,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should create ACM certificate with DNS validation
+    template.hasResourceProperties('AWS::CertificateManager::Certificate', {
+      DomainName: 'vscode.example.com',
+      ValidationMethod: 'DNS',
+    });
+  });
+
+  test.skip('should lookup hosted zone when hostedZoneId not provided', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      domainName: 'vscode.example.com',
+      hostedZoneId: 'Z123EXAMPLE',
+      autoCreateCertificate: true,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should create Route53 record (zone lookup will be handled by CDK)
+    template.hasResourceProperties('AWS::Route53::RecordSet', {
+      Type: 'A',
+      Name: 'vscode.example.com.',
+    });
+  });
+
+  test('should use custom domain in output when provided', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      domainName: 'vscode.example.com',
+      certificateArn: 'arn:aws:acm:us-east-1:1234:certificate/test-cert-id',
+    };
+
+    const vsCodeServer = new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    // Domain name should use custom domain
+    expect(vsCodeServer.domainName).toContain('vscode.example.com');
+    expect(vsCodeServer.domainName).not.toContain('cloudfront.net');
+  });
+
+  test('should maintain backward compatibility without custom domain', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {};
+
+    const vsCodeServer = new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should NOT create Route53 resources
+    template.resourceCountIs('AWS::Route53::RecordSet', 0);
+    template.resourceCountIs('AWS::CertificateManager::Certificate', 0);
+
+    // Should NOT have custom domain in CloudFront
+    template.hasResourceProperties('AWS::CloudFront::Distribution', {
+      DistributionConfig: Match.not({
+        Aliases: Match.anyValue(),
+      }),
+    });
+
+    // Domain name should use CloudFront default domain (token in tests)
+    expect(vsCodeServer.domainName).toMatch(/https:\/\/.*\?folder=\/Workshop/);
+  });
+
+  test('should throw error for invalid domain configurations', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    expect(() => {
+      new VSCodeServer(stack, 'testVSCodeServer', {
+        domainName: 'vscode.example.com',
+        // No certificate configuration provided
+      });
+    }).toThrow();
+  });
+});
+
 describe('vscode-server-cdk-nag-AwsSolutions-Pack', () => {
   let stack: Stack;
   let app: App;

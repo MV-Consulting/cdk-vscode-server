@@ -163,9 +163,13 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.additionalInstanceRolePolicies">additionalInstanceRolePolicies</a></code> | <code>aws-cdk-lib.aws_iam.PolicyStatement[]</code> | Additional instance role policies. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.additionalTags">additionalTags</a></code> | <code>{[ key: string ]: string}</code> | Additional tags to add to the instance. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.autoCreateCertificate">autoCreateCertificate</a></code> | <code>boolean</code> | Auto-create ACM certificate with DNS validation Requires hostedZoneId or a valid domain with discoverable hosted zone Cannot be used together with certificateArn. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.certificateArn">certificateArn</a></code> | <code>string</code> | ARN of existing ACM certificate for the domain Certificate must be in us-east-1 region for CloudFront Cannot be used together with autoCreateCertificate. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath">devServerBasePath</a></code> | <code>string</code> | Base path for the application to be added to Nginx sites-available list. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerPort">devServerPort</a></code> | <code>number</code> | Port for the DevServer. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.domainName">domainName</a></code> | <code>string</code> | Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder">homeFolder</a></code> | <code>string</code> | Folder to open in VS Code server. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.hostedZoneId">hostedZoneId</a></code> | <code>string</code> | Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceClass">instanceClass</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceClass</code> | VSCode Server EC2 instance class. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceCpuArchitecture">instanceCpuArchitecture</a></code> | <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType">LinuxArchitectureType</a></code> | VSCode Server EC2 cpu architecture for the operating system. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceName">instanceName</a></code> | <code>string</code> | VSCode Server EC2 instance name. |
@@ -203,6 +207,32 @@ Additional tags to add to the instance.
 
 ---
 
+##### `autoCreateCertificate`<sup>Optional</sup> <a name="autoCreateCertificate" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.autoCreateCertificate"></a>
+
+```typescript
+public readonly autoCreateCertificate: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Auto-create ACM certificate with DNS validation Requires hostedZoneId or a valid domain with discoverable hosted zone Cannot be used together with certificateArn.
+
+---
+
+##### `certificateArn`<sup>Optional</sup> <a name="certificateArn" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.certificateArn"></a>
+
+```typescript
+public readonly certificateArn: string;
+```
+
+- *Type:* string
+- *Default:* auto-create certificate if autoCreateCertificate is true
+
+ARN of existing ACM certificate for the domain Certificate must be in us-east-1 region for CloudFront Cannot be used together with autoCreateCertificate.
+
+---
+
 ##### `devServerBasePath`<sup>Optional</sup> <a name="devServerBasePath" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath"></a>
 
 ```typescript
@@ -229,6 +259,19 @@ Port for the DevServer.
 
 ---
 
+##### `domainName`<sup>Optional</sup> <a name="domainName" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.domainName"></a>
+
+```typescript
+public readonly domainName: string;
+```
+
+- *Type:* string
+- *Default:* uses CloudFront default domain
+
+Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution.
+
+---
+
 ##### `homeFolder`<sup>Optional</sup> <a name="homeFolder" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder"></a>
 
 ```typescript
@@ -239,6 +282,19 @@ public readonly homeFolder: string;
 - *Default:* /Workshop
 
 Folder to open in VS Code server.
+
+---
+
+##### `hostedZoneId`<sup>Optional</sup> <a name="hostedZoneId" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.hostedZoneId"></a>
+
+```typescript
+public readonly hostedZoneId: string;
+```
+
+- *Type:* string
+- *Default:* auto-discover from domain name
+
+Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name.
 
 ---
 

@@ -30,7 +30,7 @@
       }
     },
     "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200": {
-      "displayName": "IntegTestStackAl2023/Custom::VpcRestrictDefaultSGCustomResourceProvider Code",
+      "displayName": "IntegTestStackCustomDomain/Custom::VpcRestrictDefaultSGCustomResourceProvider Code",
       "source": {
         "path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
         "packaging": "zip"
@@ -99,16 +99,16 @@
         }
       }
     },
-    "db3007048d321ae7cdf7cf9c4bc0d7bf64956f96f10a8ceea93d39ec38ed5a58": {
-      "displayName": "IntegTestStackAl2023 Template",
+    "7028cf3cb565cc51a597ac02f66928f1ec20417f8c993ffaaf42c1c94d138373": {
+      "displayName": "IntegTestStackCustomDomain Template",
       "source": {
-        "path": "IntegTestStackAl2023.template.json",
+        "path": "IntegTestStackCustomDomain.template.json",
         "packaging": "file"
       },
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "db3007048d321ae7cdf7cf9c4bc0d7bf64956f96f10a8ceea93d39ec38ed5a58.json",
+          "objectKey": "7028cf3cb565cc51a597ac02f66928f1ec20417f8c993ffaaf42c1c94d138373.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

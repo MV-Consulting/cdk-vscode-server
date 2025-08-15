@@ -1,6 +1,6 @@
 {
  "Resources": {
-  "LambdaInvoke493987f824f978002013a8ed7c9980f4": {
+  "LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4": {
    "Type": "Custom::DeployAssert@SdkCallLambdainvoke",
    "Properties": {
     "ServiceToken": {
@@ -19,7 +19,7 @@
        [
         "\"",
         {
-         "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+         "Fn::ImportValue": "IntegTestStackCustomDomain:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
         },
         "\""
        ]
@@ -31,13 +31,9 @@
       "Fn::Join": [
        "",
        [
-        "\"{\\\"domainName\\\":\\\"https://",
+        "\"{\\\"domainName\\\":\\\"https://vscode-server-test.mavogel.xyz/?folder=/Workshop\\\",\\\"password\\\":\\\"",
         {
-         "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
-        },
-        "/?folder=/Workshop\\\",\\\"password\\\":\\\"",
-        {
-         "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
+         "Fn::ImportValue": "IntegTestStackCustomDomain:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
         },
         "\\\"}\""
        ]
@@ -45,17 +41,17 @@
      }
     },
     "flattenResponse": "false",
-    "salt": "1755282369005"
+    "salt": "1755282648730"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "LambdaInvoke493987f824f978002013a8ed7c9980f4Invoke4806B64D": {
+  "LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4InvokeFB6908A6": {
    "Type": "AWS::Lambda::Permission",
    "Properties": {
     "Action": "lambda:InvokeFunction",
     "FunctionName": {
-     "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+     "Fn::ImportValue": "IntegTestStackCustomDomain:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
     },
     "Principal": {
      "Fn::GetAtt": [
@@ -124,7 +120,7 @@
              },
              ":function:",
              {
-              "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+              "Fn::ImportValue": "IntegTestStackCustomDomain:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
              }
             ]
            ]
@@ -167,10 +163,10 @@
   }
  },
  "Outputs": {
-  "AssertionResultsLambdaInvoke493987f824f978002013a8ed7c9980f4": {
+  "AssertionResultsLambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4": {
    "Value": {
     "Fn::GetAtt": [
-     "LambdaInvoke493987f824f978002013a8ed7c9980f4",
+     "LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4",
      "assertion"
     ]
    }

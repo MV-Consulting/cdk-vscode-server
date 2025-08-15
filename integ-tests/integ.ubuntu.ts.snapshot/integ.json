@@ -1,12 +1,12 @@
 {
-  "version": "39.0.0",
+  "version": "41.0.0",
   "testCases": {
     "IntegSetupVSCodeOnUbuntu/DefaultTest": {
       "stacks": [
         "IntegTestStackUbuntu22"
       ],
       "regions": [
-        "${Token[AWS.Region.9]}"
+        "${Token[AWS.Region.4]}"
       ],
       "cdkCommandOptions": {
         "destroy": {
@@ -18,5 +18,6 @@
       "assertionStack": "IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert",
       "assertionStackName": "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5"
     }
-  }
+  },
+  "minimumCliVersion": "2.1005.0"
 }

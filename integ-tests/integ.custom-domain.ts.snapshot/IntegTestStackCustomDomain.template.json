@@ -1,5 +1,5 @@
 {
- "Description": "This stack includes the application's resources for integration testing.",
+ "Description": "This stack includes the application's resources for integration testing with custom domain.",
  "Resources": {
   "IntegVSCodeServerpasswordsecret202A5DB3": {
    "Type": "AWS::SecretsManager::Secret",
@@ -15,6 +15,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -64,6 +72,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -128,6 +144,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ],
     "Timeout": 10
@@ -184,6 +208,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -285,7 +317,7 @@
      },
      "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
     },
-    "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider)",
+    "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider)",
     "Environment": {
      "Variables": {
       "USER_ON_EVENT_FUNCTION_ARN": {
@@ -316,6 +348,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ],
     "Timeout": 900
@@ -360,6 +400,47 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
+  "IntegVSCodeServercertificate6F7940E2": {
+   "Type": "AWS::CertificateManager::Certificate",
+   "Properties": {
+    "DomainName": "vscode-server-test.mavogel.xyz",
+    "DomainValidationOptions": [
+     {
+      "DomainName": "vscode-server-test.mavogel.xyz",
+      "HostedZoneId": "Z03751551EDMO1J40VL58"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/certificate"
+     }
+    ],
+    "ValidationMethod": "DNS"
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Certificate is created for VS Code server with proper domain validation",
+       "id": "AwsSolutions-ACM1"
+      }
+     ]
+    }
+   }
+  },
   "IntegVSCodeServervpc93DDE887": {
    "Type": "AWS::EC2::VPC",
    "Properties": {
@@ -373,8 +454,16 @@
       "Value": "vscode-server"
      },
      {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
       "Key": "Name",
-      "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc"
+      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/vpc"
      }
     ]
    },
@@ -416,8 +505,16 @@
       "Value": "Public"
      },
      {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
       "Key": "Name",
-      "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet1"
+      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet1"
      }
     ],
     "VpcId": {
@@ -444,8 +541,16 @@
       "Value": "vscode-server"
      },
      {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
       "Key": "Name",
-      "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet1"
+      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet1"
      }
     ],
     "VpcId": {
@@ -536,8 +641,16 @@
       "Value": "Public"
      },
      {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
       "Key": "Name",
-      "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet2"
+      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet2"
      }
     ],
     "VpcId": {
@@ -564,8 +677,16 @@
       "Value": "vscode-server"
      },
      {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
       "Key": "Name",
-      "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet2"
+      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet2"
      }
     ],
     "VpcId": {
@@ -638,8 +759,16 @@
       "Value": "vscode-server"
      },
      {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
       "Key": "Name",
-      "Value": "IntegTestStackUbuntu22/IntegVSCodeServer/vpc"
+      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/vpc"
      }
     ]
    },
@@ -723,6 +852,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ],
     "VpcId": {
@@ -759,6 +896,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -794,6 +939,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -817,8 +970,8 @@
       "Arn"
      ]
     },
-    "Create": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c8a4f6cc7d07665f\"}}",
-    "Update": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c8a4f6cc7d07665f\"}}",
+    "Create": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c89c3883f6372588\"}}",
+    "Update": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c89c3883f6372588\"}}",
     "InstallLatestAwsSdk": false
    },
    "DependsOn": [
@@ -1132,6 +1285,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -1200,7 +1361,7 @@
     },
     "InstanceType": "m7g.xlarge",
     "LaunchTemplate": {
-     "LaunchTemplateName": "IntegTestStackUbuntu22IntegVSCodeServerserverinstanceLaunchTemplate777D49BA",
+     "LaunchTemplateName": "IntegTestStackCustomDomainIntegVSCodeServerserverinstanceLaunchTemplate2E30ED0B",
      "Version": {
       "Fn::GetAtt": [
        "IntegVSCodeServerserverinstanceLaunchTemplate43932ED3",
@@ -1230,6 +1391,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      },
      {
       "Key": "Name",
@@ -1266,7 +1435,7 @@
       "HttpTokens": "required"
      }
     },
-    "LaunchTemplateName": "IntegTestStackUbuntu22IntegVSCodeServerserverinstanceLaunchTemplate777D49BA"
+    "LaunchTemplateName": "IntegTestStackCustomDomainIntegVSCodeServerserverinstanceLaunchTemplate2E30ED0B"
    }
   },
   "IntegVSCodeServercfcachepolicy8F5F1F69": {
@@ -1277,7 +1446,7 @@
      "DefaultTTL": 86400,
      "MaxTTL": 31536000,
      "MinTTL": 1,
-     "Name": "cf-cache-policy-vscodeserver-IntegTestStackUbuntu22",
+     "Name": "cf-cache-policy-vscodeserver-IntegTestStackCustomDomain",
      "ParametersInCacheKeyAndForwardedToOrigin": {
       "CookiesConfig": {
        "CookieBehavior": "all"
@@ -1309,6 +1478,9 @@
    "Type": "AWS::CloudFront::Distribution",
    "Properties": {
     "DistributionConfig": {
+     "Aliases": [
+      "vscode-server-test.mavogel.xyz"
+     ],
      "CacheBehaviors": [
       {
        "AllowedMethods": [
@@ -1324,7 +1496,7 @@
        "Compress": false,
        "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3",
        "PathPattern": "/proxy/*",
-       "TargetOriginId": "Cloudfront-IntegTestStackUbuntu22-IntegTestStackUbuntu22",
+       "TargetOriginId": "Cloudfront-IntegTestStackCustomDomain-IntegTestStackCustomDomain",
        "ViewerProtocolPolicy": "allow-all"
       }
      ],
@@ -1344,7 +1516,7 @@
       },
       "Compress": true,
       "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3",
-      "TargetOriginId": "Cloudfront-IntegTestStackUbuntu22-IntegTestStackUbuntu22",
+      "TargetOriginId": "Cloudfront-IntegTestStackCustomDomain-IntegTestStackCustomDomain",
       "ViewerProtocolPolicy": "allow-all"
      },
      "Enabled": true,
@@ -1364,15 +1536,30 @@
          "PublicDnsName"
         ]
        },
-       "Id": "Cloudfront-IntegTestStackUbuntu22-IntegTestStackUbuntu22"
+       "Id": "Cloudfront-IntegTestStackCustomDomain-IntegTestStackCustomDomain"
       }
      ],
-     "PriceClass": "PriceClass_All"
+     "PriceClass": "PriceClass_All",
+     "ViewerCertificate": {
+      "AcmCertificateArn": {
+       "Ref": "IntegVSCodeServercertificate6F7940E2"
+      },
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     }
     },
     "Tags": [
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -1398,6 +1585,41 @@
       {
        "reason": "For this tmp distribution we do not need limit SSL protocols as we use the default viewer cert",
        "id": "AwsSolutions-CFR5"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerdomainrecord67FD9400": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "IntegVSCodeServercfdistributionFDBE873F",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z03751551EDMO1J40VL58",
+    "Name": "vscode-server-test.mavogel.xyz.",
+    "Type": "A"
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "A record created for VS Code server custom domain",
+       "id": "AwsSolutions-R53-1"
       }
      ]
     }
@@ -1590,7 +1812,7 @@
          "export HOME=/home/participant",
          "curl -fsSL https://code-server.dev/install.sh | bash -s -- 2>&1",
          "systemctl enable --now code-server@participant 2>&1",
-         "tee /etc/nginx/conf.d/code-server.conf <<EOF\nserver {\n    listen 80;\n    listen [::]:80;\n    # server_name distribution.distributionDomainName;\n    server_name *.cloudfront.net;\n    location / {\n      proxy_pass http://localhost:8080/;\n      proxy_set_header Host \\$host;\n      proxy_set_header Upgrade \\$http_upgrade;\n      proxy_set_header Connection upgrade;\n      proxy_set_header Accept-Encoding gzip;\n    }\n    location /app {\n      proxy_pass http://localhost:8081/app;\n      proxy_set_header Host \\$host;\n      proxy_set_header Upgrade \\$http_upgrade;\n      proxy_set_header Connection upgrade;\n      proxy_set_header Accept-Encoding gzip;\n    }\n}\nEOF",
+         "tee /etc/nginx/conf.d/code-server.conf <<EOF\nserver {\n    listen 80;\n    listen [::]:80;\n    # server_name distribution.distributionDomainName;\n    server_name *.cloudfront.net vscode-server-test.mavogel.xyz;\n    location / {\n      proxy_pass http://localhost:8080/;\n      proxy_set_header Host \\$host;\n      proxy_set_header Upgrade \\$http_upgrade;\n      proxy_set_header Connection upgrade;\n      proxy_set_header Accept-Encoding gzip;\n    }\n    location /app {\n      proxy_pass http://localhost:8081/app;\n      proxy_set_header Host \\$host;\n      proxy_set_header Upgrade \\$http_upgrade;\n      proxy_set_header Connection upgrade;\n      proxy_set_header Accept-Encoding gzip;\n    }\n}\nEOF",
          "mkdir -p /home/participant/.config/code-server",
          "tee /home/participant/.config/code-server/config.yaml <<EOF\ncert: false\nauth: password\nhashed-password: \"$(echo -n {{ VSCodePassword }} | argon2 $(openssl rand -base64 12) -e)\"\nEOF",
          "mkdir -p /home/participant/.local/share/code-server/User/",
@@ -1670,11 +1892,19 @@
      ]
     },
     "DocumentType": "Command",
-    "Name": "vscode-server-ubuntu-IntegTestStackUbuntu22",
+    "Name": "vscode-server-ubuntu-IntegTestStackCustomDomain",
     "Tags": [
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    }
@@ -1712,6 +1942,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -1798,7 +2036,7 @@
            {
             "Ref": "AWS::AccountId"
            },
-           ":document/vscode-server-ubuntu-IntegTestStackUbuntu22"
+           ":document/vscode-server-ubuntu-IntegTestStackCustomDomain"
           ]
          ]
         }
@@ -1838,6 +2076,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ],
     "Timeout": 300
@@ -1894,6 +2140,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ]
    },
@@ -1995,7 +2249,7 @@
      },
      "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
     },
-    "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider)",
+    "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider)",
     "Environment": {
      "Variables": {
       "USER_ON_EVENT_FUNCTION_ARN": {
@@ -2026,6 +2280,14 @@
      {
       "Key": "app",
       "Value": "vscode-server"
+     },
+     {
+      "Key": "Environment",
+      "Value": "IntegTestCustomDomain"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
      }
     ],
     "Timeout": 900
@@ -2066,8 +2328,8 @@
     "InstanceId": {
      "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
     },
-    "DocumentName": "vscode-server-ubuntu-IntegTestStackUbuntu22",
-    "CloudWatchLogGroupName": "/aws/ssm/vscode-server-ubuntu-IntegTestStackUbuntu22",
+    "DocumentName": "vscode-server-ubuntu-IntegTestStackCustomDomain",
+    "CloudWatchLogGroupName": "/aws/ssm/vscode-server-ubuntu-IntegTestStackCustomDomain",
     "VSCodePassword": {
      "Fn::GetAtt": [
       "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD",
@@ -2384,21 +2646,7 @@
  "Outputs": {
   "IntegVSCodeServerdomainName6B9F2604": {
    "Description": "The domain name of the distribution",
-   "Value": {
-    "Fn::Join": [
-     "",
-     [
-      "https://",
-      {
-       "Fn::GetAtt": [
-        "IntegVSCodeServercfdistributionFDBE873F",
-        "DomainName"
-       ]
-      },
-      "/?folder=/Workshop"
-     ]
-    ]
-   }
+   "Value": "https://vscode-server-test.mavogel.xyz/?folder=/Workshop"
   },
   "IntegVSCodeServerpasswordE38D3B2C": {
    "Description": "The password for the VSCode server",
@@ -2414,18 +2662,7 @@
     "Ref": "loginhandler99CCCCFD"
    },
    "Export": {
-    "Name": "IntegTestStackUbuntu22:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
-   }
-  },
-  "ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D": {
-   "Value": {
-    "Fn::GetAtt": [
-     "IntegVSCodeServercfdistributionFDBE873F",
-     "DomainName"
-    ]
-   },
-   "Export": {
-    "Name": "IntegTestStackUbuntu22:ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
+    "Name": "IntegTestStackCustomDomain:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
    }
   },
   "ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B": {
@@ -2436,7 +2673,7 @@
     ]
    },
    "Export": {
-    "Name": "IntegTestStackUbuntu22:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
+    "Name": "IntegTestStackCustomDomain:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
    }
   }
  },
@@ -2561,6 +2798,14 @@
    },
    "us-west-2": {
     "value": "nodejs20.x"
+   }
+  },
+  "AWSCloudFrontPartitionHostedZoneIdMap": {
+   "aws": {
+    "zoneId": "Z2FDTNDATAQYW2"
+   },
+   "aws-cn": {
+    "zoneId": "Z3RFFRIM2A3IF5"
    }
   }
  },

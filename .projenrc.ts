@@ -14,7 +14,7 @@ const project = new MvcCdkConstructLibrary({
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
   deps: [
-    '@mavogel/mvc-projen@^0.0.4',
+    '@mavogel/mvc-projen@^0.0.7',
     'constructs@^10.4.2',
     'cdk-nag',
   ],

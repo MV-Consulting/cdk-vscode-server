@@ -3,7 +3,7 @@ import { javascript } from 'projen';
 const project = new MvcCdkConstructLibrary({
   author: 'Manuel Vogel',
   authorAddress: 'info@manuel-vogel.de',
-  cdkVersion: '2.177.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib
+  cdkVersion: '2.190.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib + https://www.npmjs.com/package/@aws-cdk/integ-runner
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.7.0',
   name: 'cdk-vscode-server',
@@ -14,7 +14,7 @@ const project = new MvcCdkConstructLibrary({
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
   deps: [
-    '@mavogel/mvc-projen@^0.0.4',
+    '@mavogel/mvc-projen@^0.0.7',
     'constructs@^10.4.2',
     'cdk-nag',
   ],
@@ -52,6 +52,9 @@ const project = new MvcCdkConstructLibrary({
     distName: 'cdk-vscode-server',
     module: 'cdk-vscode-server',
   },
+  gitignore: [
+    'settings.local.json',
+  ],
 });
 
 project.synth();

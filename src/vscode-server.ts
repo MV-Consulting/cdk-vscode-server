@@ -144,9 +144,10 @@ export interface VSCodeServerProps {
   readonly certificateArn?: string;
 
   /**
-   * Auto-create ACM certificate with DNS validation
-   * Requires hostedZoneId or a valid domain with discoverable hosted zone
+   * Auto-create ACM certificate with DNS validation in us-east-1 region
+   * Requires hostedZoneId to be provided for DNS validation
    * Cannot be used together with certificateArn
+   * Certificate will automatically be created in us-east-1 as required by CloudFront
    *
    * @default false
    */
@@ -253,8 +254,9 @@ export class VSCodeServer extends Construct {
 
       // Validate that hostedZoneId is provided when autoCreateCertificate is true
       if (autoCreateCertificate && !hostedZoneId) {
-        // Note: We could allow this and do hosted zone lookup, but for now require explicit hostedZoneId
-        // when auto-creating certificates for clearer configuration
+        throw new Error(
+          'hostedZoneId is required when autoCreateCertificate is true',
+        );
       }
     } else {
       // Validate that domain-related props are not provided without domainName
@@ -331,11 +333,22 @@ export class VSCodeServer extends Construct {
         );
       } else if (autoCreateCertificate) {
         // Create new certificate with DNS validation
-        certificate = new acm.Certificate(this, 'certificate', {
+        // CloudFront requires certificates to be in us-east-1 region
+        if (!hostedZone) {
+          throw new Error(
+            'hostedZone is required when autoCreateCertificate is true',
+          );
+        }
+
+        // Note: Using DnsValidatedCertificate (deprecated but still functional)
+        // This is the simplest way to create certificates in us-east-1 from any region
+        // The modern approach requires multi-stack deployment with crossRegionReferences
+        // which is more complex for a construct library to implement cleanly
+        // @ts-ignore - DnsValidatedCertificate is deprecated but still the best option for cross-region certs
+        certificate = new acm.DnsValidatedCertificate(this, 'certificate', {
           domainName: domainName,
-          validation: hostedZone
-            ? acm.CertificateValidation.fromDns(hostedZone)
-            : acm.CertificateValidation.fromEmail(),
+          hostedZone: hostedZone,
+          region: 'us-east-1',
         });
 
         NagSuppressions.addResourceSuppressions(
@@ -799,6 +812,7 @@ class NodeTagger implements IAspect {
     const nodeType = node.constructor.name;
     if (
       nodeType === 'Certificate' ||
+      nodeType === 'DnsValidatedCertificate' ||
       nodeType === 'HostedZone' ||
       nodeType === 'CustomResource'
     ) {

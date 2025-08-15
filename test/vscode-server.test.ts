@@ -154,14 +154,25 @@ describe('vscode-server-custom-domain', () => {
 
     const template = Template.fromStack(stack);
 
-    // Should create ACM certificate with DNS validation
-    template.hasResourceProperties('AWS::CertificateManager::Certificate', {
-      DomainName: 'vscode.example.com',
-      ValidationMethod: 'DNS',
+    // Should create DNS validated certificate (uses custom resource)
+    // DnsValidatedCertificate creates a custom resource that manages the certificate
+    template.resourceCountIs('AWS::CloudFormation::CustomResource', 1);
+
+    // Should create Route53 record for the domain
+    template.hasResourceProperties('AWS::Route53::RecordSet', {
+      Name: 'vscode.example.com.',
+      Type: 'A',
+    });
+
+    // Should configure CloudFront with custom domain
+    template.hasResourceProperties('AWS::CloudFront::Distribution', {
+      DistributionConfig: {
+        Aliases: ['vscode.example.com'],
+      },
     });
   });
 
-  test.skip('should lookup hosted zone when hostedZoneId not provided', () => {
+  test('should throw error when autoCreateCertificate is true but hostedZoneId not provided', () => {
     const app = new App();
     const stack = new Stack(app, 'testStack', {
       env: {
@@ -170,21 +181,13 @@ describe('vscode-server-custom-domain', () => {
       },
     });
 
-    const testProps: VSCodeServerProps = {
-      domainName: 'vscode.example.com',
-      hostedZoneId: 'Z123EXAMPLE',
-      autoCreateCertificate: true,
-    };
-
-    new VSCodeServer(stack, 'testVSCodeServer', testProps);
-
-    const template = Template.fromStack(stack);
-
-    // Should create Route53 record (zone lookup will be handled by CDK)
-    template.hasResourceProperties('AWS::Route53::RecordSet', {
-      Type: 'A',
-      Name: 'vscode.example.com.',
-    });
+    expect(() => {
+      new VSCodeServer(stack, 'testVSCodeServer', {
+        domainName: 'vscode.example.com',
+        autoCreateCertificate: true,
+        // No hostedZoneId provided
+      });
+    }).toThrow('hostedZoneId is required when autoCreateCertificate is true');
   });
 
   test('should use custom domain in output when provided', () => {

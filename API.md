@@ -163,7 +163,7 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.additionalInstanceRolePolicies">additionalInstanceRolePolicies</a></code> | <code>aws-cdk-lib.aws_iam.PolicyStatement[]</code> | Additional instance role policies. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.additionalTags">additionalTags</a></code> | <code>{[ key: string ]: string}</code> | Additional tags to add to the instance. |
-| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.autoCreateCertificate">autoCreateCertificate</a></code> | <code>boolean</code> | Auto-create ACM certificate with DNS validation Requires hostedZoneId or a valid domain with discoverable hosted zone Cannot be used together with certificateArn. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.autoCreateCertificate">autoCreateCertificate</a></code> | <code>boolean</code> | Auto-create ACM certificate with DNS validation in us-east-1 region Requires hostedZoneId to be provided for DNS validation Cannot be used together with certificateArn Certificate will automatically be created in us-east-1 as required by CloudFront. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.certificateArn">certificateArn</a></code> | <code>string</code> | ARN of existing ACM certificate for the domain Certificate must be in us-east-1 region for CloudFront Cannot be used together with autoCreateCertificate. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath">devServerBasePath</a></code> | <code>string</code> | Base path for the application to be added to Nginx sites-available list. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerPort">devServerPort</a></code> | <code>number</code> | Port for the DevServer. |
@@ -216,7 +216,7 @@ public readonly autoCreateCertificate: boolean;
 - *Type:* boolean
 - *Default:* false
 
-Auto-create ACM certificate with DNS validation Requires hostedZoneId or a valid domain with discoverable hosted zone Cannot be used together with certificateArn.
+Auto-create ACM certificate with DNS validation in us-east-1 region Requires hostedZoneId to be provided for DNS validation Cannot be used together with certificateArn Certificate will automatically be created in us-east-1 as required by CloudFront.
 
 ---
 

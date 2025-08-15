@@ -30,7 +30,7 @@ const constructUnderTest = new VSCodeServer(
   'IntegVSCodeServer',
   {
     domainName: 'vscode-server-test.mavogel.xyz',
-    hostedZoneId: 'Z01336592122MNIWKOZTT',
+    hostedZoneId: 'Z03751551EDMO1J40VL58',
     autoCreateCertificate: true,
     additionalTags: {
       IntegTest: 'True',

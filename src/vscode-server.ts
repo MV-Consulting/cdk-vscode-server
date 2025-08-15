@@ -746,6 +746,7 @@ export class VSCodeServer extends Construct {
           devServerBasePath: props?.devServerBasePath,
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
+          customDomainName: domainName,
         })._bind(this);
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
@@ -756,6 +757,7 @@ export class VSCodeServer extends Construct {
           devServerBasePath: props?.devServerBasePath,
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
+          customDomainName: domainName,
         })._bind(this);
         break;
       default:

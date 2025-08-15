@@ -228,7 +228,7 @@ export class VSCodeServer extends Construct {
     const defaultTags = { app: 'vscode-server' };
 
     const mergedTags = { ...defaultTags, ...additionalTags };
-    Aspects.of(this).add(new NodeTagger(mergedTags));
+    Aspects.of(this).add(new NodeTagger(mergedTags), { priority: 150 });
 
     // Validate domain configuration
     const domainName = props?.domainName;
@@ -795,6 +795,16 @@ class NodeTagger implements IAspect {
   }
 
   visit(node: IConstruct) {
+    // Skip tagging certain constructs that might cause infinite loops
+    const nodeType = node.constructor.name;
+    if (
+      nodeType === 'Certificate' ||
+      nodeType === 'HostedZone' ||
+      nodeType === 'CustomResource'
+    ) {
+      return;
+    }
+
     Object.entries(this.tags).forEach(([key, value]) =>
       Tags.of(node).add(key, value),
     );

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-echo "[DEBUG] Running file checker..."
-
+# NOTE: initially from https://www.npmjs.com/package/daddy-claude?activeTab=code
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -10,7 +9,6 @@ NC='\033[0m'
 # Find the most recently modified source file (exclude cache files and generated files)
 files=$(find . -type f -mmin -1 \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/lib/*" -not -path "*/dist/*" -not -path "*/coverage/*" -not -path "*/test-reports/*" -printf '%T@ %p\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2)
 if [[ -z $files ]]; then
-	echo "No modified source files found."
 	exit 2
 fi
 

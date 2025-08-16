@@ -286,53 +286,40 @@ var require_node = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     var he_1 = require_he();
-    var Node = (
-      /** @class */
-      function() {
-        function Node2(parentNode, range) {
-          if (parentNode === void 0) {
-            parentNode = null;
-          }
-          this.parentNode = parentNode;
-          this.childNodes = [];
-          Object.defineProperty(this, "range", {
-            enumerable: false,
-            writable: true,
-            configurable: true,
-            value: range !== null && range !== void 0 ? range : [-1, -1]
+    var Node = class {
+      constructor(parentNode = null, range) {
+        this.parentNode = parentNode;
+        this.childNodes = [];
+        Object.defineProperty(this, "range", {
+          enumerable: false,
+          writable: true,
+          configurable: true,
+          value: range !== null && range !== void 0 ? range : [-1, -1]
+        });
+      }
+      /**
+       * Remove current node
+       */
+      remove() {
+        if (this.parentNode) {
+          const children = this.parentNode.childNodes;
+          this.parentNode.childNodes = children.filter((child) => {
+            return this !== child;
           });
+          this.parentNode = null;
         }
-        Node2.prototype.remove = function() {
-          var _this = this;
-          if (this.parentNode) {
-            var children = this.parentNode.childNodes;
-            this.parentNode.childNodes = children.filter(function(child) {
-              return _this !== child;
-            });
-            this.parentNode = null;
-          }
-          return this;
-        };
-        Object.defineProperty(Node2.prototype, "innerText", {
-          get: function() {
-            return this.rawText;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(Node2.prototype, "textContent", {
-          get: function() {
-            return (0, he_1.decode)(this.rawText);
-          },
-          set: function(val) {
-            this.rawText = (0, he_1.encode)(val);
-          },
-          enumerable: false,
-          configurable: true
-        });
-        return Node2;
-      }()
-    );
+        return this;
+      }
+      get innerText() {
+        return this.rawText;
+      }
+      get textContent() {
+        return (0, he_1.decode)(this.rawText);
+      }
+      set textContent(val) {
+        this.rawText = (0, he_1.encode)(val);
+      }
+    };
     exports2.default = Node;
   }
 });
@@ -356,68 +343,33 @@ var require_type = __commonJS({
 var require_comment = __commonJS({
   "node_modules/node-html-parser/dist/nodes/comment.js"(exports2) {
     "use strict";
-    var __extends = exports2 && exports2.__extends || /* @__PURE__ */ function() {
-      var extendStatics = function(d, b) {
-        extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
-          d2.__proto__ = b2;
-        } || function(d2, b2) {
-          for (var p in b2) if (Object.prototype.hasOwnProperty.call(b2, p)) d2[p] = b2[p];
-        };
-        return extendStatics(d, b);
-      };
-      return function(d, b) {
-        if (typeof b !== "function" && b !== null)
-          throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() {
-          this.constructor = d;
-        }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-      };
-    }();
     var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     var node_1 = __importDefault(require_node());
     var type_1 = __importDefault(require_type());
-    var CommentNode = (
-      /** @class */
-      function(_super) {
-        __extends(CommentNode2, _super);
-        function CommentNode2(rawText, parentNode, range, rawTagName) {
-          if (parentNode === void 0) {
-            parentNode = null;
-          }
-          if (rawTagName === void 0) {
-            rawTagName = "!--";
-          }
-          var _this = _super.call(this, parentNode, range) || this;
-          _this.rawText = rawText;
-          _this.rawTagName = rawTagName;
-          _this.nodeType = type_1.default.COMMENT_NODE;
-          return _this;
-        }
-        CommentNode2.prototype.clone = function() {
-          return new CommentNode2(this.rawText, null, void 0, this.rawTagName);
-        };
-        Object.defineProperty(CommentNode2.prototype, "text", {
-          /**
-           * Get unescaped text value of current node and its children.
-           * @return {string} text content
-           */
-          get: function() {
-            return this.rawText;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        CommentNode2.prototype.toString = function() {
-          return "<!--".concat(this.rawText, "-->");
-        };
-        return CommentNode2;
-      }(node_1.default)
-    );
+    var CommentNode = class _CommentNode extends node_1.default {
+      clone() {
+        return new _CommentNode(this.rawText, null, void 0, this.rawTagName);
+      }
+      constructor(rawText, parentNode = null, range, rawTagName = "!--") {
+        super(parentNode, range);
+        this.rawText = rawText;
+        this.rawTagName = rawTagName;
+        this.nodeType = type_1.default.COMMENT_NODE;
+      }
+      /**
+       * Get unescaped text value of current node and its children.
+       * @return {string} text content
+       */
+      get text() {
+        return this.rawText;
+      }
+      toString() {
+        return `<!--${this.rawText}-->`;
+      }
+    };
     exports2.default = CommentNode;
   }
 });
@@ -460,7 +412,7 @@ var require_lib = __commonJS({
 var require_node2 = __commonJS({
   "node_modules/domhandler/lib/node.js"(exports2) {
     "use strict";
-    var __extends = exports2 && exports2.__extends || /* @__PURE__ */ function() {
+    var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
         extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
           d2.__proto__ = b2;
@@ -478,7 +430,7 @@ var require_node2 = __commonJS({
         }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
       };
-    }();
+    })();
     var __assign = exports2 && exports2.__assign || function() {
       __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -495,7 +447,7 @@ var require_node2 = __commonJS({
     var domelementtype_1 = require_lib();
     var Node = (
       /** @class */
-      function() {
+      (function() {
         function Node2() {
           this.parent = null;
           this.prev = null;
@@ -553,12 +505,12 @@ var require_node2 = __commonJS({
           return cloneNode(this, recursive);
         };
         return Node2;
-      }()
+      })()
     );
     exports2.Node = Node;
     var DataNode = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(DataNode2, _super);
         function DataNode2(data) {
           var _this = _super.call(this) || this;
@@ -580,12 +532,12 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return DataNode2;
-      }(Node)
+      })(Node)
     );
     exports2.DataNode = DataNode;
     var Text = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(Text2, _super);
         function Text2() {
           var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -600,12 +552,12 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return Text2;
-      }(DataNode)
+      })(DataNode)
     );
     exports2.Text = Text;
     var Comment = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(Comment2, _super);
         function Comment2() {
           var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -620,12 +572,12 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return Comment2;
-      }(DataNode)
+      })(DataNode)
     );
     exports2.Comment = Comment;
     var ProcessingInstruction = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(ProcessingInstruction2, _super);
         function ProcessingInstruction2(name, data) {
           var _this = _super.call(this, data) || this;
@@ -641,12 +593,12 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return ProcessingInstruction2;
-      }(DataNode)
+      })(DataNode)
     );
     exports2.ProcessingInstruction = ProcessingInstruction;
     var NodeWithChildren = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(NodeWithChildren2, _super);
         function NodeWithChildren2(children) {
           var _this = _super.call(this) || this;
@@ -686,12 +638,12 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return NodeWithChildren2;
-      }(Node)
+      })(Node)
     );
     exports2.NodeWithChildren = NodeWithChildren;
     var CDATA = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(CDATA2, _super);
         function CDATA2() {
           var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -706,12 +658,12 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return CDATA2;
-      }(NodeWithChildren)
+      })(NodeWithChildren)
     );
     exports2.CDATA = CDATA;
     var Document = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(Document2, _super);
         function Document2() {
           var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -726,12 +678,12 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return Document2;
-      }(NodeWithChildren)
+      })(NodeWithChildren)
     );
     exports2.Document = Document;
     var Element = (
       /** @class */
-      function(_super) {
+      (function(_super) {
         __extends(Element2, _super);
         function Element2(name, attribs, children, type) {
           if (children === void 0) {
@@ -785,7 +737,7 @@ var require_node2 = __commonJS({
           configurable: true
         });
         return Element2;
-      }(NodeWithChildren)
+      })(NodeWithChildren)
     );
     exports2.Element = Element;
     function isTag(node) {
@@ -894,7 +846,7 @@ var require_node2 = __commonJS({
 var require_lib2 = __commonJS({
   "node_modules/domhandler/lib/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -903,10 +855,10 @@ var require_lib2 = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
+    }));
     var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
@@ -922,7 +874,7 @@ var require_lib2 = __commonJS({
     };
     var DomHandler = (
       /** @class */
-      function() {
+      (function() {
         function DomHandler2(callback, options, elementCB) {
           this.dom = [];
           this.root = new node_js_1.Document(this.dom);
@@ -1042,7 +994,7 @@ var require_lib2 = __commonJS({
           this.lastNode = null;
         };
         return DomHandler2;
-      }()
+      })()
     );
     exports2.DomHandler = DomHandler;
     exports2.default = DomHandler;
@@ -1145,7 +1097,7 @@ var require_decode_codepoint = __commonJS({
 var require_decode = __commonJS({
   "node_modules/entities/lib/decode.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -1154,13 +1106,13 @@ var require_decode = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -1240,7 +1192,7 @@ var require_decode = __commonJS({
     })(DecodingMode = exports2.DecodingMode || (exports2.DecodingMode = {}));
     var EntityDecoder = (
       /** @class */
-      function() {
+      (function() {
         function EntityDecoder2(decodeTree, emitCodePoint, errors) {
           this.decodeTree = decodeTree;
           this.emitCodePoint = emitCodePoint;
@@ -1419,7 +1371,7 @@ var require_decode = __commonJS({
           }
         };
         return EntityDecoder2;
-      }()
+      })()
     );
     exports2.EntityDecoder = EntityDecoder;
     function getDecoder(decodeTree) {
@@ -1901,7 +1853,7 @@ var require_lib4 = __commonJS({
       };
       return __assign.apply(this, arguments);
     };
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -1910,13 +1862,13 @@ var require_lib4 = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -2762,7 +2714,7 @@ var require_feeds = __commonJS({
 var require_lib5 = __commonJS({
   "node_modules/domutils/lib/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -2771,10 +2723,10 @@ var require_lib5 = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
+    }));
     var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
@@ -3346,7 +3298,7 @@ var require_stringify2 = __commonJS({
 var require_commonjs = __commonJS({
   "node_modules/css-what/lib/commonjs/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -3355,10 +3307,10 @@ var require_commonjs = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
+    }));
     var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
@@ -4408,7 +4360,7 @@ var require_general = __commonJS({
 var require_compile2 = __commonJS({
   "node_modules/css-select/lib/compile.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -4417,13 +4369,13 @@ var require_compile2 = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -4540,7 +4492,7 @@ var require_compile2 = __commonJS({
 var require_lib7 = __commonJS({
   "node_modules/css-select/lib/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -4549,13 +4501,13 @@ var require_lib7 = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -4693,10 +4645,10 @@ var require_matcher = __commonJS({
       return node.text;
     }
     function removeSubsets(nodes) {
-      var idx = nodes.length;
-      var node;
-      var ancestor;
-      var replace;
+      let idx = nodes.length;
+      let node;
+      let ancestor;
+      let replace;
       while (--idx > -1) {
         node = ancestor = nodes[idx];
         nodes[idx] = null;
@@ -4716,25 +4668,25 @@ var require_matcher = __commonJS({
       return nodes;
     }
     function existsOne(test, elems) {
-      return elems.some(function(elem) {
+      return elems.some((elem) => {
         return isTag(elem) ? test(elem) || existsOne(test, getChildren(elem)) : false;
       });
     }
     function getSiblings(node) {
-      var parent = getParent(node);
+      const parent = getParent(node);
       return parent ? getChildren(parent) : [];
     }
     function hasAttrib(elem, name) {
       return getAttributeValue(elem, name) !== void 0;
     }
     function findOne(test, elems) {
-      var elem = null;
-      for (var i = 0, l = elems === null || elems === void 0 ? void 0 : elems.length; i < l && !elem; i++) {
-        var el = elems[i];
+      let elem = null;
+      for (let i = 0, l = elems === null || elems === void 0 ? void 0 : elems.length; i < l && !elem; i++) {
+        const el = elems[i];
         if (test(el)) {
           elem = el;
         } else {
-          var childs = getChildren(el);
+          const childs = getChildren(el);
           if (childs && childs.length > 0) {
             elem = findOne(test, childs);
           }
@@ -4743,13 +4695,13 @@ var require_matcher = __commonJS({
       return elem;
     }
     function findAll(test, nodes) {
-      var result = [];
-      for (var i = 0, j = nodes.length; i < j; i++) {
+      let result = [];
+      for (let i = 0, j = nodes.length; i < j; i++) {
         if (!isTag(nodes[i]))
           continue;
         if (test(nodes[i]))
           result.push(nodes[i]);
-        var childs = getChildren(nodes[i]);
+        const childs = getChildren(nodes[i]);
         if (childs)
           result = result.concat(findAll(test, childs));
       }
@@ -4777,36 +4729,29 @@ var require_void_tag = __commonJS({
   "node_modules/node-html-parser/dist/void-tag.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var VoidTag = (
-      /** @class */
-      function() {
-        function VoidTag2(addClosingSlash, tags) {
-          if (addClosingSlash === void 0) {
-            addClosingSlash = false;
-          }
-          this.addClosingSlash = addClosingSlash;
-          if (Array.isArray(tags)) {
-            this.voidTags = tags.reduce(function(set, tag) {
-              return set.add(tag.toLowerCase()).add(tag.toUpperCase()).add(tag);
-            }, /* @__PURE__ */ new Set());
-          } else {
-            this.voidTags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"].reduce(function(set, tag) {
-              return set.add(tag.toLowerCase()).add(tag.toUpperCase()).add(tag);
-            }, /* @__PURE__ */ new Set());
-          }
+    var VoidTag = class {
+      constructor(addClosingSlash = false, tags) {
+        this.addClosingSlash = addClosingSlash;
+        if (Array.isArray(tags)) {
+          this.voidTags = tags.reduce((set, tag) => {
+            return set.add(tag.toLowerCase()).add(tag.toUpperCase()).add(tag);
+          }, /* @__PURE__ */ new Set());
+        } else {
+          this.voidTags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"].reduce((set, tag) => {
+            return set.add(tag.toLowerCase()).add(tag.toUpperCase()).add(tag);
+          }, /* @__PURE__ */ new Set());
         }
-        VoidTag2.prototype.formatNode = function(tag, attrs, innerHTML) {
-          var addClosingSlash = this.addClosingSlash;
-          var closingSpace = addClosingSlash && attrs && !attrs.endsWith(" ") ? " " : "";
-          var closingSlash = addClosingSlash ? "".concat(closingSpace, "/") : "";
-          return this.isVoidElement(tag.toLowerCase()) ? "<".concat(tag).concat(attrs).concat(closingSlash, ">") : "<".concat(tag).concat(attrs, ">").concat(innerHTML, "</").concat(tag, ">");
-        };
-        VoidTag2.prototype.isVoidElement = function(tag) {
-          return this.voidTags.has(tag);
-        };
-        return VoidTag2;
-      }()
-    );
+      }
+      formatNode(tag, attrs, innerHTML) {
+        const addClosingSlash = this.addClosingSlash;
+        const closingSpace = addClosingSlash && attrs && !attrs.endsWith(" ") ? " " : "";
+        const closingSlash = addClosingSlash ? `${closingSpace}/` : "";
+        return this.isVoidElement(tag.toLowerCase()) ? `<${tag}${attrs}${closingSlash}>` : `<${tag}${attrs}>${innerHTML}</${tag}>`;
+      }
+      isVoidElement(tag) {
+        return this.voidTags.has(tag);
+      }
+    };
     exports2.default = VoidTag;
   }
 });
@@ -4815,25 +4760,6 @@ var require_void_tag = __commonJS({
 var require_text = __commonJS({
   "node_modules/node-html-parser/dist/nodes/text.js"(exports2) {
     "use strict";
-    var __extends = exports2 && exports2.__extends || /* @__PURE__ */ function() {
-      var extendStatics = function(d, b) {
-        extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
-          d2.__proto__ = b2;
-        } || function(d2, b2) {
-          for (var p in b2) if (Object.prototype.hasOwnProperty.call(b2, p)) d2[p] = b2[p];
-        };
-        return extendStatics(d, b);
-      };
-      return function(d, b) {
-        if (typeof b !== "function" && b !== null)
-          throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() {
-          this.constructor = d;
-        }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-      };
-    }();
     var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -4841,97 +4767,68 @@ var require_text = __commonJS({
     var he_1 = require_he();
     var node_1 = __importDefault(require_node());
     var type_1 = __importDefault(require_type());
-    var TextNode = (
-      /** @class */
-      function(_super) {
-        __extends(TextNode2, _super);
-        function TextNode2(rawText, parentNode, range) {
-          if (parentNode === void 0) {
-            parentNode = null;
-          }
-          var _this = _super.call(this, parentNode, range) || this;
-          _this.nodeType = type_1.default.TEXT_NODE;
-          _this.rawTagName = "";
-          _this._rawText = rawText;
-          return _this;
-        }
-        TextNode2.prototype.clone = function() {
-          return new TextNode2(this._rawText, null);
-        };
-        Object.defineProperty(TextNode2.prototype, "rawText", {
-          get: function() {
-            return this._rawText;
-          },
-          /**
-           * Set rawText and invalidate trimmed caches
-           */
-          set: function(text) {
-            this._rawText = text;
-            this._trimmedRawText = void 0;
-            this._trimmedText = void 0;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(TextNode2.prototype, "trimmedRawText", {
-          /**
-           * Returns raw text with all whitespace trimmed except single leading/trailing non-breaking space
-           */
-          get: function() {
-            if (this._trimmedRawText !== void 0)
-              return this._trimmedRawText;
-            this._trimmedRawText = trimText(this.rawText);
-            return this._trimmedRawText;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(TextNode2.prototype, "trimmedText", {
-          /**
-           * Returns text with all whitespace trimmed except single leading/trailing non-breaking space
-           */
-          get: function() {
-            if (this._trimmedText !== void 0)
-              return this._trimmedText;
-            this._trimmedText = trimText(this.text);
-            return this._trimmedText;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(TextNode2.prototype, "text", {
-          /**
-           * Get unescaped text value of current node and its children.
-           * @return {string} text content
-           */
-          get: function() {
-            return (0, he_1.decode)(this.rawText);
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(TextNode2.prototype, "isWhitespace", {
-          /**
-           * Detect if the node contains only white space.
-           * @return {boolean}
-           */
-          get: function() {
-            return /^(\s|&nbsp;)*$/.test(this.rawText);
-          },
-          enumerable: false,
-          configurable: true
-        });
-        TextNode2.prototype.toString = function() {
-          return this.rawText;
-        };
-        return TextNode2;
-      }(node_1.default)
-    );
+    var TextNode = class _TextNode extends node_1.default {
+      clone() {
+        return new _TextNode(this._rawText, null);
+      }
+      constructor(rawText, parentNode = null, range) {
+        super(parentNode, range);
+        this.nodeType = type_1.default.TEXT_NODE;
+        this.rawTagName = "";
+        this._rawText = rawText;
+      }
+      get rawText() {
+        return this._rawText;
+      }
+      /**
+       * Set rawText and invalidate trimmed caches
+       */
+      set rawText(text) {
+        this._rawText = text;
+        this._trimmedRawText = void 0;
+        this._trimmedText = void 0;
+      }
+      /**
+       * Returns raw text with all whitespace trimmed except single leading/trailing non-breaking space
+       */
+      get trimmedRawText() {
+        if (this._trimmedRawText !== void 0)
+          return this._trimmedRawText;
+        this._trimmedRawText = trimText(this.rawText);
+        return this._trimmedRawText;
+      }
+      /**
+       * Returns text with all whitespace trimmed except single leading/trailing non-breaking space
+       */
+      get trimmedText() {
+        if (this._trimmedText !== void 0)
+          return this._trimmedText;
+        this._trimmedText = trimText(this.text);
+        return this._trimmedText;
+      }
+      /**
+       * Get unescaped text value of current node and its children.
+       * @return {string} text content
+       */
+      get text() {
+        return (0, he_1.decode)(this.rawText);
+      }
+      /**
+       * Detect if the node contains only white space.
+       * @return {boolean}
+       */
+      get isWhitespace() {
+        return /^(\s|&nbsp;)*$/.test(this.rawText);
+      }
+      toString() {
+        return this.rawText;
+      }
+    };
     exports2.default = TextNode;
     function trimText(text) {
-      var i = 0;
-      var startPos;
-      var endPos;
+      let i = 0;
+      let startPos;
+      let endPos;
       while (i >= 0 && i < text.length) {
         if (/\S/.test(text[i])) {
           if (startPos === void 0) {
@@ -4951,8 +4848,8 @@ var require_text = __commonJS({
         startPos = 0;
       if (endPos === void 0)
         endPos = text.length - 1;
-      var hasLeadingSpace = startPos > 0 && /[^\S\r\n]/.test(text[startPos - 1]);
-      var hasTrailingSpace = endPos < text.length - 1 && /[^\S\r\n]/.test(text[endPos + 1]);
+      const hasLeadingSpace = startPos > 0 && /[^\S\r\n]/.test(text[startPos - 1]);
+      const hasTrailingSpace = endPos < text.length - 1 && /[^\S\r\n]/.test(text[endPos + 1]);
       return (hasLeadingSpace ? " " : "") + text.slice(startPos, endPos + 1) + (hasTrailingSpace ? " " : "");
     }
   }
@@ -4962,45 +4859,6 @@ var require_text = __commonJS({
 var require_html = __commonJS({
   "node_modules/node-html-parser/dist/nodes/html.js"(exports2) {
     "use strict";
-    var __extends = exports2 && exports2.__extends || /* @__PURE__ */ function() {
-      var extendStatics = function(d, b) {
-        extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
-          d2.__proto__ = b2;
-        } || function(d2, b2) {
-          for (var p in b2) if (Object.prototype.hasOwnProperty.call(b2, p)) d2[p] = b2[p];
-        };
-        return extendStatics(d, b);
-      };
-      return function(d, b) {
-        if (typeof b !== "function" && b !== null)
-          throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() {
-          this.constructor = d;
-        }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-      };
-    }();
-    var __assign = exports2 && exports2.__assign || function() {
-      __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-          s = arguments[i];
-          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-        }
-        return t;
-      };
-      return __assign.apply(this, arguments);
-    };
-    var __spreadArray = exports2 && exports2.__spreadArray || function(to, from, pack) {
-      if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-          if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-          ar[i] = from[i];
-        }
-      }
-      return to.concat(ar || Array.prototype.slice.call(from));
-    };
     var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -5024,794 +4882,777 @@ var require_html = __commonJS({
     var tableTags = ["table", "td", "tr"];
     var htmlTags = ["address", "article", "aside", "blockquote", "br", "hr", "li", "main", "nav", "ol", "p", "pre", "section", "ul"];
     var kBlockElements = /* @__PURE__ */ new Set();
-    function addToKBlockElement() {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
-      var addToSet = function(array) {
-        for (var index = 0; index < array.length; index++) {
-          var element = array[index];
+    function addToKBlockElement(...args) {
+      const addToSet = (array) => {
+        for (let index = 0; index < array.length; index++) {
+          const element = array[index];
           kBlockElements.add(element);
           kBlockElements.add(element.toUpperCase());
         }
       };
-      for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {
-        var arg = args_1[_a];
+      for (const arg of args)
         addToSet(arg);
-      }
     }
     addToKBlockElement(Htags, Dtags, Ftags, tableTags, htmlTags);
-    var DOMTokenList = (
-      /** @class */
-      function() {
-        function DOMTokenList2(valuesInit, afterUpdate) {
-          if (valuesInit === void 0) {
-            valuesInit = [];
-          }
-          if (afterUpdate === void 0) {
-            afterUpdate = function() {
-              return null;
-            };
-          }
-          this._set = new Set(valuesInit);
-          this._afterUpdate = afterUpdate;
+    var DOMTokenList = class {
+      _validate(c) {
+        if (/\s/.test(c)) {
+          throw new Error(`DOMException in DOMTokenList.add: The token '${c}' contains HTML space characters, which are not valid in tokens.`);
         }
-        DOMTokenList2.prototype._validate = function(c) {
-          if (/\s/.test(c)) {
-            throw new Error("DOMException in DOMTokenList.add: The token '".concat(c, "' contains HTML space characters, which are not valid in tokens."));
-          }
-        };
-        DOMTokenList2.prototype.add = function(c) {
-          this._validate(c);
+      }
+      constructor(valuesInit = [], afterUpdate = () => null) {
+        this._set = new Set(valuesInit);
+        this._afterUpdate = afterUpdate;
+      }
+      add(c) {
+        this._validate(c);
+        this._set.add(c);
+        this._afterUpdate(this);
+      }
+      replace(c1, c2) {
+        this._validate(c2);
+        this._set.delete(c1);
+        this._set.add(c2);
+        this._afterUpdate(this);
+      }
+      remove(c) {
+        this._set.delete(c) && this._afterUpdate(this);
+      }
+      toggle(c) {
+        this._validate(c);
+        if (this._set.has(c))
+          this._set.delete(c);
+        else
           this._set.add(c);
-          this._afterUpdate(this);
-        };
-        DOMTokenList2.prototype.replace = function(c1, c2) {
-          this._validate(c2);
-          this._set.delete(c1);
-          this._set.add(c2);
-          this._afterUpdate(this);
-        };
-        DOMTokenList2.prototype.remove = function(c) {
-          this._set.delete(c) && this._afterUpdate(this);
-        };
-        DOMTokenList2.prototype.toggle = function(c) {
-          this._validate(c);
-          if (this._set.has(c))
-            this._set.delete(c);
-          else
-            this._set.add(c);
-          this._afterUpdate(this);
-        };
-        DOMTokenList2.prototype.contains = function(c) {
-          return this._set.has(c);
-        };
-        Object.defineProperty(DOMTokenList2.prototype, "length", {
-          get: function() {
-            return this._set.size;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        DOMTokenList2.prototype.values = function() {
-          return this._set.values();
-        };
-        Object.defineProperty(DOMTokenList2.prototype, "value", {
-          get: function() {
-            return Array.from(this._set.values());
-          },
-          enumerable: false,
-          configurable: true
-        });
-        DOMTokenList2.prototype.toString = function() {
-          return Array.from(this._set.values()).join(" ");
-        };
-        return DOMTokenList2;
-      }()
-    );
-    var HTMLElement = (
-      /** @class */
-      function(_super) {
-        __extends(HTMLElement2, _super);
-        function HTMLElement2(tagName, keyAttrs, rawAttrs, parentNode, range, voidTag, _parseOptions) {
-          if (rawAttrs === void 0) {
-            rawAttrs = "";
-          }
-          if (parentNode === void 0) {
-            parentNode = null;
-          }
-          if (voidTag === void 0) {
-            voidTag = new void_tag_1.default();
-          }
-          if (_parseOptions === void 0) {
-            _parseOptions = {};
-          }
-          var _this = _super.call(this, parentNode, range) || this;
-          _this.rawAttrs = rawAttrs;
-          _this.voidTag = voidTag;
-          _this.nodeType = type_1.default.ELEMENT_NODE;
-          _this.rawTagName = tagName;
-          _this.rawAttrs = rawAttrs || "";
-          _this.id = keyAttrs.id || "";
-          _this.childNodes = [];
-          _this._parseOptions = _parseOptions;
-          _this.classList = new DOMTokenList(
-            keyAttrs.class ? keyAttrs.class.split(/\s+/) : [],
-            function(classList) {
-              return _this.setAttribute("class", classList.toString());
-            }
-            // eslint-disable-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-          );
-          if (keyAttrs.id) {
-            if (!rawAttrs) {
-              _this.rawAttrs = 'id="'.concat(keyAttrs.id, '"');
-            }
-          }
-          if (keyAttrs.class) {
-            if (!rawAttrs) {
-              var cls = 'class="'.concat(_this.classList.toString(), '"');
-              if (_this.rawAttrs) {
-                _this.rawAttrs += " ".concat(cls);
-              } else {
-                _this.rawAttrs = cls;
-              }
-            }
-          }
-          return _this;
+        this._afterUpdate(this);
+      }
+      contains(c) {
+        return this._set.has(c);
+      }
+      get length() {
+        return this._set.size;
+      }
+      values() {
+        return this._set.values();
+      }
+      get value() {
+        return Array.from(this._set.values());
+      }
+      toString() {
+        return Array.from(this._set.values()).join(" ");
+      }
+    };
+    var HTMLElement = class _HTMLElement extends node_1.default {
+      /**
+       * Quote attribute values
+       * @param attr attribute value
+       * @returns {string} quoted value
+       */
+      quoteAttribute(attr) {
+        if (attr == null) {
+          return "null";
         }
-        HTMLElement2.prototype.quoteAttribute = function(attr) {
-          if (attr == null) {
-            return "null";
+        return JSON.stringify(attr.replace(/"/g, "&quot;")).replace(/\\t/g, "	").replace(/\\n/g, "\n").replace(/\\r/g, "\r").replace(/\\/g, "");
+      }
+      /**
+       * Creates an instance of HTMLElement.
+       * @param keyAttrs	id and class attribute
+       * @param [rawAttrs]	attributes in string
+       *
+       * @memberof HTMLElement
+       */
+      constructor(tagName, keyAttrs, rawAttrs = "", parentNode = null, range, voidTag = new void_tag_1.default(), _parseOptions = {}) {
+        super(parentNode, range);
+        this.rawAttrs = rawAttrs;
+        this.voidTag = voidTag;
+        this.nodeType = type_1.default.ELEMENT_NODE;
+        this.rawTagName = tagName;
+        this.rawAttrs = rawAttrs || "";
+        this.id = keyAttrs.id || "";
+        this.childNodes = [];
+        this._parseOptions = _parseOptions;
+        this.classList = new DOMTokenList(
+          keyAttrs.class ? keyAttrs.class.split(/\s+/) : [],
+          (classList) => this.setAttribute("class", classList.toString())
+          // eslint-disable-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        );
+        if (keyAttrs.id) {
+          if (!rawAttrs) {
+            this.rawAttrs = `id="${keyAttrs.id}"`;
           }
-          return JSON.stringify(attr.replace(/"/g, "&quot;")).replace(/\\t/g, "	").replace(/\\n/g, "\n").replace(/\\r/g, "\r").replace(/\\/g, "");
-        };
-        HTMLElement2.prototype.removeChild = function(node) {
-          this.childNodes = this.childNodes.filter(function(child) {
-            return child !== node;
-          });
-          return this;
-        };
-        HTMLElement2.prototype.exchangeChild = function(oldNode, newNode) {
-          var children = this.childNodes;
-          this.childNodes = children.map(function(child) {
-            if (child === oldNode) {
-              return newNode;
-            }
-            return child;
-          });
-          return this;
-        };
-        Object.defineProperty(HTMLElement2.prototype, "tagName", {
-          get: function() {
-            return this.rawTagName ? this.rawTagName.toUpperCase() : this.rawTagName;
-          },
-          set: function(newname) {
-            this.rawTagName = newname.toLowerCase();
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "localName", {
-          get: function() {
-            return this.rawTagName.toLowerCase();
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "isVoidElement", {
-          get: function() {
-            return this.voidTag.isVoidElement(this.localName);
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "rawText", {
-          /**
-           * Get escpaed (as-it) text value of current node and its children.
-           * @return {string} text content
-           */
-          get: function() {
-            if (/^br$/i.test(this.rawTagName)) {
-              return "\n";
-            }
-            return this.childNodes.reduce(function(pre, cur) {
-              return pre += cur.rawText;
-            }, "");
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "textContent", {
-          get: function() {
-            return decode(this.rawText);
-          },
-          set: function(val) {
-            var content = [new text_1.default(val, this)];
-            this.childNodes = content;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "text", {
-          /**
-           * Get unescaped text value of current node and its children.
-           * @return {string} text content
-           */
-          get: function() {
-            return decode(this.rawText);
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "structuredText", {
-          /**
-           * Get structured Text (with '\n' etc.)
-           * @return {string} structured text
-           */
-          get: function() {
-            var currentBlock = [];
-            var blocks = [currentBlock];
-            function dfs(node) {
-              if (node.nodeType === type_1.default.ELEMENT_NODE) {
-                if (kBlockElements.has(node.rawTagName)) {
-                  if (currentBlock.length > 0) {
-                    blocks.push(currentBlock = []);
-                  }
-                  node.childNodes.forEach(dfs);
-                  if (currentBlock.length > 0) {
-                    blocks.push(currentBlock = []);
-                  }
-                } else {
-                  node.childNodes.forEach(dfs);
-                }
-              } else if (node.nodeType === type_1.default.TEXT_NODE) {
-                if (node.isWhitespace) {
-                  currentBlock.prependWhitespace = true;
-                } else {
-                  var text = node.trimmedText;
-                  if (currentBlock.prependWhitespace) {
-                    text = " ".concat(text);
-                    currentBlock.prependWhitespace = false;
-                  }
-                  currentBlock.push(text);
-                }
-              }
-            }
-            dfs(this);
-            return blocks.map(function(block) {
-              return block.join("").replace(/\s{2,}/g, " ");
-            }).join("\n").replace(/\s+$/, "");
-          },
-          enumerable: false,
-          configurable: true
-        });
-        HTMLElement2.prototype.toString = function() {
-          var tag = this.rawTagName;
-          if (tag) {
-            var attrs = this.rawAttrs ? " ".concat(this.rawAttrs) : "";
-            return this.voidTag.formatNode(tag, attrs, this.innerHTML);
-          }
-          return this.innerHTML;
-        };
-        Object.defineProperty(HTMLElement2.prototype, "innerHTML", {
-          get: function() {
-            return this.childNodes.map(function(child) {
-              return child.toString();
-            }).join("");
-          },
-          set: function(content) {
-            var r = parse2(content, this._parseOptions);
-            var nodes = r.childNodes.length ? r.childNodes : [new text_1.default(content, this)];
-            resetParent(nodes, this);
-            resetParent(this.childNodes, null);
-            this.childNodes = nodes;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        HTMLElement2.prototype.set_content = function(content, options) {
-          if (options === void 0) {
-            options = {};
-          }
-          if (content instanceof node_1.default) {
-            content = [content];
-          } else if (typeof content == "string") {
-            options = __assign(__assign({}, this._parseOptions), options);
-            var r = parse2(content, options);
-            content = r.childNodes.length ? r.childNodes : [new text_1.default(r.innerHTML, this)];
-          }
-          resetParent(this.childNodes, null);
-          resetParent(content, this);
-          this.childNodes = content;
-          return this;
-        };
-        HTMLElement2.prototype.replaceWith = function() {
-          var _this = this;
-          var nodes = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-            nodes[_i] = arguments[_i];
-          }
-          var parent = this.parentNode;
-          var content = nodes.map(function(node) {
-            if (node instanceof node_1.default) {
-              return [node];
-            } else if (typeof node == "string") {
-              var r = parse2(node, _this._parseOptions);
-              return r.childNodes.length ? r.childNodes : [new text_1.default(node, _this)];
-            }
-            return [];
-          }).flat();
-          var idx = parent.childNodes.findIndex(function(child) {
-            return child === _this;
-          });
-          resetParent([this], null);
-          parent.childNodes = __spreadArray(__spreadArray(__spreadArray([], parent.childNodes.slice(0, idx), true), resetParent(content, parent), true), parent.childNodes.slice(idx + 1), true);
-          return this;
-        };
-        Object.defineProperty(HTMLElement2.prototype, "outerHTML", {
-          get: function() {
-            return this.toString();
-          },
-          enumerable: false,
-          configurable: true
-        });
-        HTMLElement2.prototype.trimRight = function(pattern) {
-          for (var i = 0; i < this.childNodes.length; i++) {
-            var childNode = this.childNodes[i];
-            if (childNode.nodeType === type_1.default.ELEMENT_NODE) {
-              childNode.trimRight(pattern);
-            } else {
-              var index = childNode.rawText.search(pattern);
-              if (index > -1) {
-                childNode.rawText = childNode.rawText.substr(0, index);
-                this.childNodes.length = i + 1;
-              }
-            }
-          }
-          return this;
-        };
-        Object.defineProperty(HTMLElement2.prototype, "structure", {
-          /**
-           * Get DOM structure
-           * @return {string} structure
-           */
-          get: function() {
-            var res = [];
-            var indention = 0;
-            function write(str) {
-              res.push("  ".repeat(indention) + str);
-            }
-            function dfs(node) {
-              var idStr = node.id ? "#".concat(node.id) : "";
-              var classStr = node.classList.length ? ".".concat(node.classList.value.join(".")) : "";
-              write("".concat(node.rawTagName).concat(idStr).concat(classStr));
-              indention++;
-              node.childNodes.forEach(function(childNode) {
-                if (childNode.nodeType === type_1.default.ELEMENT_NODE) {
-                  dfs(childNode);
-                } else if (childNode.nodeType === type_1.default.TEXT_NODE) {
-                  if (!childNode.isWhitespace) {
-                    write("#text");
-                  }
-                }
-              });
-              indention--;
-            }
-            dfs(this);
-            return res.join("\n");
-          },
-          enumerable: false,
-          configurable: true
-        });
-        HTMLElement2.prototype.removeWhitespace = function() {
-          var _this = this;
-          var o = 0;
-          this.childNodes.forEach(function(node) {
-            if (node.nodeType === type_1.default.TEXT_NODE) {
-              if (node.isWhitespace) {
-                return;
-              }
-              node.rawText = node.trimmedRawText;
-            } else if (node.nodeType === type_1.default.ELEMENT_NODE) {
-              node.removeWhitespace();
-            }
-            _this.childNodes[o++] = node;
-          });
-          this.childNodes.length = o;
-          return this;
-        };
-        HTMLElement2.prototype.querySelectorAll = function(selector) {
-          return (0, css_select_1.selectAll)(selector, this, {
-            xmlMode: true,
-            adapter: matcher_1.default
-          });
-        };
-        HTMLElement2.prototype.querySelector = function(selector) {
-          return (0, css_select_1.selectOne)(selector, this, {
-            xmlMode: true,
-            adapter: matcher_1.default
-          });
-        };
-        HTMLElement2.prototype.getElementsByTagName = function(tagName) {
-          var upperCasedTagName = tagName.toUpperCase();
-          var re = [];
-          var stack = [];
-          var currentNodeReference = this;
-          var index = 0;
-          while (index !== void 0) {
-            var child = void 0;
-            do {
-              child = currentNodeReference.childNodes[index++];
-            } while (index < currentNodeReference.childNodes.length && child === void 0);
-            if (child === void 0) {
-              currentNodeReference = currentNodeReference.parentNode;
-              index = stack.pop();
-              continue;
-            }
-            if (child.nodeType === type_1.default.ELEMENT_NODE) {
-              if (tagName === "*" || child.tagName === upperCasedTagName)
-                re.push(child);
-              if (child.childNodes.length > 0) {
-                stack.push(index);
-                currentNodeReference = child;
-                index = 0;
-              }
-            }
-          }
-          return re;
-        };
-        HTMLElement2.prototype.getElementById = function(id) {
-          var stack = [];
-          var currentNodeReference = this;
-          var index = 0;
-          while (index !== void 0) {
-            var child = void 0;
-            do {
-              child = currentNodeReference.childNodes[index++];
-            } while (index < currentNodeReference.childNodes.length && child === void 0);
-            if (child === void 0) {
-              currentNodeReference = currentNodeReference.parentNode;
-              index = stack.pop();
-              continue;
-            }
-            if (child.nodeType === type_1.default.ELEMENT_NODE) {
-              if (child.id === id) {
-                return child;
-              }
-              ;
-              if (child.childNodes.length > 0) {
-                stack.push(index);
-                currentNodeReference = child;
-                index = 0;
-              }
-            }
-          }
-          return null;
-        };
-        HTMLElement2.prototype.closest = function(selector) {
-          var mapChild = /* @__PURE__ */ new Map();
-          var el = this;
-          var old = null;
-          function findOne(test, elems) {
-            var elem = null;
-            for (var i = 0, l = elems.length; i < l && !elem; i++) {
-              var el_1 = elems[i];
-              if (test(el_1)) {
-                elem = el_1;
-              } else {
-                var child = mapChild.get(el_1);
-                if (child) {
-                  elem = findOne(test, [child]);
-                }
-              }
-            }
-            return elem;
-          }
-          while (el) {
-            mapChild.set(el, old);
-            old = el;
-            el = el.parentNode;
-          }
-          el = this;
-          while (el) {
-            var e = (0, css_select_1.selectOne)(selector, el, {
-              xmlMode: true,
-              adapter: __assign(__assign({}, matcher_1.default), { getChildren: function(node) {
-                var child = mapChild.get(node);
-                return child && [child];
-              }, getSiblings: function(node) {
-                return [node];
-              }, findOne, findAll: function() {
-                return [];
-              } })
-            });
-            if (e) {
-              return e;
-            }
-            el = el.parentNode;
-          }
-          return null;
-        };
-        HTMLElement2.prototype.appendChild = function(node) {
-          node.remove();
-          this.childNodes.push(node);
-          node.parentNode = this;
-          return node;
-        };
-        Object.defineProperty(HTMLElement2.prototype, "firstChild", {
-          /**
-           * Get first child node
-           * @return {Node | undefined} first child node; or undefined if none
-           */
-          get: function() {
-            return this.childNodes[0];
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "lastChild", {
-          /**
-           * Get last child node
-           * @return {Node | undefined} last child node; or undefined if none
-           */
-          get: function() {
-            return (0, back_1.default)(this.childNodes);
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "attrs", {
-          /**
-           * Get attributes
-           * @access private
-           * @return {Object} parsed and unescaped attributes
-           */
-          get: function() {
-            if (this._attrs) {
-              return this._attrs;
-            }
-            this._attrs = {};
-            var attrs = this.rawAttributes;
-            for (var key in attrs) {
-              var val = attrs[key] || "";
-              this._attrs[key.toLowerCase()] = decode(val);
-            }
-            return this._attrs;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "attributes", {
-          get: function() {
-            var ret_attrs = {};
-            var attrs = this.rawAttributes;
-            for (var key in attrs) {
-              var val = attrs[key] || "";
-              ret_attrs[key] = decode(val);
-            }
-            return ret_attrs;
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "rawAttributes", {
-          /**
-           * Get escaped (as-is) attributes
-           * @return {Object} parsed attributes
-           */
-          get: function() {
-            if (this._rawAttrs) {
-              return this._rawAttrs;
-            }
-            var attrs = {};
+        }
+        if (keyAttrs.class) {
+          if (!rawAttrs) {
+            const cls = `class="${this.classList.toString()}"`;
             if (this.rawAttrs) {
-              var re = /([a-zA-Z()[\]#@$.?:][a-zA-Z0-9-_:()[\]#]*)(?:\s*=\s*((?:'[^']*')|(?:"[^"]*")|\S+))?/g;
-              var match = void 0;
-              while (match = re.exec(this.rawAttrs)) {
-                var key = match[1];
-                var val = match[2] || null;
-                if (val && (val[0] === "'" || val[0] === '"'))
-                  val = val.slice(1, val.length - 1);
-                attrs[key] = attrs[key] || val;
-              }
+              this.rawAttrs += ` ${cls}`;
+            } else {
+              this.rawAttrs = cls;
             }
-            this._rawAttrs = attrs;
-            return attrs;
-          },
-          enumerable: false,
-          configurable: true
+          }
+        }
+      }
+      /**
+       * Remove Child element from childNodes array
+       * @param {HTMLElement} node     node to remove
+       */
+      removeChild(node) {
+        this.childNodes = this.childNodes.filter((child) => {
+          return child !== node;
         });
-        HTMLElement2.prototype.removeAttribute = function(key) {
-          var _this = this;
-          var attrs = this.rawAttributes;
-          delete attrs[key];
-          if (this._attrs) {
-            delete this._attrs[key];
+        return this;
+      }
+      /**
+       * Exchanges given child with new child
+       * @param {HTMLElement} oldNode     node to exchange
+       * @param {HTMLElement} newNode     new node
+       */
+      exchangeChild(oldNode, newNode) {
+        const children = this.childNodes;
+        this.childNodes = children.map((child) => {
+          if (child === oldNode) {
+            return newNode;
           }
-          this.rawAttrs = Object.keys(attrs).map(function(name) {
-            var val = _this.quoteAttribute(attrs[name]);
-            if (val === "null" || val === '""')
-              return name;
-            return "".concat(name, "=").concat(val);
-          }).join(" ");
-          if (key === "id") {
-            this.id = "";
-          }
-          return this;
-        };
-        HTMLElement2.prototype.hasAttribute = function(key) {
-          return key.toLowerCase() in this.attrs;
-        };
-        HTMLElement2.prototype.getAttribute = function(key) {
-          return this.attrs[key.toLowerCase()];
-        };
-        HTMLElement2.prototype.setAttribute = function(key, value) {
-          var _this = this;
-          if (arguments.length < 2) {
-            throw new Error("Failed to execute 'setAttribute' on 'Element'");
-          }
-          var k2 = key.toLowerCase();
-          var attrs = this.rawAttributes;
-          for (var k in attrs) {
-            if (k.toLowerCase() === k2) {
-              key = k;
-              break;
+          return child;
+        });
+        return this;
+      }
+      get tagName() {
+        return this.rawTagName ? this.rawTagName.toUpperCase() : this.rawTagName;
+      }
+      set tagName(newname) {
+        this.rawTagName = newname.toLowerCase();
+      }
+      get localName() {
+        return this.rawTagName.toLowerCase();
+      }
+      get isVoidElement() {
+        return this.voidTag.isVoidElement(this.localName);
+      }
+      /**
+       * Get escpaed (as-it) text value of current node and its children.
+       * @return {string} text content
+       */
+      get rawText() {
+        if (/^br$/i.test(this.rawTagName)) {
+          return "\n";
+        }
+        return this.childNodes.reduce((pre, cur) => {
+          return pre += cur.rawText;
+        }, "");
+      }
+      get textContent() {
+        return decode(this.rawText);
+      }
+      set textContent(val) {
+        const content = [new text_1.default(val, this)];
+        this.childNodes = content;
+      }
+      /**
+       * Get unescaped text value of current node and its children.
+       * @return {string} text content
+       */
+      get text() {
+        return decode(this.rawText);
+      }
+      /**
+       * Get structured Text (with '\n' etc.)
+       * @return {string} structured text
+       */
+      get structuredText() {
+        let currentBlock = [];
+        const blocks = [currentBlock];
+        function dfs(node) {
+          if (node.nodeType === type_1.default.ELEMENT_NODE) {
+            if (kBlockElements.has(node.rawTagName)) {
+              if (currentBlock.length > 0) {
+                blocks.push(currentBlock = []);
+              }
+              node.childNodes.forEach(dfs);
+              if (currentBlock.length > 0) {
+                blocks.push(currentBlock = []);
+              }
+            } else {
+              node.childNodes.forEach(dfs);
+            }
+          } else if (node.nodeType === type_1.default.TEXT_NODE) {
+            if (node.isWhitespace) {
+              currentBlock.prependWhitespace = true;
+            } else {
+              let text = node.trimmedText;
+              if (currentBlock.prependWhitespace) {
+                text = ` ${text}`;
+                currentBlock.prependWhitespace = false;
+              }
+              currentBlock.push(text);
             }
           }
-          attrs[key] = String(value);
-          if (this._attrs) {
-            this._attrs[k2] = decode(attrs[key]);
+        }
+        dfs(this);
+        return blocks.map((block) => {
+          return block.join("").replace(/\s{2,}/g, " ");
+        }).join("\n").replace(/\s+$/, "");
+      }
+      toString() {
+        const tag = this.rawTagName;
+        if (tag) {
+          const attrs = this.rawAttrs ? ` ${this.rawAttrs}` : "";
+          return this.voidTag.formatNode(tag, attrs, this.innerHTML);
+        }
+        return this.innerHTML;
+      }
+      get innerHTML() {
+        return this.childNodes.map((child) => {
+          return child.toString();
+        }).join("");
+      }
+      set innerHTML(content) {
+        const r = parse2(content, this._parseOptions);
+        const nodes = r.childNodes.length ? r.childNodes : [new text_1.default(content, this)];
+        resetParent(nodes, this);
+        resetParent(this.childNodes, null);
+        this.childNodes = nodes;
+      }
+      set_content(content, options = {}) {
+        if (content instanceof node_1.default) {
+          content = [content];
+        } else if (typeof content == "string") {
+          options = Object.assign(Object.assign({}, this._parseOptions), options);
+          const r = parse2(content, options);
+          content = r.childNodes.length ? r.childNodes : [new text_1.default(r.innerHTML, this)];
+        }
+        resetParent(this.childNodes, null);
+        resetParent(content, this);
+        this.childNodes = content;
+        return this;
+      }
+      replaceWith(...nodes) {
+        const parent = this.parentNode;
+        const content = nodes.map((node) => {
+          if (node instanceof node_1.default) {
+            return [node];
+          } else if (typeof node == "string") {
+            const r = parse2(node, this._parseOptions);
+            return r.childNodes.length ? r.childNodes : [new text_1.default(node, this)];
           }
-          this.rawAttrs = Object.keys(attrs).map(function(name) {
-            var val = _this.quoteAttribute(attrs[name]);
-            if (val === "null" || val === '""')
-              return name;
-            return "".concat(name, "=").concat(val);
-          }).join(" ");
-          if (key === "id") {
-            this.id = value;
-          }
-          return this;
-        };
-        HTMLElement2.prototype.setAttributes = function(attributes) {
-          var _this = this;
-          if (this._attrs) {
-            delete this._attrs;
-          }
-          if (this._rawAttrs) {
-            delete this._rawAttrs;
-          }
-          this.rawAttrs = Object.keys(attributes).map(function(name) {
-            var val = attributes[name];
-            if (val === "null" || val === '""')
-              return name;
-            return "".concat(name, "=").concat(_this.quoteAttribute(String(val)));
-          }).join(" ");
-          return this;
-        };
-        HTMLElement2.prototype.insertAdjacentHTML = function(where, html) {
-          var _a, _b, _c;
-          var _this = this;
-          if (arguments.length < 2) {
-            throw new Error("2 arguments required");
-          }
-          var p = parse2(html, this._parseOptions);
-          if (where === "afterend") {
-            var idx = this.parentNode.childNodes.findIndex(function(child) {
-              return child === _this;
-            });
-            resetParent(p.childNodes, this.parentNode);
-            (_a = this.parentNode.childNodes).splice.apply(_a, __spreadArray([idx + 1, 0], p.childNodes, false));
-          } else if (where === "afterbegin") {
-            resetParent(p.childNodes, this);
-            (_b = this.childNodes).unshift.apply(_b, p.childNodes);
-          } else if (where === "beforeend") {
-            p.childNodes.forEach(function(n) {
-              _this.appendChild(n);
-            });
-          } else if (where === "beforebegin") {
-            var idx = this.parentNode.childNodes.findIndex(function(child) {
-              return child === _this;
-            });
-            resetParent(p.childNodes, this.parentNode);
-            (_c = this.parentNode.childNodes).splice.apply(_c, __spreadArray([idx, 0], p.childNodes, false));
+          return [];
+        }).flat();
+        const idx = parent.childNodes.findIndex((child) => {
+          return child === this;
+        });
+        resetParent([this], null);
+        parent.childNodes = [...parent.childNodes.slice(0, idx), ...resetParent(content, parent), ...parent.childNodes.slice(idx + 1)];
+        return this;
+      }
+      get outerHTML() {
+        return this.toString();
+      }
+      /**
+       * Trim element from right (in block) after seeing pattern in a TextNode.
+       * @param  {RegExp} pattern pattern to find
+       * @return {HTMLElement}    reference to current node
+       */
+      trimRight(pattern) {
+        for (let i = 0; i < this.childNodes.length; i++) {
+          const childNode = this.childNodes[i];
+          if (childNode.nodeType === type_1.default.ELEMENT_NODE) {
+            childNode.trimRight(pattern);
           } else {
-            throw new Error("The value provided ('".concat(where, "') is not one of 'beforebegin', 'afterbegin', 'beforeend', or 'afterend'"));
+            const index = childNode.rawText.search(pattern);
+            if (index > -1) {
+              childNode.rawText = childNode.rawText.substr(0, index);
+              this.childNodes.length = i + 1;
+            }
           }
-          return this;
-        };
-        Object.defineProperty(HTMLElement2.prototype, "nextSibling", {
-          get: function() {
-            if (this.parentNode) {
-              var children = this.parentNode.childNodes;
-              var i = 0;
-              while (i < children.length) {
-                var child = children[i++];
-                if (this === child)
-                  return children[i] || null;
+        }
+        return this;
+      }
+      /**
+       * Get DOM structure
+       * @return {string} structure
+       */
+      get structure() {
+        const res = [];
+        let indention = 0;
+        function write(str) {
+          res.push("  ".repeat(indention) + str);
+        }
+        function dfs(node) {
+          const idStr = node.id ? `#${node.id}` : "";
+          const classStr = node.classList.length ? `.${node.classList.value.join(".")}` : "";
+          write(`${node.rawTagName}${idStr}${classStr}`);
+          indention++;
+          node.childNodes.forEach((childNode) => {
+            if (childNode.nodeType === type_1.default.ELEMENT_NODE) {
+              dfs(childNode);
+            } else if (childNode.nodeType === type_1.default.TEXT_NODE) {
+              if (!childNode.isWhitespace) {
+                write("#text");
               }
-              return null;
             }
-          },
-          enumerable: false,
-          configurable: true
+          });
+          indention--;
+        }
+        dfs(this);
+        return res.join("\n");
+      }
+      /**
+       * Remove whitespaces in this sub tree.
+       * @return {HTMLElement} pointer to this
+       */
+      removeWhitespace() {
+        let o = 0;
+        this.childNodes.forEach((node) => {
+          if (node.nodeType === type_1.default.TEXT_NODE) {
+            if (node.isWhitespace) {
+              return;
+            }
+            node.rawText = node.trimmedRawText;
+          } else if (node.nodeType === type_1.default.ELEMENT_NODE) {
+            node.removeWhitespace();
+          }
+          this.childNodes[o++] = node;
         });
-        Object.defineProperty(HTMLElement2.prototype, "nextElementSibling", {
-          get: function() {
-            if (this.parentNode) {
-              var children = this.parentNode.childNodes;
-              var i = 0;
-              var find = false;
-              while (i < children.length) {
-                var child = children[i++];
-                if (find) {
-                  if (child instanceof HTMLElement2) {
-                    return child || null;
-                  }
-                } else if (this === child) {
-                  find = true;
-                }
+        this.childNodes.length = o;
+        const attrs = Object.keys(this.rawAttributes).map((key) => {
+          const val = this.rawAttributes[key];
+          return `${key}=${JSON.stringify(val)}`;
+        }).join(" ");
+        this.rawAttrs = attrs;
+        delete this._rawAttrs;
+        return this;
+      }
+      /**
+       * Query CSS selector to find matching nodes.
+       * @param  {string}         selector Simplified CSS selector
+       * @return {HTMLElement[]}  matching elements
+       */
+      querySelectorAll(selector) {
+        return (0, css_select_1.selectAll)(selector, this, {
+          xmlMode: true,
+          adapter: matcher_1.default
+        });
+      }
+      /**
+       * Query CSS Selector to find matching node.
+       * @param  {string}         selector Simplified CSS selector
+       * @return {(HTMLElement|null)}    matching node
+       */
+      querySelector(selector) {
+        return (0, css_select_1.selectOne)(selector, this, {
+          xmlMode: true,
+          adapter: matcher_1.default
+        });
+      }
+      /**
+       * find elements by their tagName
+       * @param {string} tagName the tagName of the elements to select
+       */
+      getElementsByTagName(tagName) {
+        const upperCasedTagName = tagName.toUpperCase();
+        const re = [];
+        const stack = [];
+        let currentNodeReference = this;
+        let index = 0;
+        while (index !== void 0) {
+          let child;
+          do {
+            child = currentNodeReference.childNodes[index++];
+          } while (index < currentNodeReference.childNodes.length && child === void 0);
+          if (child === void 0) {
+            currentNodeReference = currentNodeReference.parentNode;
+            index = stack.pop();
+            continue;
+          }
+          if (child.nodeType === type_1.default.ELEMENT_NODE) {
+            if (tagName === "*" || child.tagName === upperCasedTagName)
+              re.push(child);
+            if (child.childNodes.length > 0) {
+              stack.push(index);
+              currentNodeReference = child;
+              index = 0;
+            }
+          }
+        }
+        return re;
+      }
+      /**
+       * find element by it's id
+       * @param {string} id the id of the element to select
+       * @returns {HTMLElement | null} the element with the given id or null if not found
+       */
+      getElementById(id) {
+        const stack = [];
+        let currentNodeReference = this;
+        let index = 0;
+        while (index !== void 0) {
+          let child;
+          do {
+            child = currentNodeReference.childNodes[index++];
+          } while (index < currentNodeReference.childNodes.length && child === void 0);
+          if (child === void 0) {
+            currentNodeReference = currentNodeReference.parentNode;
+            index = stack.pop();
+            continue;
+          }
+          if (child.nodeType === type_1.default.ELEMENT_NODE) {
+            if (child.id === id) {
+              return child;
+            }
+            if (child.childNodes.length > 0) {
+              stack.push(index);
+              currentNodeReference = child;
+              index = 0;
+            }
+          }
+        }
+        return null;
+      }
+      /**
+       * traverses the Element and its parents (heading toward the document root) until it finds a node that matches the provided selector string. Will return itself or the matching ancestor. If no such element exists, it returns null.
+       * @param selector a DOMString containing a selector list
+       * @returns {HTMLElement | null} the element with the given id or null if not found
+       */
+      closest(selector) {
+        const mapChild = /* @__PURE__ */ new Map();
+        let el = this;
+        let old = null;
+        function findOne(test, elems) {
+          let elem = null;
+          for (let i = 0, l = elems.length; i < l && !elem; i++) {
+            const el2 = elems[i];
+            if (test(el2)) {
+              elem = el2;
+            } else {
+              const child = mapChild.get(el2);
+              if (child) {
+                elem = findOne(test, [child]);
               }
-              return null;
             }
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "previousSibling", {
-          get: function() {
-            if (this.parentNode) {
-              var children = this.parentNode.childNodes;
-              var i = children.length;
-              while (i > 0) {
-                var child = children[--i];
-                if (this === child)
-                  return children[i - 1] || null;
+          }
+          return elem;
+        }
+        while (el) {
+          mapChild.set(el, old);
+          old = el;
+          el = el.parentNode;
+        }
+        el = this;
+        while (el) {
+          const e = (0, css_select_1.selectOne)(selector, el, {
+            xmlMode: true,
+            adapter: Object.assign(Object.assign({}, matcher_1.default), {
+              getChildren(node) {
+                const child = mapChild.get(node);
+                return child && [child];
+              },
+              getSiblings(node) {
+                return [node];
+              },
+              findOne,
+              findAll() {
+                return [];
               }
-              return null;
-            }
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "previousElementSibling", {
-          get: function() {
-            if (this.parentNode) {
-              var children = this.parentNode.childNodes;
-              var i = children.length;
-              var find = false;
-              while (i > 0) {
-                var child = children[--i];
-                if (find) {
-                  if (child instanceof HTMLElement2) {
-                    return child || null;
-                  }
-                } else if (this === child) {
-                  find = true;
-                }
+            })
+          });
+          if (e) {
+            return e;
+          }
+          el = el.parentNode;
+        }
+        return null;
+      }
+      /**
+       * Append a child node to childNodes
+       * @param  {Node} node node to append
+       * @return {Node}      node appended
+       */
+      appendChild(node) {
+        this.append(node);
+        return node;
+      }
+      /**
+       * Get attributes
+       * @access private
+       * @return {Object} parsed and unescaped attributes
+       */
+      get attrs() {
+        if (this._attrs) {
+          return this._attrs;
+        }
+        this._attrs = {};
+        const attrs = this.rawAttributes;
+        for (const key in attrs) {
+          const val = attrs[key] || "";
+          this._attrs[key.toLowerCase()] = decode(val);
+        }
+        return this._attrs;
+      }
+      get attributes() {
+        const ret_attrs = {};
+        const attrs = this.rawAttributes;
+        for (const key in attrs) {
+          const val = attrs[key] || "";
+          ret_attrs[key] = decode(val);
+        }
+        return ret_attrs;
+      }
+      /**
+       * Get escaped (as-is) attributes
+       * @return {Object} parsed attributes
+       */
+      get rawAttributes() {
+        if (this._rawAttrs) {
+          return this._rawAttrs;
+        }
+        const attrs = {};
+        if (this.rawAttrs) {
+          const re = /([a-zA-Z()[\]#@$.?:][a-zA-Z0-9-._:()[\]#]*)(?:\s*=\s*((?:'[^']*')|(?:"[^"]*")|\S+))?/g;
+          let match;
+          while (match = re.exec(this.rawAttrs)) {
+            const key = match[1];
+            let val = match[2] || null;
+            if (val && (val[0] === `'` || val[0] === `"`))
+              val = val.slice(1, val.length - 1);
+            attrs[key] = attrs[key] || val;
+          }
+        }
+        this._rawAttrs = attrs;
+        return attrs;
+      }
+      removeAttribute(key) {
+        const attrs = this.rawAttributes;
+        delete attrs[key];
+        if (this._attrs) {
+          delete this._attrs[key];
+        }
+        this.rawAttrs = Object.keys(attrs).map((name) => {
+          const val = this.quoteAttribute(attrs[name]);
+          if (val === "null" || val === '""')
+            return name;
+          return `${name}=${val}`;
+        }).join(" ");
+        if (key === "id") {
+          this.id = "";
+        }
+        return this;
+      }
+      hasAttribute(key) {
+        return key.toLowerCase() in this.attrs;
+      }
+      /**
+       * Get an attribute
+       * @return {string | undefined} value of the attribute; or undefined if not exist
+       */
+      getAttribute(key) {
+        return this.attrs[key.toLowerCase()];
+      }
+      /**
+       * Set an attribute value to the HTMLElement
+       * @param {string} key The attribute name
+       * @param {string} value The value to set, or null / undefined to remove an attribute
+       */
+      setAttribute(key, value) {
+        if (arguments.length < 2) {
+          throw new Error("Failed to execute 'setAttribute' on 'Element'");
+        }
+        const k2 = key.toLowerCase();
+        const attrs = this.rawAttributes;
+        for (const k in attrs) {
+          if (k.toLowerCase() === k2) {
+            key = k;
+            break;
+          }
+        }
+        attrs[key] = String(value);
+        if (this._attrs) {
+          this._attrs[k2] = decode(attrs[key]);
+        }
+        this.rawAttrs = Object.keys(attrs).map((name) => {
+          const val = this.quoteAttribute(attrs[name]);
+          if (val === "null" || val === '""')
+            return name;
+          return `${name}=${val}`;
+        }).join(" ");
+        if (key === "id") {
+          this.id = value;
+        }
+        return this;
+      }
+      /**
+       * Replace all the attributes of the HTMLElement by the provided attributes
+       * @param {Attributes} attributes the new attribute set
+       */
+      setAttributes(attributes) {
+        if (this._attrs) {
+          delete this._attrs;
+        }
+        if (this._rawAttrs) {
+          delete this._rawAttrs;
+        }
+        this.rawAttrs = Object.keys(attributes).map((name) => {
+          const val = attributes[name];
+          if (val === "null" || val === '""')
+            return name;
+          return `${name}=${this.quoteAttribute(String(val))}`;
+        }).join(" ");
+        return this;
+      }
+      insertAdjacentHTML(where, html) {
+        if (arguments.length < 2) {
+          throw new Error("2 arguments required");
+        }
+        const p = parse2(html, this._parseOptions);
+        if (where === "afterend") {
+          this.after(...p.childNodes);
+        } else if (where === "afterbegin") {
+          this.prepend(...p.childNodes);
+        } else if (where === "beforeend") {
+          this.append(...p.childNodes);
+        } else if (where === "beforebegin") {
+          this.before(...p.childNodes);
+        } else {
+          throw new Error(`The value provided ('${where}') is not one of 'beforebegin', 'afterbegin', 'beforeend', or 'afterend'`);
+        }
+        return this;
+      }
+      /** Prepend nodes or strings to this node's children. */
+      prepend(...insertable) {
+        const nodes = resolveInsertable(insertable);
+        resetParent(nodes, this);
+        this.childNodes.unshift(...nodes);
+      }
+      /** Append nodes or strings to this node's children. */
+      append(...insertable) {
+        const nodes = resolveInsertable(insertable);
+        resetParent(nodes, this);
+        this.childNodes.push(...nodes);
+      }
+      /** Insert nodes or strings before this node. */
+      before(...insertable) {
+        const nodes = resolveInsertable(insertable);
+        const siblings = this.parentNode.childNodes;
+        resetParent(nodes, this.parentNode);
+        siblings.splice(siblings.indexOf(this), 0, ...nodes);
+      }
+      /** Insert nodes or strings after this node. */
+      after(...insertable) {
+        const nodes = resolveInsertable(insertable);
+        const siblings = this.parentNode.childNodes;
+        resetParent(nodes, this.parentNode);
+        siblings.splice(siblings.indexOf(this) + 1, 0, ...nodes);
+      }
+      get nextSibling() {
+        if (this.parentNode) {
+          const children = this.parentNode.childNodes;
+          let i = 0;
+          while (i < children.length) {
+            const child = children[i++];
+            if (this === child)
+              return children[i] || null;
+          }
+          return null;
+        }
+      }
+      get nextElementSibling() {
+        if (this.parentNode) {
+          const children = this.parentNode.childNodes;
+          let i = 0;
+          let find = false;
+          while (i < children.length) {
+            const child = children[i++];
+            if (find) {
+              if (child instanceof _HTMLElement) {
+                return child || null;
               }
-              return null;
+            } else if (this === child) {
+              find = true;
             }
-          },
-          enumerable: false,
-          configurable: true
-        });
-        Object.defineProperty(HTMLElement2.prototype, "classNames", {
-          get: function() {
-            return this.classList.toString();
-          },
-          enumerable: false,
-          configurable: true
-        });
-        HTMLElement2.prototype.clone = function() {
-          return parse2(this.toString(), this._parseOptions).firstChild;
-        };
-        return HTMLElement2;
-      }(node_1.default)
-    );
+          }
+          return null;
+        }
+      }
+      get previousSibling() {
+        if (this.parentNode) {
+          const children = this.parentNode.childNodes;
+          let i = children.length;
+          while (i > 0) {
+            const child = children[--i];
+            if (this === child)
+              return children[i - 1] || null;
+          }
+          return null;
+        }
+      }
+      get previousElementSibling() {
+        if (this.parentNode) {
+          const children = this.parentNode.childNodes;
+          let i = children.length;
+          let find = false;
+          while (i > 0) {
+            const child = children[--i];
+            if (find) {
+              if (child instanceof _HTMLElement) {
+                return child || null;
+              }
+            } else if (this === child) {
+              find = true;
+            }
+          }
+          return null;
+        }
+      }
+      /** Get all childNodes of type {@link HTMLElement}. */
+      get children() {
+        const children = [];
+        for (const childNode of this.childNodes) {
+          if (childNode instanceof _HTMLElement) {
+            children.push(childNode);
+          }
+        }
+        return children;
+      }
+      /**
+       * Get the first child node.
+       * @return The first child or undefined if none exists.
+       */
+      get firstChild() {
+        return this.childNodes[0];
+      }
+      /**
+       * Get the first child node of type {@link HTMLElement}.
+       * @return The first child element or undefined if none exists.
+       */
+      get firstElementChild() {
+        return this.children[0];
+      }
+      /**
+       * Get the last child node.
+       * @return The last child or undefined if none exists.
+       */
+      get lastChild() {
+        return (0, back_1.default)(this.childNodes);
+      }
+      /**
+       * Get the last child node of type {@link HTMLElement}.
+       * @return The last child element or undefined if none exists.
+       */
+      get lastElementChild() {
+        return this.children[this.children.length - 1];
+      }
+      get childElementCount() {
+        return this.children.length;
+      }
+      get classNames() {
+        return this.classList.toString();
+      }
+      /** Clone this Node */
+      clone() {
+        return parse2(this.toString(), this._parseOptions).firstChild;
+      }
+    };
     exports2.default = HTMLElement;
-    var kMarkupPattern = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][-.:0-9_a-zA-Z]*)((?:\s+[^>]*?(?:(?:'[^']*')|(?:"[^"]*"))?)*)\s*(\/?)>/g;
+    var kMarkupPattern = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][-.:0-9_a-zA-Z@\xB7\xC0-\xD6\xD8-\xF6\u00F8-\u03A1\u03A3-\u03D9\u03DB-\u03EF\u03F7-\u03FF\u0400-\u04FF\u0500-\u052F\u1D00-\u1D2B\u1D6B-\u1D77\u1D79-\u1D9A\u1E00-\u1E9B\u1F00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2126\u212A-\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0-\uA7B7\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64-\uAB65\uFB00-\uFB06\uFB13-\uFB17\uFF21-\uFF3A\uFF41-\uFF5A\x37F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*)((?:\s+[^>]*?(?:(?:'[^']*')|(?:"[^"]*"))?)*)\s*(\/?)>/gu;
     var kAttributePattern = /(?:^|\s)(id|class)\s*=\s*((?:'[^']*')|(?:"[^"]*")|\S+)/gi;
     var kElementsClosedByOpening = {
       li: { li: true, LI: true },
@@ -5854,58 +5695,43 @@ var require_html = __commonJS({
       TH: { tr: true, table: true, TR: true, TABLE: true }
     };
     var frameflag = "documentfragmentcontainer";
-    function base_parse(data, options) {
+    function base_parse(data, options = {}) {
       var _a, _b;
-      if (options === void 0) {
-        options = {};
-      }
-      var voidTag = new void_tag_1.default((_a = options === null || options === void 0 ? void 0 : options.voidTag) === null || _a === void 0 ? void 0 : _a.closingSlash, (_b = options === null || options === void 0 ? void 0 : options.voidTag) === null || _b === void 0 ? void 0 : _b.tags);
-      var elements = options.blockTextElements || {
+      const voidTag = new void_tag_1.default((_a = options === null || options === void 0 ? void 0 : options.voidTag) === null || _a === void 0 ? void 0 : _a.closingSlash, (_b = options === null || options === void 0 ? void 0 : options.voidTag) === null || _b === void 0 ? void 0 : _b.tags);
+      const elements = options.blockTextElements || {
         script: true,
         noscript: true,
         style: true,
         pre: true
       };
-      var element_names = Object.keys(elements);
-      var kBlockTextElements = element_names.map(function(it) {
-        return new RegExp("^".concat(it, "$"), "i");
-      });
-      var kIgnoreElements = element_names.filter(function(it) {
-        return Boolean(elements[it]);
-      }).map(function(it) {
-        return new RegExp("^".concat(it, "$"), "i");
-      });
+      const element_names = Object.keys(elements);
+      const kBlockTextElements = element_names.map((it) => new RegExp(`^${it}$`, "i"));
+      const kIgnoreElements = element_names.filter((it) => Boolean(elements[it])).map((it) => new RegExp(`^${it}$`, "i"));
       function element_should_be_ignore(tag) {
-        return kIgnoreElements.some(function(it) {
-          return it.test(tag);
-        });
+        return kIgnoreElements.some((it) => it.test(tag));
       }
       function is_block_text_element(tag) {
-        return kBlockTextElements.some(function(it) {
-          return it.test(tag);
-        });
+        return kBlockTextElements.some((it) => it.test(tag));
       }
-      var createRange = function(startPos, endPos) {
-        return [startPos - frameFlagOffset, endPos - frameFlagOffset];
-      };
-      var root = new HTMLElement(null, {}, "", null, [0, data.length], voidTag, options);
-      var currentParent = root;
-      var stack = [root];
-      var lastTextPos = -1;
-      var noNestedTagIndex = void 0;
-      var match;
-      data = "<".concat(frameflag, ">").concat(data, "</").concat(frameflag, ">");
-      var lowerCaseTagName = options.lowerCaseTagName, fixNestedATags = options.fixNestedATags;
-      var dataEndPos = data.length - (frameflag.length + 2);
-      var frameFlagOffset = frameflag.length + 2;
+      const createRange = (startPos, endPos) => [startPos - frameFlagOffset, endPos - frameFlagOffset];
+      const root = new HTMLElement(null, {}, "", null, [0, data.length], voidTag, options);
+      let currentParent = root;
+      const stack = [root];
+      let lastTextPos = -1;
+      let noNestedTagIndex = void 0;
+      let match;
+      data = `<${frameflag}>${data}</${frameflag}>`;
+      const { lowerCaseTagName, fixNestedATags } = options;
+      const dataEndPos = data.length - (frameflag.length + 2);
+      const frameFlagOffset = frameflag.length + 2;
       while (match = kMarkupPattern.exec(data)) {
-        var matchText = match[0], leadingSlash = match[1], tagName = match[2], attributes = match[3], closingSlash = match[4];
-        var matchLength = matchText.length;
-        var tagStartPos = kMarkupPattern.lastIndex - matchLength;
-        var tagEndPos = kMarkupPattern.lastIndex;
+        let { 0: matchText, 1: leadingSlash, 2: tagName, 3: attributes, 4: closingSlash } = match;
+        const matchLength = matchText.length;
+        const tagStartPos = kMarkupPattern.lastIndex - matchLength;
+        const tagEndPos = kMarkupPattern.lastIndex;
         if (lastTextPos > -1) {
           if (lastTextPos + matchLength < tagEndPos) {
-            var text = data.substring(lastTextPos, tagStartPos);
+            const text = data.substring(lastTextPos, tagStartPos);
             currentParent.appendChild(new text_1.default(text, currentParent, createRange(lastTextPos, tagStartPos)));
           }
         }
@@ -5914,7 +5740,7 @@ var require_html = __commonJS({
           continue;
         if (matchText[1] === "!") {
           if (options.comment) {
-            var text = data.substring(tagStartPos + 4, tagEndPos - 3);
+            const text = data.substring(tagStartPos + 4, tagEndPos - 3);
             currentParent.appendChild(new comment_1.default(text, currentParent, createRange(tagStartPos, tagEndPos)));
           }
           continue;
@@ -5922,13 +5748,13 @@ var require_html = __commonJS({
         if (lowerCaseTagName)
           tagName = tagName.toLowerCase();
         if (!leadingSlash) {
-          var attrs = {};
-          for (var attMatch = void 0; attMatch = kAttributePattern.exec(attributes); ) {
-            var key = attMatch[1], val = attMatch[2];
-            var isQuoted = val[0] === "'" || val[0] === '"';
+          const attrs = {};
+          for (let attMatch; attMatch = kAttributePattern.exec(attributes); ) {
+            const { 1: key, 2: val } = attMatch;
+            const isQuoted = val[0] === `'` || val[0] === `"`;
             attrs[key.toLowerCase()] = isQuoted ? val.slice(1, val.length - 1) : val;
           }
-          var parentTagName = currentParent.rawTagName;
+          const parentTagName = currentParent.rawTagName;
           if (!closingSlash && kElementsClosedByOpening[parentTagName]) {
             if (kElementsClosedByOpening[parentTagName][tagName]) {
               stack.pop();
@@ -5942,21 +5768,21 @@ var require_html = __commonJS({
             }
             noNestedTagIndex = stack.length;
           }
-          var tagEndPos_1 = kMarkupPattern.lastIndex;
-          var tagStartPos_1 = tagEndPos_1 - matchLength;
+          const tagEndPos2 = kMarkupPattern.lastIndex;
+          const tagStartPos2 = tagEndPos2 - matchLength;
           currentParent = currentParent.appendChild(
             // Initialize range (end position updated later for closed tags)
-            new HTMLElement(tagName, attrs, attributes.slice(1), null, createRange(tagStartPos_1, tagEndPos_1), voidTag, options)
+            new HTMLElement(tagName, attrs, attributes.slice(1), null, createRange(tagStartPos2, tagEndPos2), voidTag, options)
           );
           stack.push(currentParent);
           if (is_block_text_element(tagName)) {
-            var closeMarkup = "</".concat(tagName, ">");
-            var closeIndex = lowerCaseTagName ? data.toLocaleLowerCase().indexOf(closeMarkup, kMarkupPattern.lastIndex) : data.indexOf(closeMarkup, kMarkupPattern.lastIndex);
-            var textEndPos = closeIndex === -1 ? dataEndPos : closeIndex;
+            const closeMarkup = `</${tagName}>`;
+            const closeIndex = lowerCaseTagName ? data.toLocaleLowerCase().indexOf(closeMarkup, kMarkupPattern.lastIndex) : data.indexOf(closeMarkup, kMarkupPattern.lastIndex);
+            const textEndPos = closeIndex === -1 ? dataEndPos : closeIndex;
             if (element_should_be_ignore(tagName)) {
-              var text = data.substring(tagEndPos_1, textEndPos);
+              const text = data.substring(tagEndPos2, textEndPos);
               if (text.length > 0 && /\S/.test(text)) {
-                currentParent.appendChild(new text_1.default(text, currentParent, createRange(tagEndPos_1, textEndPos)));
+                currentParent.appendChild(new text_1.default(text, currentParent, createRange(tagEndPos2, textEndPos)));
               }
             }
             if (closeIndex === -1) {
@@ -5977,7 +5803,7 @@ var require_html = __commonJS({
               currentParent = (0, back_1.default)(stack);
               break;
             } else {
-              var parentTagName = currentParent.tagName;
+              const parentTagName = currentParent.tagName;
               if (kElementsClosedByClosing[parentTagName]) {
                 if (kElementsClosedByClosing[parentTagName][tagName]) {
                   stack.pop();
@@ -5993,20 +5819,17 @@ var require_html = __commonJS({
       return stack;
     }
     exports2.base_parse = base_parse;
-    function parse2(data, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      var stack = base_parse(data, options);
-      var root = stack[0];
-      var _loop_1 = function() {
-        var last = stack.pop();
-        var oneBefore = (0, back_1.default)(stack);
+    function parse2(data, options = {}) {
+      const stack = base_parse(data, options);
+      const [root] = stack;
+      while (stack.length > 1) {
+        const last = stack.pop();
+        const oneBefore = (0, back_1.default)(stack);
         if (last.parentNode && last.parentNode.parentNode) {
           if (last.parentNode === oneBefore && last.tagName === oneBefore.tagName) {
             if (options.parseNoneClosedTags !== true) {
               oneBefore.removeChild(last);
-              last.childNodes.forEach(function(child) {
+              last.childNodes.forEach((child) => {
                 oneBefore.parentNode.appendChild(child);
               });
               stack.pop();
@@ -6014,22 +5837,28 @@ var require_html = __commonJS({
           } else {
             if (options.parseNoneClosedTags !== true) {
               oneBefore.removeChild(last);
-              last.childNodes.forEach(function(child) {
+              last.childNodes.forEach((child) => {
                 oneBefore.appendChild(child);
               });
             }
           }
         } else {
         }
-      };
-      while (stack.length > 1) {
-        _loop_1();
       }
       return root;
     }
     exports2.parse = parse2;
+    function resolveInsertable(insertable) {
+      return insertable.map((val) => {
+        if (typeof val === "string") {
+          return new text_1.default(val);
+        }
+        val.remove();
+        return val;
+      });
+    }
     function resetParent(nodes, parent) {
-      return nodes.map(function(node) {
+      return nodes.map((node) => {
         node.parentNode = parent;
         return node;
       });
@@ -6056,11 +5885,8 @@ var require_valid = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     var html_1 = require_html();
-    function valid(data, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      var stack = (0, html_1.base_parse)(data, options);
+    function valid(data, options = {}) {
+      const stack = (0, html_1.base_parse)(data, options);
       return Boolean(stack.length === 1);
     }
     exports2.default = valid;
@@ -6089,10 +5915,7 @@ var require_dist = __commonJS({
     var parse_1 = __importDefault(require_parse3());
     var valid_1 = __importDefault(require_valid());
     exports2.valid = valid_1.default;
-    function parse2(data, options) {
-      if (options === void 0) {
-        options = {};
-      }
+    function parse2(data, options = {}) {
       return (0, parse_1.default)(data, options);
     }
     exports2.default = parse2;

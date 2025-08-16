@@ -56,6 +56,14 @@ interface InstallerOptionsBase {
    * @default 8081
    */
   readonly devServerPort?: number;
+
+  /**
+   * The custom domain name for the VS Code server
+   * Used to configure nginx server_name directive
+   *
+   * @default - uses *.cloudfront.net only
+   */
+  readonly customDomainName?: string;
 }
 
 export interface InstallerOptions extends InstallerOptionsBase {}
@@ -77,6 +85,7 @@ export abstract class Installer {
             options.vsCodeUser,
             options.homeFolder,
             LinuxFlavorType.UBUNTU_22,
+            options.customDomainName,
           );
           documentName = document.name!;
         }
@@ -114,6 +123,7 @@ export abstract class Installer {
             options.vsCodeUser,
             options.homeFolder,
             LinuxFlavorType.AMAZON_LINUX_2023,
+            options.customDomainName,
           );
           documentName = document.name!;
         }
@@ -158,7 +168,13 @@ export abstract class Installer {
     vsCodeUser: string,
     homeFolder: string,
     linuxFlavor: LinuxFlavorType,
+    customDomainName?: string,
   ): ssm.CfnDocument {
+    // Generate nginx server_name directive based on custom domain
+    const serverNameDirective = customDomainName
+      ? `server_name *.cloudfront.net ${customDomainName};`
+      : 'server_name *.cloudfront.net;';
+
     let ssmDocument: ssm.CfnDocument;
     switch (linuxFlavor) {
       case LinuxFlavorType.UBUNTU_22:
@@ -353,7 +369,7 @@ server {
     listen 80;
     listen [::]:80;
     # server_name distribution.distributionDomainName;
-    server_name *.cloudfront.net;
+    ${serverNameDirective}
     location / {
       proxy_pass http://localhost:8080/;
       proxy_set_header Host \\$host;
@@ -619,7 +635,7 @@ server {
     listen 80;
     listen [::]:80;
     # server_name distribution.distributionDomainName;
-    server_name *.cloudfront.net;
+    ${serverNameDirective}
     location / {
       proxy_pass http://localhost:8080/;
       proxy_set_header Host \\$host;

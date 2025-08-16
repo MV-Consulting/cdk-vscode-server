@@ -103,16 +103,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
-          },
-        ],
         "Timeout": 300,
       },
       "Type": "AWS::Lambda::Function",
@@ -220,16 +210,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
             ],
           },
         ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
@@ -280,16 +260,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
-          },
-        ],
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -338,16 +308,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
           },
         ],
       },
@@ -495,16 +455,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
-          },
-        ],
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -553,16 +503,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
           },
         ],
       },
@@ -689,16 +629,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
-          },
-        ],
         "Timeout": 10,
       },
       "Type": "AWS::Lambda::Function",
@@ -743,16 +673,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
           },
         ],
       },
@@ -1031,16 +951,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
@@ -1451,16 +1361,6 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
               "Version": "2012-10-17",
             },
             "PolicyName": "VSCodeInstanceInlinePolicy",
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-          {
-            "Key": "unit-test",
-            "Value": "True",
           },
         ],
       },
@@ -2226,12 +2126,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-        ],
         "Timeout": 300,
       },
       "Type": "AWS::Lambda::Function",
@@ -2339,12 +2233,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
             ],
           },
         ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
@@ -2395,12 +2283,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-        ],
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -2449,12 +2331,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
           },
         ],
       },
@@ -2602,12 +2478,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-        ],
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -2656,12 +2526,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
           },
         ],
       },
@@ -2788,12 +2652,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
           ],
         },
         "Runtime": "nodejs20.x",
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-        ],
         "Timeout": 10,
       },
       "Type": "AWS::Lambda::Function",
@@ -2838,12 +2696,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
           },
         ],
       },
@@ -3114,12 +2966,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
@@ -3518,12 +3364,6 @@ exports[`vscode-server vscode-server-default-props 1`] = `
               "Version": "2012-10-17",
             },
             "PolicyName": "VSCodeInstanceInlinePolicy",
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "app",
-            "Value": "vscode-server",
           },
         ],
       },

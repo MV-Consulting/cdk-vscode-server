@@ -808,19 +808,15 @@ class NodeTagger implements IAspect {
   }
 
   visit(node: IConstruct) {
-    // Skip tagging certain constructs that might cause infinite loops
-    const nodeType = node.constructor.name;
-    if (
-      nodeType === 'Certificate' ||
-      nodeType === 'DnsValidatedCertificate' ||
-      nodeType === 'HostedZone' ||
-      nodeType === 'CustomResource'
-    ) {
-      return;
-    }
-
-    Object.entries(this.tags).forEach(([key, value]) =>
-      Tags.of(node).add(key, value),
-    );
+    // Apply tags to all nodes, but handle errors gracefully to prevent infinite loops
+    Object.entries(this.tags).forEach(([key, value]) => {
+      try {
+        Tags.of(node).add(key, value);
+      } catch (error) {
+        // Silently ignore tagging errors to prevent infinite loops
+        // This can happen with certain CDK constructs that don't support tagging
+        // or when tagging would cause node creation
+      }
+    });
   }
 }

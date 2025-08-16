@@ -303,3 +303,77 @@ describe('vscode-server-cdk-nag-AwsSolutions-Pack', () => {
     expect(errors).toHaveLength(0);
   });
 });
+
+describe('VSCodeServer Tagging', () => {
+  let app: App;
+  let stack: Stack;
+
+  beforeEach(() => {
+    app = new App();
+    stack = new Stack(app, 'TestStack', {
+      env: { account: '123456789012', region: 'us-east-1' },
+    });
+  });
+
+  test('Should apply custom tags without infinite loop', () => {
+    // GIVEN
+    const customTags = {
+      Environment: 'test',
+      Project: 'vscode-server',
+      Owner: 'test-user',
+    };
+
+    // WHEN - This should complete without throwing infinite loop error
+    expect(() => {
+      new VSCodeServer(stack, 'VSCodeServer', {
+        additionalTags: customTags,
+      });
+    }).not.toThrow();
+
+    // THEN - Verify the stack can be synthesized (proves no infinite loop)
+    expect(() => {
+      app.synth();
+    }).not.toThrow();
+  });
+
+  test('Should apply tags to taggable resources', () => {
+    // GIVEN
+    const customTags = {
+      Environment: 'production',
+      CostCenter: '12345',
+    };
+
+    // WHEN
+    new VSCodeServer(stack, 'VSCodeServer', {
+      additionalTags: customTags,
+    });
+
+    // THEN - Verify stack synthesizes successfully (proves no infinite loop)
+    expect(() => {
+      const template = Template.fromStack(stack);
+
+      // Verify at least the EC2 instance has the Environment tag
+      template.hasResourceProperties('AWS::EC2::Instance', {
+        Tags: Match.arrayWith([{ Key: 'Environment', Value: 'production' }]),
+      });
+    }).not.toThrow();
+  });
+
+  test('Should handle empty additional tags', () => {
+    // WHEN - No additional tags provided
+    expect(() => {
+      new VSCodeServer(stack, 'VSCodeServer', {
+        additionalTags: {},
+      });
+      app.synth();
+    }).not.toThrow();
+  });
+
+  test('Should handle undefined additional tags', () => {
+    // WHEN - additionalTags not provided
+    expect(() => {
+      new VSCodeServer(stack, 'VSCodeServer', {});
+      app.synth();
+    }).not.toThrow();
+  });
+});

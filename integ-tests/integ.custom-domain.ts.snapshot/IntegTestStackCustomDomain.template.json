@@ -67,20 +67,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
     ]
    },
    "Metadata": {
@@ -140,20 +126,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 10
    },
    "DependsOn": [
@@ -202,20 +174,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -344,20 +302,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [
@@ -400,36 +344,172 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "IntegVSCodeServercertificate6F7940E2": {
-   "Type": "AWS::CertificateManager::Certificate",
+  "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D": {
+   "Type": "AWS::IAM::Role",
    "Properties": {
-    "DomainName": "vscode-server-test.mavogel.xyz",
-    "DomainValidationOptions": [
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
      {
-      "DomainName": "vscode-server-test.mavogel.xyz",
-      "HostedZoneId": "Z03751551EDMO1J40VL58"
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     },
-     {
-      "Key": "Name",
-      "Value": "IntegTestStackCustomDomain/IntegVSCodeServer/certificate"
-     }
-    ],
-    "ValidationMethod": "DNS"
+    ]
    },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Certificate is created for VS Code server with proper domain validation",
+       "id": "AwsSolutions-ACM1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleDefaultPolicy76767E26": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "acm:AddTagsToCertificate",
+        "acm:DeleteCertificate",
+        "acm:DescribeCertificate",
+        "acm:RequestCertificate",
+        "route53:GetChange"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "route53:changeResourceRecordSets",
+       "Condition": {
+        "ForAllValues:StringEquals": {
+         "route53:ChangeResourceRecordSetsRecordTypes": [
+          "CNAME"
+         ],
+         "route53:ChangeResourceRecordSetsActions": [
+          "UPSERT"
+         ]
+        },
+        "ForAllValues:StringLike": {
+         "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
+          "*.vscode-server-test.mavogel.xyz"
+         ]
+        }
+       },
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":route53:::hostedzone/Z03751551EDMO1J40VL58"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleDefaultPolicy76767E26",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Certificate is created for VS Code server with proper domain validation",
+       "id": "AwsSolutions-ACM1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServercertificateCertificateRequestorFunction6491288C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "b073cebcf4d61fb152a30f5a5e57a94df7f980a549fdf1a79a0b18c5750522d8.zip"
+    },
+    "Handler": "index.certificateRequestHandler",
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleDefaultPolicy76767E26",
+    "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Certificate is created for VS Code server with proper domain validation",
+       "id": "AwsSolutions-ACM1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServercertificateCertificateRequestorResourceFDC04752": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServercertificateCertificateRequestorFunction6491288C",
+      "Arn"
+     ]
+    },
+    "DomainName": "vscode-server-test.mavogel.xyz",
+    "HostedZoneId": "Z03751551EDMO1J40VL58",
+    "Region": "us-east-1"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
    "Metadata": {
     "cdk_nag": {
      "rules_to_suppress": [
@@ -934,21 +1014,7 @@
       }
      ],
      "Version": "2012-10-17"
-    },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ]
+    }
    },
    "Metadata": {
     "cdk_nag": {
@@ -1280,20 +1346,6 @@
       },
       "PolicyName": "VSCodeInstanceInlinePolicy"
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
     ]
    },
    "Metadata": {
@@ -1542,7 +1594,10 @@
      "PriceClass": "PriceClass_All",
      "ViewerCertificate": {
       "AcmCertificateArn": {
-       "Ref": "IntegVSCodeServercertificate6F7940E2"
+       "Fn::GetAtt": [
+        "IntegVSCodeServercertificateCertificateRequestorResourceFDC04752",
+        "Arn"
+       ]
       },
       "MinimumProtocolVersion": "TLSv1.2_2021",
       "SslSupportMethod": "sni-only"
@@ -1937,20 +1992,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
     ]
    },
    "Metadata": {
@@ -2072,20 +2113,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 300
    },
    "DependsOn": [
@@ -2134,20 +2161,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -2276,20 +2289,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environment",
-      "Value": "IntegTestCustomDomain"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [

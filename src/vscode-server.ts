@@ -808,15 +808,40 @@ class NodeTagger implements IAspect {
   }
 
   visit(node: IConstruct) {
-    // Apply tags to all nodes, but handle errors gracefully to prevent infinite loops
-    Object.entries(this.tags).forEach(([key, value]) => {
-      try {
-        Tags.of(node).add(key, value);
-      } catch (error) {
-        // Silently ignore tagging errors to prevent infinite loops
-        // This can happen with certain CDK constructs that don't support tagging
-        // or when tagging would cause node creation
-      }
-    });
+    // Only tag L1 constructs (CfnResource) and L2 constructs that represent AWS resources
+    // This prevents infinite loops by avoiding tagging of intermediate constructs
+    const nodeType = node.constructor.name;
+
+    // Check if this is a CDK L1 construct (starts with 'Cfn') or known taggable L2 constructs
+    const isTaggableConstruct =
+      nodeType.startsWith('Cfn') ||
+      nodeType.includes('Instance') ||
+      nodeType.includes('Vpc') ||
+      nodeType.includes('Subnet') ||
+      nodeType.includes('SecurityGroup') ||
+      nodeType.includes('Volume') ||
+      nodeType.includes('Distribution') ||
+      nodeType.includes('LoadBalancer') ||
+      nodeType.includes('TargetGroup');
+
+    // Skip constructs that are known to cause issues
+    const isProblematicConstruct =
+      nodeType.includes('Certificate') ||
+      nodeType.includes('HostedZone') ||
+      nodeType.includes('CustomResource') ||
+      nodeType.includes('Provider') ||
+      nodeType.includes('Function') ||
+      nodeType.includes('Role') ||
+      nodeType.includes('Policy');
+
+    if (isTaggableConstruct && !isProblematicConstruct) {
+      Object.entries(this.tags).forEach(([key, value]) => {
+        try {
+          Tags.of(node).add(key, value);
+        } catch (error) {
+          // Silently ignore tagging errors
+        }
+      });
+    }
   }
 }

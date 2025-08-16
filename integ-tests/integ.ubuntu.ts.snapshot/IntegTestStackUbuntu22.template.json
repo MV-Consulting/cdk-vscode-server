@@ -59,12 +59,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     }
     ]
    },
    "Metadata": {
@@ -124,12 +118,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     }
-    ],
     "Timeout": 10
    },
    "DependsOn": [
@@ -178,12 +166,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
      }
     ]
    },
@@ -312,12 +294,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [
@@ -789,13 +765,7 @@
       }
      ],
      "Version": "2012-10-17"
-    },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     }
-    ]
+    }
    },
    "Metadata": {
     "cdk_nag": {
@@ -1126,12 +1096,6 @@
        "Version": "2012-10-17"
       },
       "PolicyName": "VSCodeInstanceInlinePolicy"
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
      }
     ]
    },
@@ -1707,12 +1671,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     }
     ]
    },
    "Metadata": {
@@ -1834,12 +1792,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     }
-    ],
     "Timeout": 300
    },
    "DependsOn": [
@@ -1888,12 +1840,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
      }
     ]
    },
@@ -2022,12 +1968,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [

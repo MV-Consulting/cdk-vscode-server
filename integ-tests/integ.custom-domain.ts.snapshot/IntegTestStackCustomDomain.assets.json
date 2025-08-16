@@ -29,6 +29,20 @@
         }
       }
     },
+    "b073cebcf4d61fb152a30f5a5e57a94df7f980a549fdf1a79a0b18c5750522d8": {
+      "displayName": "IntegVSCodeServer/certificate/CertificateRequestorFunction/Code",
+      "source": {
+        "path": "asset.b073cebcf4d61fb152a30f5a5e57a94df7f980a549fdf1a79a0b18c5750522d8",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "b073cebcf4d61fb152a30f5a5e57a94df7f980a549fdf1a79a0b18c5750522d8.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
     "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200": {
       "displayName": "IntegTestStackCustomDomain/Custom::VpcRestrictDefaultSGCustomResourceProvider Code",
       "source": {
@@ -99,7 +113,7 @@
         }
       }
     },
-    "7028cf3cb565cc51a597ac02f66928f1ec20417f8c993ffaaf42c1c94d138373": {
+    "5ada21c4ebacdcda8066710f1448e1522351ea48d095f31137afcb74d5e1ce38": {
       "displayName": "IntegTestStackCustomDomain Template",
       "source": {
         "path": "IntegTestStackCustomDomain.template.json",
@@ -108,7 +122,7 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "7028cf3cb565cc51a597ac02f66928f1ec20417f8c993ffaaf42c1c94d138373.json",
+          "objectKey": "5ada21c4ebacdcda8066710f1448e1522351ea48d095f31137afcb74d5e1ce38.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

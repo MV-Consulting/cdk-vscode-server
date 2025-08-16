@@ -67,20 +67,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
     ]
    },
    "Metadata": {
@@ -140,20 +126,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 10
    },
    "DependsOn": [
@@ -202,20 +174,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -344,20 +302,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [
@@ -893,21 +837,7 @@
       }
      ],
      "Version": "2012-10-17"
-    },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ]
+    }
    },
    "Metadata": {
     "cdk_nag": {
@@ -1238,20 +1168,6 @@
        "Version": "2012-10-17"
       },
       "PolicyName": "VSCodeInstanceInlinePolicy"
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -1833,20 +1749,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
     ]
    },
    "Metadata": {
@@ -1968,20 +1870,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 300
    },
    "DependsOn": [
@@ -2030,20 +1918,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -2172,20 +2046,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [

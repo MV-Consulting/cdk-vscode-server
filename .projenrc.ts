@@ -5,7 +5,7 @@ const project = new MvcCdkConstructLibrary({
   authorAddress: 'info@manuel-vogel.de',
   cdkVersion: '2.190.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib + https://www.npmjs.com/package/@aws-cdk/integ-runner
   defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.9.0',
+  jsiiVersion: '~5.7.0',
   name: 'cdk-vscode-server',
   packageName: '@mavogel/cdk-vscode-server',
   projenVersion: '0.91.8', // Find the latest projen version here: https://www.npmjs.com/package/projen

@@ -18,6 +18,16 @@ type VSCodeServerProps struct {
 	//
 	// Experimental.
 	AdditionalTags *map[string]*string `field:"optional" json:"additionalTags" yaml:"additionalTags"`
+	// Auto-create ACM certificate with DNS validation in us-east-1 region Requires hostedZoneId to be provided for DNS validation Cannot be used together with certificateArn Certificate will automatically be created in us-east-1 as required by CloudFront.
+	// Default: false.
+	//
+	// Experimental.
+	AutoCreateCertificate *bool `field:"optional" json:"autoCreateCertificate" yaml:"autoCreateCertificate"`
+	// ARN of existing ACM certificate for the domain Certificate must be in us-east-1 region for CloudFront Cannot be used together with autoCreateCertificate.
+	// Default: - auto-create certificate if autoCreateCertificate is true.
+	//
+	// Experimental.
+	CertificateArn *string `field:"optional" json:"certificateArn" yaml:"certificateArn"`
 	// Base path for the application to be added to Nginx sites-available list.
 	// Default: - app.
 	//
@@ -28,11 +38,21 @@ type VSCodeServerProps struct {
 	//
 	// Experimental.
 	DevServerPort *float64 `field:"optional" json:"devServerPort" yaml:"devServerPort"`
+	// Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution.
+	// Default: - uses CloudFront default domain.
+	//
+	// Experimental.
+	DomainName *string `field:"optional" json:"domainName" yaml:"domainName"`
 	// Folder to open in VS Code server.
 	// Default: - /Workshop.
 	//
 	// Experimental.
 	HomeFolder *string `field:"optional" json:"homeFolder" yaml:"homeFolder"`
+	// Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name.
+	// Default: - auto-discover from domain name.
+	//
+	// Experimental.
+	HostedZoneId *string `field:"optional" json:"hostedZoneId" yaml:"hostedZoneId"`
 	// VSCode Server EC2 instance class.
 	// Default: - m7g.
 	//

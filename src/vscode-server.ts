@@ -6,10 +6,13 @@ import {
   Stack,
   Tags,
 } from 'aws-cdk-lib';
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as cf from 'aws-cdk-lib/aws-cloudfront';
 import * as cfo from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as route53 from 'aws-cdk-lib/aws-route53';
+import * as route53targets from 'aws-cdk-lib/aws-route53-targets';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct, IConstruct } from 'constructs';
@@ -112,6 +115,43 @@ export interface VSCodeServerProps {
    * @default - {}
    */
   readonly additionalTags?: { [key: string]: string };
+
+  /**
+   * Custom domain name for the VS Code server
+   * When provided, creates a CloudFront distribution with this domain name
+   * and sets up Route53 A record pointing to the distribution
+   *
+   * @default - uses CloudFront default domain
+   */
+  readonly domainName?: string;
+
+  /**
+   * Route53 hosted zone ID for the domain
+   * Required when using autoCreateCertificate
+   * If not provided, will attempt to lookup hosted zone from domain name
+   *
+   * @default - auto-discover from domain name
+   */
+  readonly hostedZoneId?: string;
+
+  /**
+   * ARN of existing ACM certificate for the domain
+   * Certificate must be in us-east-1 region for CloudFront
+   * Cannot be used together with autoCreateCertificate
+   *
+   * @default - auto-create certificate if autoCreateCertificate is true
+   */
+  readonly certificateArn?: string;
+
+  /**
+   * Auto-create ACM certificate with DNS validation in us-east-1 region
+   * Requires hostedZoneId to be provided for DNS validation
+   * Cannot be used together with certificateArn
+   * Certificate will automatically be created in us-east-1 as required by CloudFront
+   *
+   * @default false
+   */
+  readonly autoCreateCertificate?: boolean;
 }
 
 /**
@@ -189,7 +229,43 @@ export class VSCodeServer extends Construct {
     const defaultTags = { app: 'vscode-server' };
 
     const mergedTags = { ...defaultTags, ...additionalTags };
-    Aspects.of(this).add(new NodeTagger(mergedTags));
+    Aspects.of(this).add(new NodeTagger(mergedTags), { priority: 150 });
+
+    // Validate domain configuration
+    const domainName = props?.domainName;
+    const hostedZoneId = props?.hostedZoneId;
+    const certificateArn = props?.certificateArn;
+    const autoCreateCertificate = props?.autoCreateCertificate ?? false;
+
+    if (domainName) {
+      // Validate that either certificateArn or autoCreateCertificate is provided
+      if (!certificateArn && !autoCreateCertificate) {
+        throw new Error(
+          'When domainName is provided, either certificateArn or autoCreateCertificate must be specified',
+        );
+      }
+
+      // Validate that both certificateArn and autoCreateCertificate are not provided together
+      if (certificateArn && autoCreateCertificate) {
+        throw new Error(
+          'Cannot specify both certificateArn and autoCreateCertificate. Choose one.',
+        );
+      }
+
+      // Validate that hostedZoneId is provided when autoCreateCertificate is true
+      if (autoCreateCertificate && !hostedZoneId) {
+        throw new Error(
+          'hostedZoneId is required when autoCreateCertificate is true',
+        );
+      }
+    } else {
+      // Validate that domain-related props are not provided without domainName
+      if (hostedZoneId || certificateArn || autoCreateCertificate) {
+        throw new Error(
+          'hostedZoneId, certificateArn, and autoCreateCertificate can only be used with domainName',
+        );
+      }
+    }
 
     let vscodePassword = props?.vscodePassword ?? '';
     if (vscodePassword == '') {
@@ -223,6 +299,103 @@ export class VSCodeServer extends Construct {
       })._bind(this);
 
       vscodePassword = secretRetriever.secretPasswordPlaintext;
+    }
+
+    // Handle SSL certificate for custom domain
+    let certificate: acm.ICertificate | undefined;
+    let hostedZone: route53.IHostedZone | undefined;
+
+    if (domainName) {
+      // Get or create hosted zone
+      if (hostedZoneId) {
+        hostedZone = route53.HostedZone.fromHostedZoneAttributes(
+          this,
+          'hosted-zone',
+          {
+            hostedZoneId: hostedZoneId,
+            zoneName: domainName,
+          },
+        );
+      } else {
+        // Lookup hosted zone by domain name
+        hostedZone = route53.HostedZone.fromLookup(this, 'hosted-zone', {
+          domainName: domainName,
+        });
+      }
+
+      // Handle certificate
+      if (certificateArn) {
+        // Use existing certificate
+        certificate = acm.Certificate.fromCertificateArn(
+          this,
+          'certificate',
+          certificateArn,
+        );
+      } else if (autoCreateCertificate) {
+        // Create new certificate with DNS validation
+        // CloudFront requires certificates to be in us-east-1 region
+        if (!hostedZone) {
+          throw new Error(
+            'hostedZone is required when autoCreateCertificate is true',
+          );
+        }
+
+        // Note: Using DnsValidatedCertificate (deprecated but still functional)
+        // This is the simplest way to create certificates in us-east-1 from any region
+        // The modern approach requires multi-stack deployment with crossRegionReferences
+        // which is more complex for a construct library to implement cleanly
+        // @ts-ignore - DnsValidatedCertificate is deprecated but still the best option for cross-region certs
+        certificate = new acm.DnsValidatedCertificate(this, 'certificate', {
+          domainName: domainName,
+          hostedZone: hostedZone,
+          region: 'us-east-1',
+          // Explicitly grant the validation Lambda permission to describe certificates
+          customResourceRole: new iam.Role(this, 'certificate-validation-role', {
+            assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+            managedPolicies: [
+              iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+            ],
+            inlinePolicies: {
+              CertificateValidationPolicy: new iam.PolicyDocument({
+                statements: [
+                  new iam.PolicyStatement({
+                    actions: [
+                      'acm:DescribeCertificate',
+                      'acm:RequestCertificate',
+                      'acm:DeleteCertificate',
+                    ],
+                    resources: ['*'],
+                  }),
+                  new iam.PolicyStatement({
+                    actions: [
+                      'route53:GetChange',
+                      'route53:ChangeResourceRecordSets',
+                    ],
+                    resources: ['*'],
+                  }),
+                ],
+              }),
+            },
+          }),
+        });
+
+        NagSuppressions.addResourceSuppressions(
+          [certificate],
+          [
+            {
+              id: 'AwsSolutions-ACM1',
+              reason:
+                'Certificate is created for VS Code server with proper domain validation',
+            },
+            {
+              id: 'AwsSolutions-IAM5',
+              reason:
+                'Certificate validation Lambda needs wildcard permissions for ACM and Route53',
+            },
+          ],
+          true,
+        );
+      }
     }
 
     // Create default vpc
@@ -524,6 +697,13 @@ export class VSCodeServer extends Construct {
       // minimumProtocolVersion: cf.SecurityPolicyProtocol.TLS_V1_2_2021,
       comment: 'Distribution for VSCodeServer',
       priceClass: cf.PriceClass.PRICE_CLASS_ALL,
+      // Custom domain configuration
+      ...(domainName && certificate
+        ? {
+          domainNames: [domainName],
+          certificate: certificate,
+        }
+        : {}),
       defaultBehavior: {
         allowedMethods: cf.AllowedMethods.ALLOW_ALL,
         cachePolicy: cfCachePolicy,
@@ -579,6 +759,28 @@ export class VSCodeServer extends Construct {
       true,
     );
 
+    // Create Route53 A record for custom domain
+    if (domainName && hostedZone) {
+      const aRecord = new route53.ARecord(this, 'domain-record', {
+        zone: hostedZone,
+        recordName: domainName,
+        target: route53.RecordTarget.fromAlias(
+          new route53targets.CloudFrontTarget(distribution),
+        ),
+      });
+
+      NagSuppressions.addResourceSuppressions(
+        [aRecord],
+        [
+          {
+            id: 'AwsSolutions-R53-1',
+            reason: 'A record created for VS Code server custom domain',
+          },
+        ],
+        true,
+      );
+    }
+
     // Use a custom resource lambda to run the SSM document on the instance
     switch (instanceOperatingSystem) {
       case LinuxFlavorType.UBUNTU_22:
@@ -590,6 +792,7 @@ export class VSCodeServer extends Construct {
           devServerBasePath: props?.devServerBasePath,
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
+          customDomainName: domainName,
         })._bind(this);
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
@@ -600,6 +803,7 @@ export class VSCodeServer extends Construct {
           devServerBasePath: props?.devServerBasePath,
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
+          customDomainName: domainName,
         })._bind(this);
         break;
       default:
@@ -611,7 +815,8 @@ export class VSCodeServer extends Construct {
     // atm this is achieved by the integ tests
 
     // Outputs
-    this.domainName = `https://${distribution.domainName}/?folder=${homeFolder}`;
+    const finalDomainName = domainName || distribution.domainName;
+    this.domainName = `https://${finalDomainName}/?folder=${homeFolder}`;
     new CfnOutput(this, 'domainName', {
       description: 'The domain name of the distribution',
       value: this.domainName,
@@ -636,8 +841,40 @@ class NodeTagger implements IAspect {
   }
 
   visit(node: IConstruct) {
-    Object.entries(this.tags).forEach(([key, value]) =>
-      Tags.of(node).add(key, value),
-    );
+    // Only tag L1 constructs (CfnResource) and L2 constructs that represent AWS resources
+    // This prevents infinite loops by avoiding tagging of intermediate constructs
+    const nodeType = node.constructor.name;
+
+    // Check if this is a CDK L1 construct (starts with 'Cfn') or known taggable L2 constructs
+    const isTaggableConstruct =
+      nodeType.startsWith('Cfn') ||
+      nodeType.includes('Instance') ||
+      nodeType.includes('Vpc') ||
+      nodeType.includes('Subnet') ||
+      nodeType.includes('SecurityGroup') ||
+      nodeType.includes('Volume') ||
+      nodeType.includes('Distribution') ||
+      nodeType.includes('LoadBalancer') ||
+      nodeType.includes('TargetGroup');
+
+    // Skip constructs that are known to cause issues
+    const isProblematicConstruct =
+      nodeType.includes('Certificate') ||
+      nodeType.includes('HostedZone') ||
+      nodeType.includes('CustomResource') ||
+      nodeType.includes('Provider') ||
+      nodeType.includes('Function') ||
+      nodeType.includes('Role') ||
+      nodeType.includes('Policy');
+
+    if (isTaggableConstruct && !isProblematicConstruct) {
+      Object.entries(this.tags).forEach(([key, value]) => {
+        try {
+          Tags.of(node).add(key, value);
+        } catch (error) {
+          // Silently ignore tagging errors
+        }
+      });
+    }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "version": "39.0.0",
+  "version": "48.0.0",
   "artifacts": {
     "IntegTestStackUbuntu22.assets": {
       "type": "cdk:asset-manifest",
@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/c5f0ec92afe91ac5502adf561b7de48fb4b24cd3ad9c471df288232897cec6f6.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/a7c2aeec7d9d4fadadd4ac092c193c570531ae7b013f8f6300d15855836ea007.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -34,16 +34,119 @@
         "IntegTestStackUbuntu22.assets"
       ],
       "metadata": {
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/password-secret": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "generateSecretString": {
+                "passwordLength": "*",
+                "secretStringTemplate": "*",
+                "excludePunctuation": true,
+                "includeSpace": false,
+                "generateStringKey": "*"
+              }
+            }
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/password-secret/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerpasswordsecret202A5DB3"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverOnEventHandler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "runtime": "*",
+              "handler": "*",
+              "code": "*"
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
@@ -58,10 +161,130 @@
             "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "code": "*",
+              "description": "*",
+              "runtime": "*",
+              "handler": "*",
+              "timeout": "*",
+              "logGroup": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "securityGroups": "*",
+              "role": "*",
+              "functionName": "*",
+              "environmentEncryption": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
@@ -76,16 +299,83 @@
             "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventCF035CA3"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:warning",
+            "data": "The following keys will be overwritten as they exist in the 'properties' prop. Keys found: ServiceTimeout [ack: @aws-cdk/core:customResourcePropConflict]"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/SecretRetrieverCustomResource/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "maxAzs": "*",
+              "createInternetGateway": true,
+              "subnetConfiguration": [
+                {
+                  "name": "*",
+                  "subnetType": "Public"
+                }
+              ],
+              "enableDnsHostnames": true,
+              "enableDnsSupport": true
+            }
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpc93DDE887"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet1/Subnet": [
@@ -110,6 +400,34 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet1DefaultRoute36845B30"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc/publicSubnet2/Subnet": [
@@ -148,10 +466,40 @@
             "data": "IntegVSCodeServervpcVPCGWA7CDED90"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcRestrictDefaultSecurityGroupCustomResourceF6EA8ED1"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-to-server-sg": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "securityGroupName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": false,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*"
+              ]
+            }
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-to-server-sg/Resource": [
@@ -168,6 +516,13 @@
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup": [
           {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "removalPolicy": "destroy",
+              "retention": 1
+            }
+          },
+          {
             "type": "aws:cdk:is-custom-resource-handler-logGroup",
             "data": true
           }
@@ -178,16 +533,86 @@
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdLogGroup171C2803"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/ImportGetPrefixListIdRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1"
           }
         ],
-        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId": [
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Provider": [
           {
-            "type": "aws:cdk:warning",
-            "data": "installLatestAwsSdk was not specified, and defaults to true. You probably do not want this. Set the global context flag '@aws-cdk/customresources:installLatestAwsSdkDefault' to false to switch this behavior off project-wide, or set the property explicitly to true if you know you need to call APIs that are not in Lambda's built-in SDK version. [ack: @aws-cdk/custom-resources:installLatestAwsSdkNotSpecified]"
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "uuid": "*",
+              "lambdaPurpose": "*",
+              "memorySize": "*",
+              "timeout": "*",
+              "role": "*",
+              "logGroup": "*",
+              "functionName": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "code": "*",
+              "handler": "*",
+              "runtime": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMetadata": [
+                "*",
+                true
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMetadata": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource/Default": [
@@ -196,16 +621,106 @@
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdF0821FFC"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "statements": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/server-instance-role": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "inlinePolicies": "*",
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                },
+                {
+                  "managedPolicyArn": "*"
+                },
+                {
+                  "managedPolicyArn": "*"
+                },
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/server-instance-role/Importserver-instance-role": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/server-instance-role/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerserverinstancerole7745B5BB"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/server-instance": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "instanceName": "*",
+              "instanceType": "*",
+              "machineImage": "*",
+              "requireImdsv2": true,
+              "vpcSubnets": {
+                "subnetType": "Public"
+              },
+              "associatePublicIpAddress": true,
+              "detailedMonitoring": true,
+              "blockDevices": [
+                {
+                  "deviceName": "*",
+                  "volume": "*"
+                }
+              ],
+              "role": "*",
+              "securityGroup": "*",
+              "userData": "*"
+            }
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/server-instance/InstanceProfile": [
@@ -226,10 +741,67 @@
             "data": "IntegVSCodeServerserverinstanceLaunchTemplate43932ED3"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-cache-policy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "cachePolicyName": "*",
+              "comment": "*",
+              "minTtl": "*",
+              "maxTtl": "*",
+              "defaultTtl": "*",
+              "cookieBehavior": "*",
+              "enableAcceptEncodingGzip": false,
+              "headerBehavior": "*",
+              "queryStringBehavior": "*"
+            }
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-cache-policy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfcachepolicy8F5F1F69"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-distribution": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "enabled": true,
+              "httpVersion": "http2and3",
+              "comment": "*",
+              "priceClass": "PriceClass_All",
+              "defaultBehavior": {
+                "allowedMethods": "*",
+                "cachePolicy": "*",
+                "originRequestPolicy": {
+                  "originRequestPolicyId": "*"
+                },
+                "viewerProtocolPolicy": "allow-all",
+                "origin": "*"
+              },
+              "additionalBehaviors": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addBehavior": [
+                "*",
+                {},
+                {
+                  "allowedMethods": "*",
+                  "compress": false,
+                  "cachePolicy": {
+                    "cachePolicyId": "*"
+                  },
+                  "originRequestPolicy": {
+                    "originRequestPolicyId": "*"
+                  },
+                  "viewerProtocolPolicy": "allow-all"
+                }
+              ]
+            }
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/cf-distribution/Resource": [
@@ -244,10 +816,99 @@
             "data": "IntegVSCodeServerssmdocumentubuntuED32BACB"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerOnEventHandler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "runtime": "*",
+              "handler": "*",
+              "code": "*"
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
@@ -262,10 +923,130 @@
             "data": "IntegVSCodeServerInstallerOnEventHandler6FF91542"
           }
         ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider/framework-onEvent": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "code": "*",
+              "description": "*",
+              "runtime": "*",
+              "handler": "*",
+              "timeout": "*",
+              "logGroup": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "securityGroups": "*",
+              "role": "*",
+              "functionName": "*",
+              "environmentEncryption": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
@@ -278,6 +1059,16 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerProviderframeworkonEvent7B6C1190"
+          }
+        ],
+        "/IntegTestStackUbuntu22/IntegVSCodeServer/SSMInstallerCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:warning",
+            "data": "The following keys will be overwritten as they exist in the 'properties' prop. Keys found: ServiceTimeout [ack: @aws-cdk/core:customResourcePropConflict]"
           }
         ],
         "/IntegTestStackUbuntu22/IntegVSCodeServer/SSMInstallerCustomResource/Default": [
@@ -324,6 +1115,21 @@
         ],
         "/IntegTestStackUbuntu22/AWS679f53fac002430cb0da5b7982bd2287": [
           {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "memorySize": "*",
+              "timeout": "*",
+              "role": "*",
+              "logGroup": "*",
+              "functionName": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "code": "*",
+              "handler": "*",
+              "runtime": "*"
+            }
+          },
+          {
             "type": "aws:cdk:is-custom-resource-handler-singleton",
             "data": true
           },
@@ -344,6 +1150,58 @@
             "data": "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
           }
         ],
+        "/IntegTestStackUbuntu22/login-handler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              },
+              "code": "*",
+              "handler": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              }
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/login-handler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/login-handler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/login-handler/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -362,10 +1220,86 @@
             "data": "loginhandlerLogRetentionFD323A9B"
           }
         ],
+        "/IntegTestStackUbuntu22/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackUbuntu22/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
         "/IntegTestStackUbuntu22/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/IntegTestStackUbuntu22/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
           }
         ],
         "/IntegTestStackUbuntu22/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
@@ -430,7 +1364,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e9e286ecf5d93fee2dc2fe580b8b8f9447f83d3b865450563674d96af47a64f7.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/4b172853f97562ce69aef5c13e0e47c1b57b0743f17f3f26595522493ca8c6a9.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -447,6 +1381,20 @@
         "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5.assets"
       ],
       "metadata": {
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
         "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default/Default": [
           {
             "type": "aws:cdk:logicalId",
@@ -504,5 +1452,6 @@
         "file": "tree.json"
       }
     }
-  }
+  },
+  "minimumCliVersion": "2.1025.0"
 }

@@ -67,20 +67,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
     ]
    },
    "Metadata": {
@@ -140,20 +126,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 10
    },
    "DependsOn": [
@@ -202,20 +174,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -268,6 +226,16 @@
          ]
         }
        ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3",
+         "Arn"
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -334,20 +302,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [
@@ -883,21 +837,7 @@
       }
      ],
      "Version": "2012-10-17"
-    },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ]
+    }
    },
    "Metadata": {
     "cdk_nag": {
@@ -919,9 +859,9 @@
       "Arn"
      ]
     },
-    "Create": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c8d558adb0eaa137\"},\"logApiResponseData\":true}",
-    "Update": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c8d558adb0eaa137\"},\"logApiResponseData\":true}",
-    "InstallLatestAwsSdk": "false"
+    "Create": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c8d558adb0eaa137\"}}",
+    "Update": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c8d558adb0eaa137\"}}",
+    "InstallLatestAwsSdk": false
    },
    "DependsOn": [
     "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958"
@@ -1228,20 +1168,6 @@
        "Version": "2012-10-17"
       },
       "PolicyName": "VSCodeInstanceInlinePolicy"
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -1823,20 +1749,6 @@
        ]
       ]
      }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
     ]
    },
    "Metadata": {
@@ -1860,7 +1772,11 @@
     "PolicyDocument": {
      "Statement": [
       {
-       "Action": "ssm:SendCommand",
+       "Action": [
+        "ssm:GetCommandInvocation",
+        "ssm:ListCommandInvocations",
+        "ssm:SendCommand"
+       ],
        "Effect": "Allow",
        "Resource": [
         {
@@ -1946,7 +1862,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.zip"
+     "S3Key": "33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f.zip"
     },
     "Description": "src/installer/installer.lambda.ts",
     "Handler": "index.handler",
@@ -1958,20 +1874,6 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 300
    },
    "DependsOn": [
@@ -2020,20 +1922,6 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
-     }
-    ],
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
      }
     ]
    },
@@ -2086,6 +1974,16 @@
          ]
         }
        ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "IntegVSCodeServerInstallerOnEventHandler6FF91542",
+         "Arn"
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -2152,20 +2050,6 @@
       "value"
      ]
     },
-    "Tags": [
-     {
-      "Key": "app",
-      "Value": "vscode-server"
-     },
-     {
-      "Key": "Environement",
-      "Value": "IntegTestAl2023"
-     },
-     {
-      "Key": "IntegTest",
-      "Value": "True"
-     }
-    ],
     "Timeout": 900
    },
    "DependsOn": [
@@ -2325,7 +2209,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a.zip"
+     "S3Key": "9d043014be736e8162bcc7ec5590cc6d2ff24fd0d9c73a5c5d595151c5fdad00.zip"
     },
     "Handler": "index.handler",
     "LoggingConfig": {
@@ -2392,7 +2276,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "23732f3d1982f7fb0da3bd6638a8107337bb767fea165b45eae12000a1dd67ce.zip"
+     "S3Key": "0ad50fc42afd768c3d0bfdd4701e43284fb077a25f19eea1e8c51a5ca36ebfe4.zip"
     },
     "Handler": "index.handler",
     "Role": {
@@ -2626,10 +2510,10 @@
     "value": "nodejs20.x"
    },
    "cn-north-1": {
-    "value": "nodejs18.x"
+    "value": "nodejs20.x"
    },
    "cn-northwest-1": {
-    "value": "nodejs18.x"
+    "value": "nodejs20.x"
    },
    "eu-central-1": {
     "value": "nodejs20.x"
@@ -2680,10 +2564,10 @@
     "value": "nodejs20.x"
    },
    "us-gov-east-1": {
-    "value": "nodejs18.x"
+    "value": "nodejs20.x"
    },
    "us-gov-west-1": {
-    "value": "nodejs18.x"
+    "value": "nodejs20.x"
    },
    "us-iso-east-1": {
     "value": "nodejs18.x"

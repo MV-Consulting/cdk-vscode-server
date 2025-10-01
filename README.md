@@ -20,6 +20,8 @@ we implement new features. Therefore make sure you use an exact version in your 
 
 - [Features](#features)
 - [Usage](#usage)
+  - [Standard](#Standard)
+  - [Custom Domain Configuration](#custom-domain-configuration)
 - [Solution Design](#solution-design)
 - [Inspiration](#inspiration)
 
@@ -28,9 +30,13 @@ we implement new features. Therefore make sure you use an exact version in your 
 - ⚡ **Quick Setup**: Spin up and configure your [vscode](https://code.visualstudio.com/) server in under 10 minutes in your AWS account
 - 📏 **Best Practice Setup**: Set up with [projen](https://projen.io/) and a [single configuration file](./.projenrc.ts) to keep your changes centralized.
 - 🤹‍♂️ **Pre-installed packages**: Besides the [vscode](https://code.visualstudio.com/) server, other tools and software packages such as `git`, `docker`, `awscli` `nodejs` and `python` are pre-installed on the EC2 instance.
+- 🌐 **Custom Domain Support**: Use your own domain name with automatic ACM certificate creation and Route53 DNS configuration, or bring your existing certificate.
 - 🏗️ **Extensibility**: Pass in properties to the construct, which start with `additional*`. They allow you to extend the configuration to your needs. There are more to come...
 
 ## Usage
+Actually we supported 2 modes:
+
+### Standard
 The following steps get you started:
 
 1. Create a new `awscdk-app` via
@@ -107,6 +113,48 @@ dev.vscodepassword64FBCA12 = foobarbaz
 ```
 
 See the [examples](./examples) folder for more inspiration.
+
+### Custom Domain Configuration
+
+You can configure your VS Code Server with a custom domain name instead of using the default CloudFront domain. The construct supports three different configuration options:
+
+#### Option 1: Auto-create Certificate with DNS Validation
+```ts
+new VSCodeServer(this, 'vscode', {
+  domainName: 'vscode.example.com',
+  hostedZoneId: 'Z123EXAMPLE456',  // optional - will auto-discover if not provided
+  autoCreateCertificate: true,
+});
+```
+
+This will:
+- Create an ACM certificate in us-east-1 (required for CloudFront)
+- Validate the certificate using DNS validation
+- Create a Route53 A record pointing to the CloudFront distribution
+- Configure the CloudFront distribution with the custom domain
+
+#### Option 2: Use Existing Certificate
+```ts
+new VSCodeServer(this, 'vscode', {
+  domainName: 'vscode.example.com',
+  hostedZoneId: 'Z123EXAMPLE456',
+  certificateArn: 'arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012',
+});
+```
+
+**Requirements:**
+- Certificate must be in us-east-1 region
+- Certificate must be validated and ready to use
+- Certificate must include the domain name
+
+#### Option 3: Default (No Custom Domain)
+```ts
+new VSCodeServer(this, 'vscode', {
+  // No domain configuration - uses CloudFront default domain
+});
+```
+
+For complete examples, see [examples/custom-domain/main.ts](./examples/custom-domain/main.ts).
 
 6. Then open the domain name in your favorite browser and you'd see the following login screen:
 ![vscode-server-ui-login](docs/img/vscode-server-ui-login-min.png)

@@ -5,7 +5,7 @@ const project = new MvcCdkConstructLibrary({
   authorAddress: 'info@manuel-vogel.de',
   cdkVersion: '2.190.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib + https://www.npmjs.com/package/@aws-cdk/integ-runner
   defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.7.0',
+  jsiiVersion: '~5.8.0',
   name: 'cdk-vscode-server',
   packageName: '@mavogel/cdk-vscode-server',
   projenVersion: '0.91.8', // Find the latest projen version here: https://www.npmjs.com/package/projen
@@ -13,11 +13,7 @@ const project = new MvcCdkConstructLibrary({
   projenrcTs: true,
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
-  deps: [
-    '@mavogel/mvc-projen@^0.0.7',
-    'constructs@^10.4.2',
-    'cdk-nag',
-  ],
+  deps: ['@mavogel/mvc-projen@^0.0.7', 'constructs@^10.4.2', 'cdk-nag'],
   // If this module is not jsii-enabled, it must also be declared under bundledDependencie
   bundledDeps: ['node-html-parser'],
   description: 'Running VS Code Server on AWS',
@@ -27,6 +23,7 @@ const project = new MvcCdkConstructLibrary({
     '@types/aws-lambda',
     '@types/jsdom',
   ],
+  integTestRegions: ['eu-west-1', 'eu-west-2', 'eu-north-1'],
   // see details for each: https://github.com/cdklabs/publib
   // Go
   publishToGo: {
@@ -52,9 +49,7 @@ const project = new MvcCdkConstructLibrary({
     distName: 'cdk-vscode-server',
     module: 'cdk-vscode-server',
   },
-  gitignore: [
-    'settings.local.json',
-  ],
+  gitignore: ['settings.local.json'],
 });
 
 project.synth();

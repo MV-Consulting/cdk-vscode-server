@@ -125,9 +125,30 @@ export const handler = async (
       }
 
       return { Data: responseData };
-    } catch (error) {
-      console.log(error);
-      throw error;
+    } catch (error: any) {
+      console.log('Error occurred:', error);
+
+      // Check if this is a retryable error (IAM propagation, throttling, etc.)
+      const isUnauthorized = error.name === 'UnauthorizedException' ||
+                            error.name === 'AccessDeniedException' ||
+                            (error.message && error.message.includes('not authorized'));
+      const isThrottled = error.name === 'ThrottlingException' ||
+                         error.name === 'TooManyRequestsException';
+      const isRetryable = isUnauthorized || isThrottled;
+
+      timeRemaining = context.getRemainingTimeInMillis();
+
+      if (isRetryable && timeRemaining > SLEEP_MS) {
+        console.log(
+          `Retryable error encountered (${error.name}). Attempt ${attemptNo}. Sleeping: ${SLEEP_MS / 1000}s before retry`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, SLEEP_MS));
+        // Continue to next iteration of while loop
+      } else {
+        // Non-retryable error or out of time
+        console.log('Non-retryable error or timeout. Failing...');
+        throw error;
+      }
     }
   }
 };

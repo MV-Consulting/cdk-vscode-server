@@ -35,7 +35,7 @@
     "projen": "npx projen",
     "prepare": "husky",
     "awslint": "awslint",
-    "integ-test": "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --update-on-failed"
+    "integ-test": "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --parallel-regions eu-north-1 --update-on-failed"
   },
   "author": {
     "name": "Manuel Vogel",

@@ -349,6 +349,34 @@ export class VSCodeServer extends Construct {
           domainName: domainName,
           hostedZone: hostedZone,
           region: 'us-east-1',
+          // Explicitly grant the validation Lambda permission to describe certificates
+          customResourceRole: new iam.Role(this, 'certificate-validation-role', {
+            assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+            managedPolicies: [
+              iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+            ],
+            inlinePolicies: {
+              CertificateValidationPolicy: new iam.PolicyDocument({
+                statements: [
+                  new iam.PolicyStatement({
+                    actions: [
+                      'acm:DescribeCertificate',
+                      'acm:RequestCertificate',
+                      'acm:DeleteCertificate',
+                    ],
+                    resources: ['*'],
+                  }),
+                  new iam.PolicyStatement({
+                    actions: [
+                      'route53:GetChange',
+                      'route53:ChangeResourceRecordSets',
+                    ],
+                    resources: ['*'],
+                  }),
+                ],
+              }),
+            },
+          }),
         });
 
         NagSuppressions.addResourceSuppressions(
@@ -358,6 +386,11 @@ export class VSCodeServer extends Construct {
               id: 'AwsSolutions-ACM1',
               reason:
                 'Certificate is created for VS Code server with proper domain validation',
+            },
+            {
+              id: 'AwsSolutions-IAM5',
+              reason:
+                'Certificate validation Lambda needs wildcard permissions for ACM and Route53',
             },
           ],
           true,

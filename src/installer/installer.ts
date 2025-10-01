@@ -797,7 +797,11 @@ class CustomResourceInstaller extends Installer {
 
     onEvent.addToRolePolicy(
       new PolicyStatement({
-        actions: ['ssm:SendCommand'],
+        actions: [
+          'ssm:SendCommand',
+          'ssm:GetCommandInvocation',
+          'ssm:ListCommandInvocations',
+        ],
         resources: [documentArn, cwManageAgentArn, targetEc2InstanceArn],
       }),
     );

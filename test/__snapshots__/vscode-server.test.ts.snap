@@ -91,7 +91,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
-          "S3Key": "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.zip",
+          "S3Key": "33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f.zip",
         },
         "Description": "src/installer/installer.lambda.ts",
         "Handler": "index.handler",
@@ -112,7 +112,11 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": "ssm:SendCommand",
+              "Action": [
+                "ssm:SendCommand",
+                "ssm:GetCommandInvocation",
+                "ssm:ListCommandInvocations",
+              ],
               "Effect": "Allow",
               "Resource": [
                 {
@@ -2114,7 +2118,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
-          "S3Key": "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.zip",
+          "S3Key": "33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f.zip",
         },
         "Description": "src/installer/installer.lambda.ts",
         "Handler": "index.handler",
@@ -2135,7 +2139,11 @@ exports[`vscode-server vscode-server-default-props 1`] = `
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": "ssm:SendCommand",
+              "Action": [
+                "ssm:SendCommand",
+                "ssm:GetCommandInvocation",
+                "ssm:ListCommandInvocations",
+              ],
               "Effect": "Allow",
               "Resource": [
                 {

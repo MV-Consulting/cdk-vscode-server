@@ -71,16 +71,16 @@
         }
       }
     },
-    "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa": {
+    "33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f": {
       "displayName": "IntegVSCodeServer/InstallerOnEventHandler/Code",
       "source": {
-        "path": "asset.a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.lambda",
+        "path": "asset.33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f.lambda",
         "packaging": "zip"
       },
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.zip",
+          "objectKey": "33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f.zip",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }
@@ -113,7 +113,7 @@
         }
       }
     },
-    "5ada21c4ebacdcda8066710f1448e1522351ea48d095f31137afcb74d5e1ce38": {
+    "5a265e84c609e126bf964e62660b0e6648bd50fa188b1cdc2ccce0a0f81eeea0": {
       "displayName": "IntegTestStackCustomDomain Template",
       "source": {
         "path": "IntegTestStackCustomDomain.template.json",
@@ -122,7 +122,7 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "5ada21c4ebacdcda8066710f1448e1522351ea48d095f31137afcb74d5e1ce38.json",
+          "objectKey": "5a265e84c609e126bf964e62660b0e6648bd50fa188b1cdc2ccce0a0f81eeea0.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

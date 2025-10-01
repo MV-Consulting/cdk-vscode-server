@@ -120,8 +120,20 @@ var handler = async (event, context) => {
       }
       return { Data: responseData };
     } catch (error) {
-      console.log(error);
-      throw error;
+      console.log("Error occurred:", error);
+      const isUnauthorized = error.name === "UnauthorizedException" || error.name === "AccessDeniedException" || error.message && error.message.includes("not authorized");
+      const isThrottled = error.name === "ThrottlingException" || error.name === "TooManyRequestsException";
+      const isRetryable = isUnauthorized || isThrottled;
+      timeRemaining = context.getRemainingTimeInMillis();
+      if (isRetryable && timeRemaining > SLEEP_MS) {
+        console.log(
+          `Retryable error encountered (${error.name}). Attempt ${attemptNo}. Sleeping: ${SLEEP_MS / 1e3}s before retry`
+        );
+        await new Promise((resolve) => setTimeout(resolve, SLEEP_MS));
+      } else {
+        console.log("Non-retryable error or timeout. Failing...");
+        throw error;
+      }
     }
   }
 };

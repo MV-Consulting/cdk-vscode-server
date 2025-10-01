@@ -344,7 +344,7 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D": {
+  "IntegVSCodeServercertificatevalidationroleBD33BDA4": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -372,20 +372,31 @@
        ]
       ]
      }
+    ],
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "acm:DeleteCertificate",
+          "acm:DescribeCertificate",
+          "acm:RequestCertificate",
+          "route53:ChangeResourceRecordSets",
+          "route53:GetChange"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": "CertificateValidationPolicy"
+     }
     ]
-   },
-   "Metadata": {
-    "cdk_nag": {
-     "rules_to_suppress": [
-      {
-       "reason": "Certificate is created for VS Code server with proper domain validation",
-       "id": "AwsSolutions-ACM1"
-      }
-     ]
-    }
    }
   },
-  "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleDefaultPolicy76767E26": {
+  "IntegVSCodeServercertificatevalidationroleDefaultPolicy7ED8ABBB": {
    "Type": "AWS::IAM::Policy",
    "Properties": {
     "PolicyDocument": {
@@ -435,22 +446,12 @@
      ],
      "Version": "2012-10-17"
     },
-    "PolicyName": "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleDefaultPolicy76767E26",
+    "PolicyName": "IntegVSCodeServercertificatevalidationroleDefaultPolicy7ED8ABBB",
     "Roles": [
      {
-      "Ref": "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D"
+      "Ref": "IntegVSCodeServercertificatevalidationroleBD33BDA4"
      }
     ]
-   },
-   "Metadata": {
-    "cdk_nag": {
-     "rules_to_suppress": [
-      {
-       "reason": "Certificate is created for VS Code server with proper domain validation",
-       "id": "AwsSolutions-ACM1"
-      }
-     ]
-    }
    }
   },
   "IntegVSCodeServercertificateCertificateRequestorFunction6491288C": {
@@ -465,7 +466,7 @@
     "Handler": "index.certificateRequestHandler",
     "Role": {
      "Fn::GetAtt": [
-      "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D",
+      "IntegVSCodeServercertificatevalidationroleBD33BDA4",
       "Arn"
      ]
     },
@@ -481,8 +482,8 @@
     "Timeout": 900
    },
    "DependsOn": [
-    "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleDefaultPolicy76767E26",
-    "IntegVSCodeServercertificateCertificateRequestorFunctionServiceRoleC262E59D"
+    "IntegVSCodeServercertificatevalidationroleDefaultPolicy7ED8ABBB",
+    "IntegVSCodeServercertificatevalidationroleBD33BDA4"
    ],
    "Metadata": {
     "cdk_nag": {
@@ -490,6 +491,10 @@
       {
        "reason": "Certificate is created for VS Code server with proper domain validation",
        "id": "AwsSolutions-ACM1"
+      },
+      {
+       "reason": "Certificate validation Lambda needs wildcard permissions for ACM and Route53",
+       "id": "AwsSolutions-IAM5"
       }
      ]
     }
@@ -516,6 +521,10 @@
       {
        "reason": "Certificate is created for VS Code server with proper domain validation",
        "id": "AwsSolutions-ACM1"
+      },
+      {
+       "reason": "Certificate validation Lambda needs wildcard permissions for ACM and Route53",
+       "id": "AwsSolutions-IAM5"
       }
      ]
     }
@@ -2015,7 +2024,11 @@
     "PolicyDocument": {
      "Statement": [
       {
-       "Action": "ssm:SendCommand",
+       "Action": [
+        "ssm:GetCommandInvocation",
+        "ssm:ListCommandInvocations",
+        "ssm:SendCommand"
+       ],
        "Effect": "Allow",
        "Resource": [
         {
@@ -2101,7 +2114,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "a9865c9d36c7aa999e28cb7926e7a3a8e0b6d0854b25131a172024c5777442fa.zip"
+     "S3Key": "33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f.zip"
     },
     "Description": "src/installer/installer.lambda.ts",
     "Handler": "index.handler",

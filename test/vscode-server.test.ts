@@ -377,3 +377,224 @@ describe('VSCodeServer Tagging', () => {
     }).not.toThrow();
   });
 });
+
+describe('vscode-server-auto-stop', () => {
+  test('should create auto-stop resources when enabled', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+      idleTimeoutMinutes: 30,
+      enableAutoResume: true,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Verify DynamoDB table
+    template.hasResourceProperties('AWS::DynamoDB::Table', {
+      BillingMode: 'PAY_PER_REQUEST',
+      KeySchema: [
+        {
+          AttributeName: 'instanceId',
+          KeyType: 'HASH',
+        },
+      ],
+    });
+
+    // Verify IdleMonitor Lambda
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: Match.objectLike({
+        Variables: Match.objectLike({
+          IDLE_TIMEOUT_MINUTES: '30',
+        }),
+      }),
+    });
+
+    // Verify EventBridge rule
+    template.hasResourceProperties('AWS::Events::Rule', {
+      ScheduleExpression: 'rate(5 minutes)',
+    });
+
+    // Verify API Gateway
+    template.hasResourceProperties('AWS::ApiGateway::RestApi', {
+      Name: 'VSCodeStatusCheckApi',
+    });
+
+    // Verify ResumeHandler Lambda
+    template.resourcePropertiesCountIs(
+      'AWS::Lambda::Function',
+      {
+        Runtime: 'nodejs20.x',
+        Timeout: 5,
+      },
+      1,
+    );
+  });
+
+  test('should not create auto-stop resources when disabled', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: false,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should NOT have API Gateway
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
+
+    // Should NOT have EventBridge rule with 5 minutes schedule
+    const rules = template.findResources('AWS::Events::Rule');
+    const hasIdleMonitorRule = Object.values(rules).some(
+      (rule: any) => rule.Properties?.ScheduleExpression === 'rate(5 minutes)',
+    );
+    expect(hasIdleMonitorRule).toBe(false);
+  });
+
+  test('should use default idle timeout when not specified', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should use default 30 minutes
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: Match.objectLike({
+        Variables: Match.objectLike({
+          IDLE_TIMEOUT_MINUTES: '30',
+        }),
+      }),
+    });
+  });
+
+  test('should use custom idle timeout when specified', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+      idleTimeoutMinutes: 60,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should use custom 60 minutes
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: Match.objectLike({
+        Variables: Match.objectLike({
+          IDLE_TIMEOUT_MINUTES: '60',
+        }),
+      }),
+    });
+  });
+
+  test('should maintain backward compatibility when auto-stop not specified', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {};
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should NOT have auto-stop resources
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
+  });
+
+  test('should create resume handler when enableAutoResume is true', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+      enableAutoResume: true,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should have Lambda function with 5 second timeout (Lambda@Edge requirement)
+    template.resourcePropertiesCountIs(
+      'AWS::Lambda::Function',
+      {
+        Timeout: 5,
+      },
+      1,
+    );
+  });
+
+  test('should create outputs for auto-stop resources', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+      enableAutoResume: true,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should have status API URL output
+    template.hasOutput('*', {
+      Description: 'Status check API URL',
+    });
+
+    // Should have resume handler info output
+    template.hasOutput('*', {
+      Description: Match.stringLikeRegexp('Lambda@Edge.*auto-resume'),
+    });
+  });
+});

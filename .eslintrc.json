@@ -146,8 +146,11 @@
         "devDependencies": [
           "**/test/**",
           "**/build-tools/**",
+          "src/idle-monitor/idle-monitor.lambda.ts",
           "src/installer/installer.lambda.ts",
+          "src/resume-handler/resume-handler.lambda.ts",
           "src/secret-retriever/secret-retriever.lambda.ts",
+          "src/status-check/status-check.lambda.ts",
           ".projenrc.ts",
           "projenrc/**/*.ts"
         ],

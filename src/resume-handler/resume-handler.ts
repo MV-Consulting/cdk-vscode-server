@@ -1,0 +1,67 @@
+import * as path from 'path';
+import { Duration, Stack } from 'aws-cdk-lib';
+import { ITable } from 'aws-cdk-lib/aws-dynamodb';
+import { IInstance } from 'aws-cdk-lib/aws-ec2';
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Code, Runtime, Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda';
+import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
+
+export interface ResumeHandlerProps {
+  readonly instance: IInstance;
+  readonly stateTable: ITable;
+  readonly statusApiUrl: string;
+}
+
+export class ResumeHandler extends Construct {
+  public readonly function: LambdaFunction;
+
+  constructor(scope: Construct, id: string, props: ResumeHandlerProps) {
+    super(scope, id);
+
+    // Lambda@Edge requires specific configuration
+    this.function = new LambdaFunction(this, 'Function', {
+      runtime: Runtime.NODEJS_20_X,
+      handler: 'index.handler',
+      code: Code.fromAsset(path.join(__dirname, '../../assets/resume-handler/resume-handler.lambda')),
+      timeout: Duration.seconds(5), // Lambda@Edge viewer request max
+      memorySize: 128, // Lambda@Edge minimum
+      environment: {
+        TABLE_NAME: props.stateTable.tableName,
+        INSTANCE_ID: props.instance.instanceId,
+        STATUS_API_URL: props.statusApiUrl,
+      },
+    });
+
+    // Grant permissions
+    props.stateTable.grantReadWriteData(this.function);
+
+    this.function.addToRolePolicy(
+      new PolicyStatement({
+        actions: [
+          'ec2:StartInstances',
+          'ec2:DescribeInstances',
+        ],
+        resources: [
+          `arn:aws:ec2:${Stack.of(this).region}:${Stack.of(this).account}:instance/${props.instance.instanceId}`,
+        ],
+      }),
+    );
+
+    // CDK-nag suppressions
+    NagSuppressions.addResourceSuppressions(
+      this.function,
+      [
+        {
+          id: 'AwsSolutions-IAM4',
+          reason: 'Managed policies acceptable for Lambda@Edge functions',
+        },
+        {
+          id: 'AwsSolutions-L1',
+          reason: 'Runtime version compatible with Lambda@Edge',
+        },
+      ],
+      true,
+    );
+  }
+}

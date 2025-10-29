@@ -20,6 +20,10 @@ const project = new MvcCdkConstructLibrary({
   devDeps: [
     '@aws-sdk/client-ssm',
     '@aws-sdk/client-secrets-manager',
+    '@aws-sdk/client-dynamodb',
+    '@aws-sdk/lib-dynamodb',
+    '@aws-sdk/client-cloudwatch',
+    '@aws-sdk/client-ec2',
     '@types/aws-lambda',
     '@types/jsdom',
   ],

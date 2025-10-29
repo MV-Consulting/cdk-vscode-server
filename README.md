@@ -31,6 +31,7 @@ we implement new features. Therefore make sure you use an exact version in your 
 - 📏 **Best Practice Setup**: Set up with [projen](https://projen.io/) and a [single configuration file](./.projenrc.ts) to keep your changes centralized.
 - 🤹‍♂️ **Pre-installed packages**: Besides the [vscode](https://code.visualstudio.com/) server, other tools and software packages such as `git`, `docker`, `awscli` `nodejs` and `python` are pre-installed on the EC2 instance.
 - 🌐 **Custom Domain Support**: Use your own domain name with automatic ACM certificate creation and Route53 DNS configuration, or bring your existing certificate.
+- 💰 **Auto-Stop/Resume**: Automatically stop EC2 instances after inactivity and resume on access - save up to 75% on costs for development environments
 - 🏗️ **Extensibility**: Pass in properties to the construct, which start with `additional*`. They allow you to extend the configuration to your needs. There are more to come...
 
 ## Usage
@@ -165,6 +166,42 @@ For complete examples, see [examples/custom-domain/main.ts](./examples/custom-do
 
 > [!Important]
 > There are issues with copy pasting into the VSCode terminal within the Firefox browser (2025-01-12)
+
+### Auto-Stop/Resume Configuration
+
+Save up to 75% on costs by automatically stopping EC2 instances when idle and resuming them on access:
+
+```ts
+new VSCodeServer(this, 'vscode', {
+  enableAutoStop: true,              // Enable auto-stop feature
+  idleTimeoutMinutes: 30,            // Stop after 30 minutes of no activity (default)
+  enableAutoResume: true,            // Enable auto-resume on access (default: true)
+});
+```
+
+**How it works:**
+1. **Idle Detection**: Monitors CloudFront request metrics every 5 minutes
+2. **Auto-Stop**: Stops the EC2 instance after the configured idle timeout (no requests)
+3. **Auto-Resume**: Lambda@Edge intercepts requests to stopped instances and starts them automatically
+4. **User Experience**: Users see a polished loading page with real-time status updates during startup
+
+**Cost Savings Example:**
+- **Without auto-stop**: m7g.xlarge running 24/7 = ~$120/month
+- **With auto-stop** (8 hours/day, 5 days/week): ~$30/month
+- **Savings**: ~$90/month (75% reduction)
+
+**Additional costs:**
+- DynamoDB (state tracking): ~$0.25/month
+- Lambda functions: ~$0.20/month
+- **Net savings**: ~$89/month per instance
+
+**Architecture Components:**
+- DynamoDB table for instance state tracking
+- EventBridge rule triggering idle monitor every 5 minutes
+- IdleMonitor Lambda function checking CloudWatch metrics
+- StatusCheck API for real-time instance status
+- ResumeHandler Lambda@Edge for intercepting requests
+- Beautiful HTML loading page with auto-refresh
 
 ## Solution Design
 

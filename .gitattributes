@@ -27,6 +27,9 @@
 /LICENSE linguist-generated
 /package-lock.json linguist-generated
 /package.json linguist-generated
+/src/idle-monitor/idle-monitor-function.ts linguist-generated
 /src/installer/installer-function.ts linguist-generated
+/src/resume-handler/resume-handler-function.ts linguist-generated
 /src/secret-retriever/secret-retriever-function.ts linguist-generated
+/src/status-check/status-check-function.ts linguist-generated
 /tsconfig.dev.json linguist-generated

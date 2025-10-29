@@ -16,10 +16,14 @@ import * as route53targets from 'aws-cdk-lib/aws-route53-targets';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct, IConstruct } from 'constructs';
+import { IdleMonitor } from './idle-monitor/idle-monitor';
 import { Installer } from './installer/installer';
 import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from './mappings';
 import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retriever';
+import { ResumeHandler } from './resume-handler/resume-handler';
 import { SecretRetriever } from './secret-retriever/secret-retriever';
+import { InstanceStateTable } from './state-table/state-table';
+import { StatusCheckApi } from './status-check/status-check';
 
 /**
  * Properties for the VSCodeServer construct
@@ -152,6 +156,31 @@ export interface VSCodeServerProps {
    * @default false
    */
   readonly autoCreateCertificate?: boolean;
+
+  /**
+   * Enable automatic instance stop when idle
+   * Monitors CloudFront metrics and stops the EC2 instance after specified idle time
+   *
+   * @default false
+   */
+  readonly enableAutoStop?: boolean;
+
+  /**
+   * Minutes of inactivity before stopping the instance
+   * Only applies when enableAutoStop is true
+   *
+   * @default 30
+   */
+  readonly idleTimeoutMinutes?: number;
+
+  /**
+   * Enable automatic instance resume when user accesses stopped instance
+   * Uses Lambda@Edge to intercept requests and start the instance
+   * Only applies when enableAutoStop is true
+   *
+   * @default true
+   */
+  readonly enableAutoResume?: boolean;
 }
 
 /**
@@ -813,6 +842,50 @@ export class VSCodeServer extends Construct {
 
     // NOTE: maybe have a healhcheck CFN custom resource to see if the vscode server is healthy
     // atm this is achieved by the integ tests
+
+    // Auto-stop/resume feature
+    if (props?.enableAutoStop) {
+      // Create state table
+      const stateTable = new InstanceStateTable(this, 'StateTable', {
+        tableName: `${instanceName}-StateTable`,
+      });
+
+      // Create status check API
+      const statusApi = new StatusCheckApi(this, 'StatusApi', {
+        instance: instance,
+        stateTable: stateTable.table,
+      });
+
+      // Create idle monitor
+      new IdleMonitor(this, 'IdleMonitor', {
+        instance: instance,
+        distribution: distribution,
+        stateTable: stateTable.table,
+        idleTimeoutMinutes: props?.idleTimeoutMinutes ?? 30,
+      });
+
+      // Create and attach resume handler (Lambda@Edge) if enabled
+      if (props?.enableAutoResume ?? true) {
+        new ResumeHandler(this, 'ResumeHandler', {
+          instance: instance,
+          stateTable: stateTable.table,
+          statusApiUrl: statusApi.apiUrl,
+        });
+
+        // Note: Lambda@Edge association with CloudFront requires manual setup
+        // or using escape hatch to modify the CfnDistribution
+        // This is left as a TODO for complete implementation
+        new CfnOutput(this, 'resumeHandlerInfo', {
+          description: 'Lambda@Edge function for auto-resume (requires manual CloudFront association)',
+          value: 'Auto-resume handler created - manual CloudFront association required',
+        });
+      }
+
+      new CfnOutput(this, 'statusApiUrl', {
+        description: 'Status check API URL',
+        value: statusApi.apiUrl,
+      });
+    }
 
     // Outputs
     const finalDomainName = domainName || distribution.domainName;

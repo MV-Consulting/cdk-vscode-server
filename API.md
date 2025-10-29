@@ -2,6 +2,526 @@
 
 ## Constructs <a name="Constructs" id="Constructs"></a>
 
+### IdleMonitor <a name="IdleMonitor" id="@mavogel/cdk-vscode-server.IdleMonitor"></a>
+
+#### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer"></a>
+
+```typescript
+import { IdleMonitor } from '@mavogel/cdk-vscode-server'
+
+new IdleMonitor(scope: Construct, id: string, props: IdleMonitorProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.props">props</a></code> | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps">IdleMonitorProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.IdleMonitorProps">IdleMonitorProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="@mavogel/cdk-vscode-server.IdleMonitor.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@mavogel/cdk-vscode-server.IdleMonitor.isConstruct"></a>
+
+```typescript
+import { IdleMonitor } from '@mavogel/cdk-vscode-server'
+
+IdleMonitor.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@mavogel/cdk-vscode-server.IdleMonitor.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@mavogel/cdk-vscode-server.IdleMonitor.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `function`<sup>Required</sup> <a name="function" id="@mavogel/cdk-vscode-server.IdleMonitor.property.function"></a>
+
+```typescript
+public readonly function: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
+### InstanceStateTable <a name="InstanceStateTable" id="@mavogel/cdk-vscode-server.InstanceStateTable"></a>
+
+DynamoDB table for tracking instance state and activity.
+
+#### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.InstanceStateTable.Initializer"></a>
+
+```typescript
+import { InstanceStateTable } from '@mavogel/cdk-vscode-server'
+
+new InstanceStateTable(scope: Construct, id: string, props?: InstanceStateTableProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.Initializer.parameter.props">props</a></code> | <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTableProps">InstanceStateTableProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="@mavogel/cdk-vscode-server.InstanceStateTable.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="@mavogel/cdk-vscode-server.InstanceStateTable.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Optional</sup> <a name="props" id="@mavogel/cdk-vscode-server.InstanceStateTable.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.InstanceStateTableProps">InstanceStateTableProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="@mavogel/cdk-vscode-server.InstanceStateTable.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@mavogel/cdk-vscode-server.InstanceStateTable.isConstruct"></a>
+
+```typescript
+import { InstanceStateTable } from '@mavogel/cdk-vscode-server'
+
+InstanceStateTable.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@mavogel/cdk-vscode-server.InstanceStateTable.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.property.table">table</a></code> | <code>aws-cdk-lib.aws_dynamodb.Table</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@mavogel/cdk-vscode-server.InstanceStateTable.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `table`<sup>Required</sup> <a name="table" id="@mavogel/cdk-vscode-server.InstanceStateTable.property.table"></a>
+
+```typescript
+public readonly table: Table;
+```
+
+- *Type:* aws-cdk-lib.aws_dynamodb.Table
+
+---
+
+
+### ResumeHandler <a name="ResumeHandler" id="@mavogel/cdk-vscode-server.ResumeHandler"></a>
+
+#### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer"></a>
+
+```typescript
+import { ResumeHandler } from '@mavogel/cdk-vscode-server'
+
+new ResumeHandler(scope: Construct, id: string, props: ResumeHandlerProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.props">props</a></code> | <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps">ResumeHandlerProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps">ResumeHandlerProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="@mavogel/cdk-vscode-server.ResumeHandler.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@mavogel/cdk-vscode-server.ResumeHandler.isConstruct"></a>
+
+```typescript
+import { ResumeHandler } from '@mavogel/cdk-vscode-server'
+
+ResumeHandler.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@mavogel/cdk-vscode-server.ResumeHandler.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@mavogel/cdk-vscode-server.ResumeHandler.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `function`<sup>Required</sup> <a name="function" id="@mavogel/cdk-vscode-server.ResumeHandler.property.function"></a>
+
+```typescript
+public readonly function: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
+### StatusCheckApi <a name="StatusCheckApi" id="@mavogel/cdk-vscode-server.StatusCheckApi"></a>
+
+#### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer"></a>
+
+```typescript
+import { StatusCheckApi } from '@mavogel/cdk-vscode-server'
+
+new StatusCheckApi(scope: Construct, id: string, props: StatusCheckApiProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.props">props</a></code> | <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps">StatusCheckApiProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps">StatusCheckApiProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="@mavogel/cdk-vscode-server.StatusCheckApi.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@mavogel/cdk-vscode-server.StatusCheckApi.isConstruct"></a>
+
+```typescript
+import { StatusCheckApi } from '@mavogel/cdk-vscode-server'
+
+StatusCheckApi.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@mavogel/cdk-vscode-server.StatusCheckApi.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.api">api</a></code> | <code>aws-cdk-lib.aws_apigateway.RestApi</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.apiUrl">apiUrl</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `api`<sup>Required</sup> <a name="api" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.api"></a>
+
+```typescript
+public readonly api: RestApi;
+```
+
+- *Type:* aws-cdk-lib.aws_apigateway.RestApi
+
+---
+
+##### `apiUrl`<sup>Required</sup> <a name="apiUrl" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.apiUrl"></a>
+
+```typescript
+public readonly apiUrl: string;
+```
+
+- *Type:* string
+
+---
+
+##### `function`<sup>Required</sup> <a name="function" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.function"></a>
+
+```typescript
+public readonly function: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
 ### VSCodeServer <a name="VSCodeServer" id="@mavogel/cdk-vscode-server.VSCodeServer"></a>
 
 VSCodeServer - spin it up in under 10 minutes.
@@ -145,6 +665,187 @@ The password to login to the server.
 
 ## Structs <a name="Structs" id="Structs"></a>
 
+### IdleMonitorProps <a name="IdleMonitorProps" id="@mavogel/cdk-vscode-server.IdleMonitorProps"></a>
+
+#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.IdleMonitorProps.Initializer"></a>
+
+```typescript
+import { IdleMonitorProps } from '@mavogel/cdk-vscode-server'
+
+const idleMonitorProps: IdleMonitorProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.distribution">distribution</a></code> | <code>aws-cdk-lib.aws_cloudfront.IDistribution</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | *No description.* |
+
+---
+
+##### `distribution`<sup>Required</sup> <a name="distribution" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.distribution"></a>
+
+```typescript
+public readonly distribution: IDistribution;
+```
+
+- *Type:* aws-cdk-lib.aws_cloudfront.IDistribution
+
+---
+
+##### `idleTimeoutMinutes`<sup>Required</sup> <a name="idleTimeoutMinutes" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes"></a>
+
+```typescript
+public readonly idleTimeoutMinutes: number;
+```
+
+- *Type:* number
+
+---
+
+##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance"></a>
+
+```typescript
+public readonly instance: IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IInstance
+
+---
+
+##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable"></a>
+
+```typescript
+public readonly stateTable: ITable;
+```
+
+- *Type:* aws-cdk-lib.aws_dynamodb.ITable
+
+---
+
+### InstanceStateTableProps <a name="InstanceStateTableProps" id="@mavogel/cdk-vscode-server.InstanceStateTableProps"></a>
+
+#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.InstanceStateTableProps.Initializer"></a>
+
+```typescript
+import { InstanceStateTableProps } from '@mavogel/cdk-vscode-server'
+
+const instanceStateTableProps: InstanceStateTableProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTableProps.property.tableName">tableName</a></code> | <code>string</code> | Table name. |
+
+---
+
+##### `tableName`<sup>Optional</sup> <a name="tableName" id="@mavogel/cdk-vscode-server.InstanceStateTableProps.property.tableName"></a>
+
+```typescript
+public readonly tableName: string;
+```
+
+- *Type:* string
+- *Default:* auto-generated
+
+Table name.
+
+---
+
+### ResumeHandlerProps <a name="ResumeHandlerProps" id="@mavogel/cdk-vscode-server.ResumeHandlerProps"></a>
+
+#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.Initializer"></a>
+
+```typescript
+import { ResumeHandlerProps } from '@mavogel/cdk-vscode-server'
+
+const resumeHandlerProps: ResumeHandlerProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.statusApiUrl">statusApiUrl</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.property.instance"></a>
+
+```typescript
+public readonly instance: IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IInstance
+
+---
+
+##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.property.stateTable"></a>
+
+```typescript
+public readonly stateTable: ITable;
+```
+
+- *Type:* aws-cdk-lib.aws_dynamodb.ITable
+
+---
+
+##### `statusApiUrl`<sup>Required</sup> <a name="statusApiUrl" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.property.statusApiUrl"></a>
+
+```typescript
+public readonly statusApiUrl: string;
+```
+
+- *Type:* string
+
+---
+
+### StatusCheckApiProps <a name="StatusCheckApiProps" id="@mavogel/cdk-vscode-server.StatusCheckApiProps"></a>
+
+#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.Initializer"></a>
+
+```typescript
+import { StatusCheckApiProps } from '@mavogel/cdk-vscode-server'
+
+const statusCheckApiProps: StatusCheckApiProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | *No description.* |
+
+---
+
+##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.property.instance"></a>
+
+```typescript
+public readonly instance: IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IInstance
+
+---
+
+##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.property.stateTable"></a>
+
+```typescript
+public readonly stateTable: ITable;
+```
+
+- *Type:* aws-cdk-lib.aws_dynamodb.ITable
+
+---
+
 ### VSCodeServerProps <a name="VSCodeServerProps" id="@mavogel/cdk-vscode-server.VSCodeServerProps"></a>
 
 Properties for the VSCodeServer construct.
@@ -168,8 +869,11 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath">devServerBasePath</a></code> | <code>string</code> | Base path for the application to be added to Nginx sites-available list. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerPort">devServerPort</a></code> | <code>number</code> | Port for the DevServer. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.domainName">domainName</a></code> | <code>string</code> | Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoResume">enableAutoResume</a></code> | <code>boolean</code> | Enable automatic instance resume when user accesses stopped instance Uses Lambda@Edge to intercept requests and start the instance Only applies when enableAutoStop is true. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoStop">enableAutoStop</a></code> | <code>boolean</code> | Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder">homeFolder</a></code> | <code>string</code> | Folder to open in VS Code server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.hostedZoneId">hostedZoneId</a></code> | <code>string</code> | Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | Minutes of inactivity before stopping the instance Only applies when enableAutoStop is true. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceClass">instanceClass</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceClass</code> | VSCode Server EC2 instance class. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceCpuArchitecture">instanceCpuArchitecture</a></code> | <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType">LinuxArchitectureType</a></code> | VSCode Server EC2 cpu architecture for the operating system. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceName">instanceName</a></code> | <code>string</code> | VSCode Server EC2 instance name. |
@@ -272,6 +976,32 @@ Custom domain name for the VS Code server When provided, creates a CloudFront di
 
 ---
 
+##### `enableAutoResume`<sup>Optional</sup> <a name="enableAutoResume" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoResume"></a>
+
+```typescript
+public readonly enableAutoResume: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Enable automatic instance resume when user accesses stopped instance Uses Lambda@Edge to intercept requests and start the instance Only applies when enableAutoStop is true.
+
+---
+
+##### `enableAutoStop`<sup>Optional</sup> <a name="enableAutoStop" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoStop"></a>
+
+```typescript
+public readonly enableAutoStop: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time.
+
+---
+
 ##### `homeFolder`<sup>Optional</sup> <a name="homeFolder" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder"></a>
 
 ```typescript
@@ -295,6 +1025,19 @@ public readonly hostedZoneId: string;
 - *Default:* auto-discover from domain name
 
 Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name.
+
+---
+
+##### `idleTimeoutMinutes`<sup>Optional</sup> <a name="idleTimeoutMinutes" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleTimeoutMinutes"></a>
+
+```typescript
+public readonly idleTimeoutMinutes: number;
+```
+
+- *Type:* number
+- *Default:* 30
+
+Minutes of inactivity before stopping the instance Only applies when enableAutoStop is true.
 
 ---
 

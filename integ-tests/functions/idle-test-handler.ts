@@ -92,10 +92,10 @@ async function verifyAutoResume(instanceId: string, domainName: string): Promise
   console.log('Instance is stopped');
 
   // Step 2: Trigger resume by accessing CloudFront
-  console.log(`Step 2: Accessing CloudFront domain https://${domainName} to trigger resume...`);
+  console.log(`Step 2: Accessing CloudFront domain ${domainName} to trigger resume...`);
   try {
     // Use fetch to access the domain (Lambda@Edge will intercept and start instance)
-    const response = await fetch(`https://${domainName}`, {
+    const response = await fetch(domainName, {
       method: 'GET',
       redirect: 'manual', // Don't follow redirects
     });

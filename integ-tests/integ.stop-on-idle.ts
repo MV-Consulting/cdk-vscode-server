@@ -3,7 +3,6 @@ import * as path from 'path';
 import { IntegTest, LogType, InvocationType, ExpectedResult } from '@aws-cdk/integ-tests-alpha';
 import {
   App,
-  CfnOutput,
   Duration,
   PhysicalName,
   Stack,

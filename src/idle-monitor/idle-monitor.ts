@@ -76,11 +76,22 @@ export class IdleMonitor extends Construct {
       }),
     );
 
+    // DescribeInstances and DescribeInstanceStatus don't support resource-level permissions
+    // They require wildcard resources
     this.function.addToRolePolicy(
       new PolicyStatement({
         actions: [
           'ec2:DescribeInstances',
           'ec2:DescribeInstanceStatus',
+        ],
+        resources: ['*'],
+      }),
+    );
+
+    // StopInstances supports resource-level permissions, so we can restrict it
+    this.function.addToRolePolicy(
+      new PolicyStatement({
+        actions: [
           'ec2:StopInstances',
         ],
         resources: [

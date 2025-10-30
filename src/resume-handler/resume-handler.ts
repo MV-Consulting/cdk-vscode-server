@@ -54,11 +54,21 @@ export class ResumeHandler extends Construct {
     // Grant permissions
     props.stateTable.grantReadWriteData(this.function);
 
+    // DescribeInstances doesn't support resource-level permissions, requires wildcard
+    this.function.addToRolePolicy(
+      new PolicyStatement({
+        actions: [
+          'ec2:DescribeInstances',
+        ],
+        resources: ['*'],
+      }),
+    );
+
+    // StartInstances supports resource-level permissions, so we can restrict it
     this.function.addToRolePolicy(
       new PolicyStatement({
         actions: [
           'ec2:StartInstances',
-          'ec2:DescribeInstances',
         ],
         resources: [
           `arn:aws:ec2:${Stack.of(this).region}:${Stack.of(this).account}:instance/${props.instance.instanceId}`,

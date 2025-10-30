@@ -640,6 +640,7 @@ Any object.
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.domainName">domainName</a></code> | <code>string</code> | The name of the domain the server is reachable. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance running VS Code Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.password">password</a></code> | <code>string</code> | The password to login to the server. |
 
 ---
@@ -665,6 +666,18 @@ public readonly domainName: string;
 - *Type:* string
 
 The name of the domain the server is reachable.
+
+---
+
+##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.VSCodeServer.property.instance"></a>
+
+```typescript
+public readonly instance: IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IInstance
+
+The EC2 instance running VS Code Server.
 
 ---
 
@@ -703,6 +716,7 @@ const idleMonitorProps: IdleMonitorProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | Number of minutes of inactivity before stopping the instance. |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to monitor. |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | DynamoDB table for tracking instance state. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.checkIntervalMinutes">checkIntervalMinutes</a></code> | <code>number</code> | How often to check for idle activity (in minutes). |
 
 ---
 
@@ -751,6 +765,19 @@ public readonly stateTable: ITable;
 - *Type:* aws-cdk-lib.aws_dynamodb.ITable
 
 DynamoDB table for tracking instance state.
+
+---
+
+##### `checkIntervalMinutes`<sup>Optional</sup> <a name="checkIntervalMinutes" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.checkIntervalMinutes"></a>
+
+```typescript
+public readonly checkIntervalMinutes: number;
+```
+
+- *Type:* number
+- *Default:* 5 - Check every 5 minutes
+
+How often to check for idle activity (in minutes).
 
 ---
 
@@ -917,6 +944,7 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoStop">enableAutoStop</a></code> | <code>boolean</code> | Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder">homeFolder</a></code> | <code>string</code> | Folder to open in VS Code server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.hostedZoneId">hostedZoneId</a></code> | <code>string</code> | Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleCheckIntervalMinutes">idleCheckIntervalMinutes</a></code> | <code>number</code> | How often to check for idle activity (in minutes) Only applies when enableAutoStop is true. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | Minutes of inactivity before stopping the instance Only applies when enableAutoStop is true. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceClass">instanceClass</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceClass</code> | VSCode Server EC2 instance class. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceCpuArchitecture">instanceCpuArchitecture</a></code> | <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType">LinuxArchitectureType</a></code> | VSCode Server EC2 cpu architecture for the operating system. |
@@ -1069,6 +1097,19 @@ public readonly hostedZoneId: string;
 - *Default:* auto-discover from domain name
 
 Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name.
+
+---
+
+##### `idleCheckIntervalMinutes`<sup>Optional</sup> <a name="idleCheckIntervalMinutes" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleCheckIntervalMinutes"></a>
+
+```typescript
+public readonly idleCheckIntervalMinutes: number;
+```
+
+- *Type:* number
+- *Default:* 5 - Check every 5 minutes
+
+How often to check for idle activity (in minutes) Only applies when enableAutoStop is true.
 
 ---
 

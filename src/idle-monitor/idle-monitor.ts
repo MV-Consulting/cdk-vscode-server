@@ -30,6 +30,11 @@ export interface IdleMonitorProps {
    * Number of minutes of inactivity before stopping the instance
    */
   readonly idleTimeoutMinutes: number;
+  /**
+   * How often to check for idle activity (in minutes)
+   * @default 5 - Check every 5 minutes
+   */
+  readonly checkIntervalMinutes?: number;
 }
 
 /**
@@ -84,9 +89,10 @@ export class IdleMonitor extends Construct {
       }),
     );
 
-    // Create EventBridge rule to trigger every 5 minutes
+    // Create EventBridge rule to trigger at specified interval
+    const checkInterval = props.checkIntervalMinutes ?? 5;
     const rule = new Rule(this, 'ScheduleRule', {
-      schedule: Schedule.rate(Duration.minutes(5)),
+      schedule: Schedule.rate(Duration.minutes(checkInterval)),
     });
 
     rule.addTarget(new LambdaFunctionTarget(this.function));

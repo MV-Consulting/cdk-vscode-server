@@ -174,6 +174,14 @@ export interface VSCodeServerProps {
   readonly idleTimeoutMinutes?: number;
 
   /**
+   * How often to check for idle activity (in minutes)
+   * Only applies when enableAutoStop is true
+   *
+   * @default 5 - Check every 5 minutes
+   */
+  readonly idleCheckIntervalMinutes?: number;
+
+  /**
    * Enable automatic instance resume when user accesses stopped instance
    * Uses Lambda@Edge to intercept requests and start the instance
    * Only applies when enableAutoStop is true
@@ -231,6 +239,11 @@ export class VSCodeServer extends Construct {
    * The password to login to the server
    */
   public readonly password: string;
+
+  /**
+   * The EC2 instance running VS Code Server
+   */
+  public readonly instance: ec2.IInstance;
 
   constructor(scope: Construct, id: string, props?: VSCodeServerProps) {
     super(scope, id);
@@ -640,7 +653,7 @@ export class VSCodeServer extends Construct {
       true,
     );
 
-    const instance = new ec2.Instance(this, 'server-instance', {
+    this.instance = new ec2.Instance(this, 'server-instance', {
       vpc,
       instanceName,
       instanceType,
@@ -676,7 +689,7 @@ export class VSCodeServer extends Construct {
       `),
     });
     NagSuppressions.addResourceSuppressions(
-      [instance],
+      [this.instance],
       [
         {
           id: 'AwsSolutions-EC29',
@@ -712,7 +725,7 @@ export class VSCodeServer extends Construct {
       queryStringBehavior: cf.CacheQueryStringBehavior.all(),
     });
 
-    const origin = new cfo.HttpOrigin(instance.instancePublicDnsName, {
+    const origin = new cfo.HttpOrigin(this.instance.instancePublicDnsName, {
       protocolPolicy: cf.OriginProtocolPolicy.HTTP_ONLY,
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,
     });
@@ -815,7 +828,7 @@ export class VSCodeServer extends Construct {
       case LinuxFlavorType.UBUNTU_22:
       case LinuxFlavorType.UBUNTU_24:
         Installer.ubuntu({
-          instanceId: instance.instanceId,
+          instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
           devServerBasePath: props?.devServerBasePath,
@@ -826,7 +839,7 @@ export class VSCodeServer extends Construct {
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
         Installer.amazonLinux2023({
-          instanceId: instance.instanceId,
+          instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
           devServerBasePath: props?.devServerBasePath,
@@ -852,22 +865,23 @@ export class VSCodeServer extends Construct {
 
       // Create status check API
       const statusApi = new StatusCheckApi(this, 'StatusApi', {
-        instance: instance,
+        instance: this.instance,
         stateTable: stateTable.table,
       });
 
       // Create idle monitor
       new IdleMonitor(this, 'IdleMonitor', {
-        instance: instance,
+        instance: this.instance,
         distribution: distribution,
         stateTable: stateTable.table,
         idleTimeoutMinutes: props?.idleTimeoutMinutes ?? 30,
+        checkIntervalMinutes: props?.idleCheckIntervalMinutes ?? 5,
       });
 
       // Create and attach resume handler (Lambda@Edge) if enabled
       if (props?.enableAutoResume ?? true) {
         new ResumeHandler(this, 'ResumeHandler', {
-          instance: instance,
+          instance: this.instance,
           stateTable: stateTable.table,
           statusApiUrl: statusApi.apiUrl,
         });

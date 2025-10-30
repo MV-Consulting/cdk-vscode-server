@@ -16,10 +16,14 @@ import * as route53targets from 'aws-cdk-lib/aws-route53-targets';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct, IConstruct } from 'constructs';
+import { IdleMonitor } from './idle-monitor/idle-monitor';
 import { Installer } from './installer/installer';
 import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from './mappings';
 import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retriever';
+import { ResumeHandler } from './resume-handler/resume-handler';
 import { SecretRetriever } from './secret-retriever/secret-retriever';
+import { InstanceStateTable } from './state-table/state-table';
+import { StatusCheckApi } from './status-check/status-check';
 
 /**
  * Properties for the VSCodeServer construct
@@ -152,6 +156,39 @@ export interface VSCodeServerProps {
    * @default false
    */
   readonly autoCreateCertificate?: boolean;
+
+  /**
+   * Enable automatic instance stop when idle
+   * Monitors CloudFront metrics and stops the EC2 instance after specified idle time
+   *
+   * @default false
+   */
+  readonly enableAutoStop?: boolean;
+
+  /**
+   * Minutes of inactivity before stopping the instance
+   * Only applies when enableAutoStop is true
+   *
+   * @default 30
+   */
+  readonly idleTimeoutMinutes?: number;
+
+  /**
+   * How often to check for idle activity (in minutes)
+   * Only applies when enableAutoStop is true
+   *
+   * @default 5 - Check every 5 minutes
+   */
+  readonly idleCheckIntervalMinutes?: number;
+
+  /**
+   * Enable automatic instance resume when user accesses stopped instance
+   * Uses Lambda@Edge to intercept requests and start the instance
+   * Only applies when enableAutoStop is true
+   *
+   * @default true
+   */
+  readonly enableAutoResume?: boolean;
 }
 
 /**
@@ -202,6 +239,11 @@ export class VSCodeServer extends Construct {
    * The password to login to the server
    */
   public readonly password: string;
+
+  /**
+   * The EC2 instance running VS Code Server
+   */
+  public readonly instance: ec2.IInstance;
 
   constructor(scope: Construct, id: string, props?: VSCodeServerProps) {
     super(scope, id);
@@ -611,7 +653,7 @@ export class VSCodeServer extends Construct {
       true,
     );
 
-    const instance = new ec2.Instance(this, 'server-instance', {
+    this.instance = new ec2.Instance(this, 'server-instance', {
       vpc,
       instanceName,
       instanceType,
@@ -647,7 +689,7 @@ export class VSCodeServer extends Construct {
       `),
     });
     NagSuppressions.addResourceSuppressions(
-      [instance],
+      [this.instance],
       [
         {
           id: 'AwsSolutions-EC29',
@@ -683,7 +725,7 @@ export class VSCodeServer extends Construct {
       queryStringBehavior: cf.CacheQueryStringBehavior.all(),
     });
 
-    const origin = new cfo.HttpOrigin(instance.instancePublicDnsName, {
+    const origin = new cfo.HttpOrigin(this.instance.instancePublicDnsName, {
       protocolPolicy: cf.OriginProtocolPolicy.HTTP_ONLY,
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,
     });
@@ -786,7 +828,7 @@ export class VSCodeServer extends Construct {
       case LinuxFlavorType.UBUNTU_22:
       case LinuxFlavorType.UBUNTU_24:
         Installer.ubuntu({
-          instanceId: instance.instanceId,
+          instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
           devServerBasePath: props?.devServerBasePath,
@@ -797,7 +839,7 @@ export class VSCodeServer extends Construct {
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
         Installer.amazonLinux2023({
-          instanceId: instance.instanceId,
+          instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
           devServerBasePath: props?.devServerBasePath,
@@ -813,6 +855,51 @@ export class VSCodeServer extends Construct {
 
     // NOTE: maybe have a healhcheck CFN custom resource to see if the vscode server is healthy
     // atm this is achieved by the integ tests
+
+    // Auto-stop/resume feature
+    if (props?.enableAutoStop) {
+      // Create state table
+      const stateTable = new InstanceStateTable(this, 'StateTable', {
+        tableName: `${instanceName}-StateTable`,
+      });
+
+      // Create status check API
+      const statusApi = new StatusCheckApi(this, 'StatusApi', {
+        instance: this.instance,
+        stateTable: stateTable.table,
+      });
+
+      // Create idle monitor
+      new IdleMonitor(this, 'IdleMonitor', {
+        instance: this.instance,
+        distribution: distribution,
+        stateTable: stateTable.table,
+        idleTimeoutMinutes: props?.idleTimeoutMinutes ?? 30,
+        checkIntervalMinutes: props?.idleCheckIntervalMinutes ?? 5,
+      });
+
+      // Create and attach resume handler (Lambda@Edge) if enabled
+      if (props?.enableAutoResume ?? true) {
+        new ResumeHandler(this, 'ResumeHandler', {
+          instance: this.instance,
+          stateTable: stateTable.table,
+          statusApiUrl: statusApi.apiUrl,
+        });
+
+        // Note: Lambda@Edge association with CloudFront requires manual setup
+        // or using escape hatch to modify the CfnDistribution
+        // This is left as a TODO for complete implementation
+        new CfnOutput(this, 'resumeHandlerInfo', {
+          description: 'Lambda@Edge function for auto-resume (requires manual CloudFront association)',
+          value: 'Auto-resume handler created - manual CloudFront association required',
+        });
+      }
+
+      new CfnOutput(this, 'statusApiUrl', {
+        description: 'Status check API URL',
+        value: statusApi.apiUrl,
+      });
+    }
 
     // Outputs
     const finalDomainName = domainName || distribution.domainName;

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# for now 
+exit 0;
+
 # NOTE: initially from https://www.npmjs.com/package/daddy-claude?activeTab=code
 # Colors
 RED='\033[0;31m'

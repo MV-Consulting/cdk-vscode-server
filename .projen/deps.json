@@ -11,11 +11,27 @@
       "type": "build"
     },
     {
+      "name": "@aws-sdk/client-cloudwatch",
+      "type": "build"
+    },
+    {
+      "name": "@aws-sdk/client-dynamodb",
+      "type": "build"
+    },
+    {
+      "name": "@aws-sdk/client-ec2",
+      "type": "build"
+    },
+    {
       "name": "@aws-sdk/client-secrets-manager",
       "type": "build"
     },
     {
       "name": "@aws-sdk/client-ssm",
+      "type": "build"
+    },
+    {
+      "name": "@aws-sdk/lib-dynamodb",
       "type": "build"
     },
     {

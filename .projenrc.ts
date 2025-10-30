@@ -20,10 +20,14 @@ const project = new MvcCdkConstructLibrary({
   devDeps: [
     '@aws-sdk/client-ssm',
     '@aws-sdk/client-secrets-manager',
+    '@aws-sdk/client-dynamodb',
+    '@aws-sdk/lib-dynamodb',
+    '@aws-sdk/client-cloudwatch',
+    '@aws-sdk/client-ec2',
     '@types/aws-lambda',
     '@types/jsdom',
   ],
-  integTestRegions: ['eu-west-1', 'eu-west-2', 'eu-north-1'],
+  integTestRegions: ['eu-west-1', 'eu-west-2', 'eu-north-1', 'eu-west-3'],
   // see details for each: https://github.com/cdklabs/publib
   // Go
   publishToGo: {

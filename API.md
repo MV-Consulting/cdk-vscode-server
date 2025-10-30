@@ -4,6 +4,8 @@
 
 ### IdleMonitor <a name="IdleMonitor" id="@mavogel/cdk-vscode-server.IdleMonitor"></a>
 
+Construct that monitors CloudFront request metrics and stops the EC2 instance when idle.
+
 #### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer"></a>
 
 ```typescript
@@ -99,7 +101,7 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that performs idle monitoring. |
 
 ---
 
@@ -122,6 +124,8 @@ public readonly function: Function;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Function
+
+The Lambda function that performs idle monitoring.
 
 ---
 
@@ -225,7 +229,7 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.property.table">table</a></code> | <code>aws-cdk-lib.aws_dynamodb.Table</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.InstanceStateTable.property.table">table</a></code> | <code>aws-cdk-lib.aws_dynamodb.Table</code> | The DynamoDB table. |
 
 ---
 
@@ -249,10 +253,14 @@ public readonly table: Table;
 
 - *Type:* aws-cdk-lib.aws_dynamodb.Table
 
+The DynamoDB table.
+
 ---
 
 
 ### ResumeHandler <a name="ResumeHandler" id="@mavogel/cdk-vscode-server.ResumeHandler"></a>
+
+Lambda@Edge function that intercepts CloudFront requests and resumes stopped instances.
 
 #### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer"></a>
 
@@ -349,7 +357,7 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda@Edge function that handles resume logic. |
 
 ---
 
@@ -373,10 +381,14 @@ public readonly function: Function;
 
 - *Type:* aws-cdk-lib.aws_lambda.Function
 
+The Lambda@Edge function that handles resume logic.
+
 ---
 
 
 ### StatusCheckApi <a name="StatusCheckApi" id="@mavogel/cdk-vscode-server.StatusCheckApi"></a>
+
+API Gateway endpoint for checking instance status, used by resume page for polling.
 
 #### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer"></a>
 
@@ -473,9 +485,9 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.api">api</a></code> | <code>aws-cdk-lib.aws_apigateway.RestApi</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.apiUrl">apiUrl</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.api">api</a></code> | <code>aws-cdk-lib.aws_apigateway.RestApi</code> | The API Gateway REST API. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.apiUrl">apiUrl</a></code> | <code>string</code> | The URL of the status check API endpoint. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that handles status check requests. |
 
 ---
 
@@ -499,6 +511,8 @@ public readonly api: RestApi;
 
 - *Type:* aws-cdk-lib.aws_apigateway.RestApi
 
+The API Gateway REST API.
+
 ---
 
 ##### `apiUrl`<sup>Required</sup> <a name="apiUrl" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.apiUrl"></a>
@@ -509,6 +523,8 @@ public readonly apiUrl: string;
 
 - *Type:* string
 
+The URL of the status check API endpoint.
+
 ---
 
 ##### `function`<sup>Required</sup> <a name="function" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.function"></a>
@@ -518,6 +534,8 @@ public readonly function: Function;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Function
+
+The Lambda function that handles status check requests.
 
 ---
 
@@ -667,6 +685,8 @@ The password to login to the server.
 
 ### IdleMonitorProps <a name="IdleMonitorProps" id="@mavogel/cdk-vscode-server.IdleMonitorProps"></a>
 
+Props for IdleMonitor construct.
+
 #### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.IdleMonitorProps.Initializer"></a>
 
 ```typescript
@@ -679,10 +699,10 @@ const idleMonitorProps: IdleMonitorProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.distribution">distribution</a></code> | <code>aws-cdk-lib.aws_cloudfront.IDistribution</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.distribution">distribution</a></code> | <code>aws-cdk-lib.aws_cloudfront.IDistribution</code> | The CloudFront distribution to monitor for activity. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | Number of minutes of inactivity before stopping the instance. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to monitor. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | DynamoDB table for tracking instance state. |
 
 ---
 
@@ -694,6 +714,8 @@ public readonly distribution: IDistribution;
 
 - *Type:* aws-cdk-lib.aws_cloudfront.IDistribution
 
+The CloudFront distribution to monitor for activity.
+
 ---
 
 ##### `idleTimeoutMinutes`<sup>Required</sup> <a name="idleTimeoutMinutes" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes"></a>
@@ -703,6 +725,8 @@ public readonly idleTimeoutMinutes: number;
 ```
 
 - *Type:* number
+
+Number of minutes of inactivity before stopping the instance.
 
 ---
 
@@ -714,6 +738,8 @@ public readonly instance: IInstance;
 
 - *Type:* aws-cdk-lib.aws_ec2.IInstance
 
+The EC2 instance to monitor.
+
 ---
 
 ##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable"></a>
@@ -724,9 +750,13 @@ public readonly stateTable: ITable;
 
 - *Type:* aws-cdk-lib.aws_dynamodb.ITable
 
+DynamoDB table for tracking instance state.
+
 ---
 
 ### InstanceStateTableProps <a name="InstanceStateTableProps" id="@mavogel/cdk-vscode-server.InstanceStateTableProps"></a>
+
+Props for InstanceStateTable construct.
 
 #### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.InstanceStateTableProps.Initializer"></a>
 
@@ -759,6 +789,8 @@ Table name.
 
 ### ResumeHandlerProps <a name="ResumeHandlerProps" id="@mavogel/cdk-vscode-server.ResumeHandlerProps"></a>
 
+Props for ResumeHandler construct.
+
 #### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.Initializer"></a>
 
 ```typescript
@@ -771,9 +803,9 @@ const resumeHandlerProps: ResumeHandlerProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.statusApiUrl">statusApiUrl</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to resume. |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | DynamoDB table for tracking instance state. |
+| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.statusApiUrl">statusApiUrl</a></code> | <code>string</code> | URL of the status check API endpoint. |
 
 ---
 
@@ -785,6 +817,8 @@ public readonly instance: IInstance;
 
 - *Type:* aws-cdk-lib.aws_ec2.IInstance
 
+The EC2 instance to resume.
+
 ---
 
 ##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.property.stateTable"></a>
@@ -794,6 +828,8 @@ public readonly stateTable: ITable;
 ```
 
 - *Type:* aws-cdk-lib.aws_dynamodb.ITable
+
+DynamoDB table for tracking instance state.
 
 ---
 
@@ -805,9 +841,13 @@ public readonly statusApiUrl: string;
 
 - *Type:* string
 
+URL of the status check API endpoint.
+
 ---
 
 ### StatusCheckApiProps <a name="StatusCheckApiProps" id="@mavogel/cdk-vscode-server.StatusCheckApiProps"></a>
+
+Props for StatusCheckApi construct.
 
 #### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.Initializer"></a>
 
@@ -821,8 +861,8 @@ const statusCheckApiProps: StatusCheckApiProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to check status for. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | DynamoDB table for tracking instance state. |
 
 ---
 
@@ -834,6 +874,8 @@ public readonly instance: IInstance;
 
 - *Type:* aws-cdk-lib.aws_ec2.IInstance
 
+The EC2 instance to check status for.
+
 ---
 
 ##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.property.stateTable"></a>
@@ -843,6 +885,8 @@ public readonly stateTable: ITable;
 ```
 
 - *Type:* aws-cdk-lib.aws_dynamodb.ITable
+
+DynamoDB table for tracking instance state.
 
 ---
 

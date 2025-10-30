@@ -3,6 +3,9 @@ import { AttributeType, BillingMode, Table, TableEncryption } from 'aws-cdk-lib/
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 
+/**
+ * Props for InstanceStateTable construct
+ */
 export interface InstanceStateTableProps {
   /**
    * Table name
@@ -15,6 +18,9 @@ export interface InstanceStateTableProps {
  * DynamoDB table for tracking instance state and activity
  */
 export class InstanceStateTable extends Construct {
+  /**
+   * The DynamoDB table
+   */
   public readonly table: Table;
 
   constructor(scope: Construct, id: string, props?: InstanceStateTableProps) {

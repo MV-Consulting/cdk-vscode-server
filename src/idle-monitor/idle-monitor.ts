@@ -10,14 +10,35 @@ import { Runtime, Code, Function as LambdaFunction } from 'aws-cdk-lib/aws-lambd
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 
+/**
+ * Props for IdleMonitor construct
+ */
 export interface IdleMonitorProps {
+  /**
+   * The EC2 instance to monitor
+   */
   readonly instance: IInstance;
+  /**
+   * The CloudFront distribution to monitor for activity
+   */
   readonly distribution: IDistribution;
+  /**
+   * DynamoDB table for tracking instance state
+   */
   readonly stateTable: ITable;
+  /**
+   * Number of minutes of inactivity before stopping the instance
+   */
   readonly idleTimeoutMinutes: number;
 }
 
+/**
+ * Construct that monitors CloudFront request metrics and stops the EC2 instance when idle
+ */
 export class IdleMonitor extends Construct {
+  /**
+   * The Lambda function that performs idle monitoring
+   */
   public readonly function: LambdaFunction;
 
   constructor(scope: Construct, id: string, props: IdleMonitorProps) {

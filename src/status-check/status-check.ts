@@ -8,14 +8,35 @@ import { Runtime, Code, Function as LambdaFunction } from 'aws-cdk-lib/aws-lambd
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 
+/**
+ * Props for StatusCheckApi construct
+ */
 export interface StatusCheckApiProps {
+  /**
+   * The EC2 instance to check status for
+   */
   readonly instance: IInstance;
+  /**
+   * DynamoDB table for tracking instance state
+   */
   readonly stateTable: ITable;
 }
 
+/**
+ * API Gateway endpoint for checking instance status, used by resume page for polling
+ */
 export class StatusCheckApi extends Construct {
+  /**
+   * The API Gateway REST API
+   */
   public readonly api: RestApi;
+  /**
+   * The URL of the status check API endpoint
+   */
   public readonly apiUrl: string;
+  /**
+   * The Lambda function that handles status check requests
+   */
   public readonly function: LambdaFunction;
 
   constructor(scope: Construct, id: string, props: StatusCheckApiProps) {

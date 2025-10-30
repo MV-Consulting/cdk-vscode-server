@@ -7,13 +7,31 @@ import { Code, Runtime, Function as LambdaFunction } from 'aws-cdk-lib/aws-lambd
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 
+/**
+ * Props for ResumeHandler construct
+ */
 export interface ResumeHandlerProps {
+  /**
+   * The EC2 instance to resume
+   */
   readonly instance: IInstance;
+  /**
+   * DynamoDB table for tracking instance state
+   */
   readonly stateTable: ITable;
+  /**
+   * URL of the status check API endpoint
+   */
   readonly statusApiUrl: string;
 }
 
+/**
+ * Lambda@Edge function that intercepts CloudFront requests and resumes stopped instances
+ */
 export class ResumeHandler extends Construct {
+  /**
+   * The Lambda@Edge function that handles resume logic
+   */
   public readonly function: LambdaFunction;
 
   constructor(scope: Construct, id: string, props: ResumeHandlerProps) {

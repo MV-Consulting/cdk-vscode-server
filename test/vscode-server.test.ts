@@ -391,7 +391,6 @@ describe('vscode-server-auto-stop', () => {
     const testProps: VSCodeServerProps = {
       enableAutoStop: true,
       idleTimeoutMinutes: 30,
-      enableAutoResume: true,
     };
 
     new VSCodeServer(stack, 'testVSCodeServer', testProps);
@@ -450,14 +449,13 @@ describe('vscode-server-auto-stop', () => {
 
     const testProps: VSCodeServerProps = {
       enableAutoStop: false,
-      enableAutoResume: false, // Also disable auto-resume to prevent StatusApi creation
     };
 
     new VSCodeServer(stack, 'testVSCodeServer', testProps);
 
     const template = Template.fromStack(stack);
 
-    // Should NOT have API Gateway (both auto-stop and auto-resume disabled)
+    // Should NOT have API Gateway (auto-stop disabled, so no auto-resume either)
     template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
 
     // Should NOT have EventBridge rule with 5 minutes schedule
@@ -538,15 +536,14 @@ describe('vscode-server-auto-stop', () => {
 
     const template = Template.fromStack(stack);
 
-    // enableAutoResume defaults to true, so API Gateway will exist (for StatusApi)
-    // To truly disable auto-stop resources, need enableAutoResume: false as well
-    template.resourceCountIs('AWS::ApiGateway::RestApi', 1);
+    // Without enableAutoStop, no auto-stop/resume resources should be created
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
 
     // Should NOT have IdleMonitor (EventBridge rule)
     template.resourceCountIs('AWS::Events::Rule', 0);
   });
 
-  test('should create resume handler when enableAutoResume is true', () => {
+  test('should create resume handler when enableAutoStop is true', () => {
     const app = new App();
     const stack = new Stack(app, 'testStack', {
       env: {
@@ -557,7 +554,6 @@ describe('vscode-server-auto-stop', () => {
 
     const testProps: VSCodeServerProps = {
       enableAutoStop: true,
-      enableAutoResume: true,
     };
 
     new VSCodeServer(stack, 'testVSCodeServer', testProps);
@@ -565,6 +561,7 @@ describe('vscode-server-auto-stop', () => {
     const template = Template.fromStack(stack);
 
     // Should have Lambda function with 5 second timeout (Lambda@Edge requirement)
+    // Auto-resume is automatically enabled when auto-stop is enabled
     template.resourcePropertiesCountIs(
       'AWS::Lambda::Function',
       {
@@ -585,7 +582,6 @@ describe('vscode-server-auto-stop', () => {
 
     const testProps: VSCodeServerProps = {
       enableAutoStop: true,
-      enableAutoResume: true,
     };
 
     new VSCodeServer(stack, 'testVSCodeServer', testProps);
@@ -599,5 +595,6 @@ describe('vscode-server-auto-stop', () => {
 
     // Lambda@Edge is now properly attached to CloudFront, so no separate output needed
     // The resume handler exists as part of the CloudFront distribution's edge lambdas
+    // Auto-resume is automatically enabled when auto-stop is enabled
   });
 });

@@ -16,9 +16,9 @@ import { VSCodeServer } from '../src/vscode-server';
 // CDK App for Integration Tests
 const app = new App();
 
-// Stack under test
+// Stack under test - MUST be us-east-1 for Lambda@Edge
 const stackUnderTest = new Stack(app, 'IntegTestStackStopOnIdle', {
-  description: "Integration test for stop-on-idle functionality with fast execution parameters.",
+  description: "Integration test for stop-on-idle functionality with fast execution parameters. Requires us-east-1 for Lambda@Edge.",
 });
 
 // Create VSCodeServer with optimized parameters for fast testing:
@@ -31,10 +31,9 @@ const constructUnderTest = new VSCodeServer(stackUnderTest, 'IntegVSCodeServer',
   instanceClass: InstanceClass.T4G,
   instanceSize: InstanceSize.NANO,
   instanceVolumeSize: 8,
-  enableAutoStop: true,
+  enableAutoStop: true, // Auto-resume is automatically enabled with auto-stop
   idleTimeoutMinutes: 2, // Very short timeout for fast testing (2 minutes)
   idleCheckIntervalMinutes: 1, // Check every 1 minute for fast testing
-  enableAutoResume: true,
   additionalTags: {
     'IntegTest': 'True',
     'TestType': 'StopOnIdle',
@@ -50,7 +49,8 @@ const integ = new IntegTest(app, 'IntegStopOnIdleFunctionality', {
       },
     },
   },
-  regions: [stackUnderTest.region],
+  // Lambda@Edge REQUIRES us-east-1, so this test must only run there
+  regions: ['us-east-1'],
 });
 
 // Lambda function to test the stop-on-idle flow
@@ -143,9 +143,13 @@ const stopOnIdleAssertion = integ.assertions
  * This test:
  * 1. Waits for instance to be stopped (from previous test)
  * 2. Makes a request to CloudFront domain
- * 3. Verifies Lambda@Edge starts the instance
+ * 3. Verifies Lambda@Edge starts the instance (only works in us-east-1)
  * 4. Waits for instance to be running
  * 5. Verifies VS Code Server is accessible again
+ *
+ * NOTE: Lambda@Edge can only be created in us-east-1, so auto-resume functionality
+ * will not be available when this stack is deployed to other regions (eu-west-1, etc).
+ * The test will fail in non-us-east-1 regions with "instance did not resume" message.
  */
 const autoResumeAssertion = integ.assertions
   .invokeFunction({

@@ -38,6 +38,7 @@ export class ResumeHandler extends Construct {
     super(scope, id);
 
     // Lambda@Edge requires specific configuration
+    // Note: Lambda@Edge functions MUST be in us-east-1
     this.function = new LambdaFunction(this, 'Function', {
       runtime: Runtime.NODEJS_20_X,
       handler: 'index.handler',

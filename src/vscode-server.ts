@@ -180,15 +180,6 @@ export interface VSCodeServerProps {
    * @default 5 - Check every 5 minutes
    */
   readonly idleCheckIntervalMinutes?: number;
-
-  /**
-   * Enable automatic instance resume when user accesses stopped instance
-   * Uses Lambda@Edge to intercept requests and start the instance
-   * Only applies when enableAutoStop is true
-   *
-   * @default true
-   */
-  readonly enableAutoResume?: boolean;
 }
 
 /**
@@ -732,11 +723,12 @@ export class VSCodeServer extends Construct {
 
     // Auto-stop/resume infrastructure (create BEFORE distribution if needed)
     // State table and status API are shared between auto-stop and auto-resume features
+    // Auto-resume is automatically enabled when auto-stop is enabled
     let stateTable: InstanceStateTable | undefined;
     let statusApi: StatusCheckApi | undefined;
     let resumeHandler: ResumeHandler | undefined;
 
-    if (props?.enableAutoStop || (props?.enableAutoResume ?? true)) {
+    if (props?.enableAutoStop) {
       // Create state table (shared by both features)
       stateTable = new InstanceStateTable(this, 'StateTable', {
         tableName: `${instanceName}-StateTable`,
@@ -748,12 +740,22 @@ export class VSCodeServer extends Construct {
         stateTable: stateTable.table,
       });
 
-      // Create resume handler Lambda@Edge if enabled
-      if (props?.enableAutoResume ?? true) {
+      // Create resume handler Lambda@Edge (auto-resume is implied when auto-stop is enabled)
+      // Lambda@Edge can only be created in us-east-1, so we check the stack region
+      const stackRegion = Stack.of(this).region;
+      const isUsEast1 = stackRegion === 'us-east-1' || stackRegion.includes('${Token[');
+
+      if (isUsEast1) {
         resumeHandler = new ResumeHandler(this, 'ResumeHandler', {
           instance: this.instance,
           stateTable: stateTable.table,
           statusApiUrl: statusApi.apiUrl,
+        });
+      } else {
+        // Warn user that Lambda@Edge requires us-east-1
+        new CfnOutput(this, 'autoResumeWarning', {
+          description: 'Auto-resume feature requires stack to be in us-east-1 for Lambda@Edge',
+          value: `Lambda@Edge cannot be created in ${stackRegion}. Deploy to us-east-1 for auto-resume functionality.`,
         });
       }
     }

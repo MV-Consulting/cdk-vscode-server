@@ -940,7 +940,6 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath">devServerBasePath</a></code> | <code>string</code> | Base path for the application to be added to Nginx sites-available list. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerPort">devServerPort</a></code> | <code>number</code> | Port for the DevServer. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.domainName">domainName</a></code> | <code>string</code> | Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution. |
-| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoResume">enableAutoResume</a></code> | <code>boolean</code> | Enable automatic instance resume when user accesses stopped instance Uses Lambda@Edge to intercept requests and start the instance Only applies when enableAutoStop is true. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoStop">enableAutoStop</a></code> | <code>boolean</code> | Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder">homeFolder</a></code> | <code>string</code> | Folder to open in VS Code server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.hostedZoneId">hostedZoneId</a></code> | <code>string</code> | Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name. |
@@ -1045,19 +1044,6 @@ public readonly domainName: string;
 - *Default:* uses CloudFront default domain
 
 Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution.
-
----
-
-##### `enableAutoResume`<sup>Optional</sup> <a name="enableAutoResume" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoResume"></a>
-
-```typescript
-public readonly enableAutoResume: boolean;
-```
-
-- *Type:* boolean
-- *Default:* true
-
-Enable automatic instance resume when user accesses stopped instance Uses Lambda@Edge to intercept requests and start the instance Only applies when enableAutoStop is true.
 
 ---
 

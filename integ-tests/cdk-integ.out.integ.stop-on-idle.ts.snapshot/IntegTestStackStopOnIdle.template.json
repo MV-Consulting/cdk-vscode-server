@@ -1,0 +1,4297 @@
+{
+ "Description": "Integration test for stop-on-idle functionality with fast execution parameters. Requires us-east-1 for Lambda@Edge.",
+ "Resources": {
+  "IntegVSCodeServerpasswordsecret202A5DB3": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "GenerateSecretString": {
+     "ExcludePunctuation": true,
+     "GenerateStringKey": "password",
+     "IncludeSpace": false,
+     "PasswordLength": 16,
+     "SecretStringTemplate": "{\"username\":\"participant\"}"
+    },
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vc code server we do not need password rotation",
+       "id": "AwsSolutions-SMG4"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this event handler we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this lambda the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleDefaultPolicy2641E2C6": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "secretsmanager:GetSecretValue",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "IntegVSCodeServerpasswordsecret202A5DB3"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleDefaultPolicy2641E2C6",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2"
+     }
+    ]
+   }
+  },
+  "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "781ab0ab74634cdaf61539ab208ab777829ef07097ac21f95b9e15a3b1eedc1b.zip"
+    },
+    "Description": "src/secret-retriever/secret-retriever.lambda.ts",
+    "Handler": "index.handler",
+    "MemorySize": 128,
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleDefaultPolicy2641E2C6",
+    "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this event handler we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this lambda the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "For this provider the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRoleDefaultPolicyEC4DCEA0": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRoleDefaultPolicyEC4DCEA0",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "For this provider the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerSecretRetrieveProviderframeworkonEventCF035CA3": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRoleDefaultPolicyEC4DCEA0",
+    "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "For this provider the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerSecretRetrieveProviderframeworkonEventCF035CA3",
+      "Arn"
+     ]
+    },
+    "ServiceTimeout": 305,
+    "SecretArn": {
+     "Ref": "IntegVSCodeServerpasswordsecret202A5DB3"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "IntegVSCodeServervpc93DDE887": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "IntegTestStackStopOnIdle/IntegVSCodeServer/vpc"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet1Subnet928029A1": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      0,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": "10.0.0.0/17",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet1"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IntegVSCodeServervpc93DDE887"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet1RouteTableFD418D0B": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet1"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IntegVSCodeServervpc93DDE887"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet1RouteTableAssociation599AB80D": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "IntegVSCodeServervpcpublicSubnet1RouteTableFD418D0B"
+    },
+    "SubnetId": {
+     "Ref": "IntegVSCodeServervpcpublicSubnet1Subnet928029A1"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet1DefaultRoute36845B30": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "IntegVSCodeServervpcIGW960F6D83"
+    },
+    "RouteTableId": {
+     "Ref": "IntegVSCodeServervpcpublicSubnet1RouteTableFD418D0B"
+    }
+   },
+   "DependsOn": [
+    "IntegVSCodeServervpcVPCGWA7CDED90"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet2SubnetE381654D": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      1,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": "10.0.128.0/17",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet2"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IntegVSCodeServervpc93DDE887"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet2RouteTableC264EFB4": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet2"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IntegVSCodeServervpc93DDE887"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet2RouteTableAssociationC62A1999": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "IntegVSCodeServervpcpublicSubnet2RouteTableC264EFB4"
+    },
+    "SubnetId": {
+     "Ref": "IntegVSCodeServervpcpublicSubnet2SubnetE381654D"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcpublicSubnet2DefaultRouteEAD8BC23": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "IntegVSCodeServervpcIGW960F6D83"
+    },
+    "RouteTableId": {
+     "Ref": "IntegVSCodeServervpcpublicSubnet2RouteTableC264EFB4"
+    }
+   },
+   "DependsOn": [
+    "IntegVSCodeServervpcVPCGWA7CDED90"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcIGW960F6D83": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "IntegTestStackStopOnIdle/IntegVSCodeServer/vpc"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcVPCGWA7CDED90": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "IntegVSCodeServervpcIGW960F6D83"
+    },
+    "VpcId": {
+     "Ref": "IntegVSCodeServervpc93DDE887"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServervpcRestrictDefaultSecurityGroupCustomResourceF6EA8ED1": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServervpc93DDE887",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": {
+     "Ref": "AWS::AccountId"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp vpc we do not need flow logs",
+       "id": "AwsSolutions-VPC7"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServercftoserversgFFE586B0": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "SG for VSCodeServer - only allow CloudFront ingress",
+    "GroupName": "cloudfront-to-vscode-server",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ],
+    "VpcId": {
+     "Ref": "IntegVSCodeServervpc93DDE887"
+    }
+   }
+  },
+  "IntegVSCodeServercftoserversgfromIndirectPeer80C4F51713": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow HTTP from com.amazonaws.global.cloudfront.origin-facing",
+    "FromPort": 80,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServercftoserversgFFE586B0",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourcePrefixListId": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServercfprefixlistIdGetPrefixListIdF0821FFC",
+      "PrefixLists.0.PrefixListId"
+     ]
+    },
+    "ToPort": 80
+   }
+  },
+  "IntegVSCodeServercfprefixlistIdGetPrefixListIdLogGroup171C2803": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "RetentionInDays": 1,
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServercfprefixlistIdGetPrefixListIdF0821FFC": {
+   "Type": "Custom::AWS",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+      "Arn"
+     ]
+    },
+    "Create": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c823fd194a4e8e22\"}}",
+    "Update": "{\"service\":\"@aws-sdk/client-ec2\",\"action\":\"DescribeManagedPrefixListsCommand\",\"parameters\":{\"Filters\":[{\"Name\":\"prefix-list-name\",\"Values\":[\"com.amazonaws.global.cloudfront.origin-facing\"]}]},\"physicalResourceId\":{\"id\":\"cf-prefixlistId-c823fd194a4e8e22\"}}",
+    "InstallLatestAwsSdk": false
+   },
+   "DependsOn": [
+    "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "ec2:DescribeManagedPrefixLists",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerserverinstancerole7745B5BB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "ec2.amazonaws.com",
+         "ssm.amazonaws.com"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonSSMManagedInstanceCore"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/CloudWatchAgentServerPolicy"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonQDeveloperAccess"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/ReadOnlyAccess"
+       ]
+      ]
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "iam:AddRoleToInstanceProfile",
+          "iam:AttachRolePolicy",
+          "iam:CreateRole",
+          "iam:CreateServiceLinkedRole",
+          "iam:DeleteRole",
+          "iam:DeleteRolePermissionsBoundary",
+          "iam:DeleteRolePolicy",
+          "iam:DeleteServiceLinkedRole",
+          "iam:DetachRolePolicy",
+          "iam:GetRole",
+          "iam:GetRolePolicy",
+          "iam:GetServiceLinkedRoleDeletionStatus",
+          "iam:ListAttachedRolePolicies",
+          "iam:ListInstanceProfilesForRole",
+          "iam:ListRolePolicies",
+          "iam:ListRoleTags",
+          "iam:ListRoles",
+          "iam:PutRolePermissionsBoundary",
+          "iam:PutRolePolicy",
+          "iam:RemoveRoleFromInstanceProfile",
+          "iam:TagRole",
+          "iam:UntagRole",
+          "iam:UpdateAssumeRolePolicy",
+          "iam:UpdateRole",
+          "iam:UpdateRoleDescription",
+          "sts:AssumeRole"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:iam::",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":role/cdk-*"
+           ]
+          ]
+         },
+         "Sid": "StsAccess"
+        },
+        {
+         "Action": "iam:PassRole",
+         "Condition": {
+          "StringLike": {
+           "iam:PassedToService": "cloudformation.amazonaws.com"
+          }
+         },
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:iam::",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":role/cdk-*"
+           ]
+          ]
+         }
+        },
+        {
+         "Action": "cloudformation:*",
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:cloudformation:*:",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":stack/CDKToolkit/*"
+           ]
+          ]
+         }
+        },
+        {
+         "Action": [
+          "cloudformation:CreateChangeSet",
+          "cloudformation:DeleteChangeSet",
+          "cloudformation:ExecuteChangeSet",
+          "ec2:DescribeInstances",
+          "ec2:DescribeVolumesModifications*",
+          "ec2:ModifyVolume"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": "s3:*",
+         "Effect": "Allow",
+         "Resource": "*",
+         "Sid": "S3Access"
+        },
+        {
+         "Action": [
+          "ecr:CreateRepository",
+          "ecr:DeleteRepository",
+          "ecr:DescribeRepositories",
+          "ecr:GetLifecyclePolicy",
+          "ecr:PutImageScanningConfiguration",
+          "ecr:PutLifecyclePolicy",
+          "ecr:SetRepositoryPolicy"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:ecr:*:",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":repository/cdk-*"
+           ]
+          ]
+         },
+         "Sid": "ECRAccess"
+        },
+        {
+         "Action": [
+          "ssm:DeleteParameter*",
+          "ssm:GetParameter*",
+          "ssm:PutParameter*"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:ssm:*:",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":parameter/cdk-bootstrap/*"
+           ]
+          ]
+         }
+        },
+        {
+         "Action": [
+          "codepipeline:DisableStageTransition",
+          "codepipeline:EnableStageTransition",
+          "codepipeline:StartPipelineExecution",
+          "codepipeline:StopPipelineExecution",
+          "codepipeline:UpdatePipeline"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:codepipeline:*:",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":*/*"
+           ]
+          ]
+         }
+        },
+        {
+         "Action": "kms:Decrypt",
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:kms:*:",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":key/*"
+           ]
+          ]
+         }
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": "VSCodeInstanceInlinePolicy"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp role we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this tmp role the wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerserverinstanceInstanceProfile6130979E": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerserverinstancerole7745B5BB"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp instance we do not need an asg",
+       "id": "AwsSolutions-EC29"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerserverinstance0A3D62D7": {
+   "Type": "AWS::EC2::Instance",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      0,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "BlockDeviceMappings": [
+     {
+      "DeviceName": "/dev/sda1",
+      "Ebs": {
+       "DeleteOnTermination": true,
+       "Encrypted": true,
+       "VolumeSize": 8,
+       "VolumeType": "gp3"
+      }
+     }
+    ],
+    "IamInstanceProfile": {
+     "Ref": "IntegVSCodeServerserverinstanceInstanceProfile6130979E"
+    },
+    "ImageId": {
+     "Ref": "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
+    },
+    "InstanceType": "t4g.nano",
+    "LaunchTemplate": {
+     "LaunchTemplateName": "IntegTestStackStopOnIdleIntegVSCodeServerserverinstanceLaunchTemplateD9ABA365",
+     "Version": {
+      "Fn::GetAtt": [
+       "IntegVSCodeServerserverinstanceLaunchTemplate43932ED3",
+       "LatestVersionNumber"
+      ]
+     }
+    },
+    "Monitoring": true,
+    "NetworkInterfaces": [
+     {
+      "AssociatePublicIpAddress": true,
+      "DeviceIndex": "0",
+      "GroupSet": [
+       {
+        "Fn::GetAtt": [
+         "IntegVSCodeServercftoserversgFFE586B0",
+         "GroupId"
+        ]
+       }
+      ],
+      "SubnetId": {
+       "Ref": "IntegVSCodeServervpcpublicSubnet1Subnet928029A1"
+      }
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "Name",
+      "Value": "VSCodeServer"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": "\n        #cloud-config\n          hostname: VSCodeServer\n          runcmd:\n            - mkdir -p /Workshop && chown -R participant:participant /Workshop\n      "
+    }
+   },
+   "DependsOn": [
+    "IntegVSCodeServerserverinstancerole7745B5BB",
+    "IntegVSCodeServervpcpublicSubnet1DefaultRoute36845B30",
+    "IntegVSCodeServervpcpublicSubnet1RouteTableAssociation599AB80D",
+    "IntegVSCodeServervpcpublicSubnet2DefaultRouteEAD8BC23",
+    "IntegVSCodeServervpcpublicSubnet2RouteTableAssociationC62A1999"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp instance we do not need an asg",
+       "id": "AwsSolutions-EC29"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerserverinstanceLaunchTemplate43932ED3": {
+   "Type": "AWS::EC2::LaunchTemplate",
+   "Properties": {
+    "LaunchTemplateData": {
+     "MetadataOptions": {
+      "HttpTokens": "required"
+     }
+    },
+    "LaunchTemplateName": "IntegTestStackStopOnIdleIntegVSCodeServerserverinstanceLaunchTemplateD9ABA365"
+   }
+  },
+  "IntegVSCodeServercfcachepolicy8F5F1F69": {
+   "Type": "AWS::CloudFront::CachePolicy",
+   "Properties": {
+    "CachePolicyConfig": {
+     "Comment": "Cache policy for VSCodeServer",
+     "DefaultTTL": 86400,
+     "MaxTTL": 31536000,
+     "MinTTL": 1,
+     "Name": "cf-cache-policy-vscodeserver-IntegTestStackStopOnIdle",
+     "ParametersInCacheKeyAndForwardedToOrigin": {
+      "CookiesConfig": {
+       "CookieBehavior": "all"
+      },
+      "EnableAcceptEncodingBrotli": false,
+      "EnableAcceptEncodingGzip": false,
+      "HeadersConfig": {
+       "HeaderBehavior": "whitelist",
+       "Headers": [
+        "Accept-Charset",
+        "Authorization",
+        "Origin",
+        "Accept",
+        "Referer",
+        "Host",
+        "Accept-Language",
+        "Accept-Encoding",
+        "Accept-Datetime"
+       ]
+      },
+      "QueryStringsConfig": {
+       "QueryStringBehavior": "all"
+      }
+     }
+    }
+   }
+  },
+  "IntegVSCodeServerStateTable3BED34EE": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "instanceId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "instanceId",
+      "KeyType": "HASH"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": false
+    },
+    "SSESpecification": {
+     "SSEEnabled": true
+    },
+    "TableName": "VSCodeServer-StateTable",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Point-in-time recovery not needed for workshop/dev environments",
+       "id": "AwsSolutions-DDB3"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApiFunctionServiceRoleE8DD7643": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for workshop Lambda functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Latest runtime not required for this function",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy8D006192": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "IntegVSCodeServerStateTable3BED34EE",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "ec2:DescribeInstanceStatus",
+        "ec2:DescribeInstances"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:ec2:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":instance/",
+          {
+           "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+          }
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy8D006192",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerStatusApiFunctionServiceRoleE8DD7643"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for workshop Lambda functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Latest runtime not required for this function",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApiFunction91D9BDE1": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "5c4f22e5b0cd2afb5f98af8ce7e3035667e5f8274b5eb8e5f0e09d2a9dfcc00f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Ref": "IntegVSCodeServerStateTable3BED34EE"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 128,
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerStatusApiFunctionServiceRoleE8DD7643",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "IntegVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy8D006192",
+    "IntegVSCodeServerStatusApiFunctionServiceRoleE8DD7643"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for workshop Lambda functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Latest runtime not required for this function",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApi80BFD768": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "API for checking VS Code Server instance status",
+    "Name": "VSCodeStatusCheckApi",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApiDeployment86D76F272b3f2692d50f5ad06e59f7cf15544efa": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "API for checking VS Code Server instance status",
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    }
+   },
+   "DependsOn": [
+    "IntegVSCodeServerStatusApiOPTIONS132B5605",
+    "IntegVSCodeServerStatusApistatusinstanceIdGET33B3DE92",
+    "IntegVSCodeServerStatusApistatusinstanceIdOPTIONSC541E6C3",
+    "IntegVSCodeServerStatusApistatusinstanceId98AC18AC",
+    "IntegVSCodeServerStatusApistatusOPTIONS31951A6E",
+    "IntegVSCodeServerStatusApistatus8BA65969"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApiDeploymentStageprod40EC088F": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "IntegVSCodeServerStatusApiDeployment86D76F272b3f2692d50f5ad06e59f7cf15544efa"
+    },
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    },
+    "StageName": "prod",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApiOPTIONS132B5605": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerStatusApi80BFD768",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApistatus8BA65969": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerStatusApi80BFD768",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "status",
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApistatusOPTIONS31951A6E": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "IntegVSCodeServerStatusApistatus8BA65969"
+    },
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApistatusinstanceId98AC18AC": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "IntegVSCodeServerStatusApistatus8BA65969"
+    },
+    "PathPart": "{instanceId}",
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApistatusinstanceIdOPTIONSC541E6C3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "IntegVSCodeServerStatusApistatusinstanceId98AC18AC"
+    },
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApistatusinstanceIdGETApiPermissionIntegTestStackStopOnIdleIntegVSCodeServerStatusApi2A8BE189GETstatusinstanceId819915B5": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerStatusApiFunction91D9BDE1",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "IntegVSCodeServerStatusApi80BFD768"
+       },
+       "/",
+       {
+        "Ref": "IntegVSCodeServerStatusApiDeploymentStageprod40EC088F"
+       },
+       "/GET/status/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApistatusinstanceIdGETApiPermissionTestIntegTestStackStopOnIdleIntegVSCodeServerStatusApi2A8BE189GETstatusinstanceIdC2B11E61": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerStatusApiFunction91D9BDE1",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "IntegVSCodeServerStatusApi80BFD768"
+       },
+       "/test-invoke-stage/GET/status/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerStatusApistatusinstanceIdGET33B3DE92": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "IntegVSCodeServerStatusApiFunction91D9BDE1",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "IntegVSCodeServerStatusApistatusinstanceId98AC18AC"
+    },
+    "RestApiId": {
+     "Ref": "IntegVSCodeServerStatusApi80BFD768"
+    }
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Request validation not required for this simple API",
+       "id": "AwsSolutions-APIG2"
+      },
+      {
+       "reason": "Managed policies acceptable for workshop API Gateway",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Authorization not required for status check endpoint",
+       "id": "AwsSolutions-APIG4"
+      },
+      {
+       "reason": "Cognito not required for this workshop API",
+       "id": "AwsSolutions-COG4"
+      },
+      {
+       "reason": "Access logging not required for workshop environment",
+       "id": "AwsSolutions-APIG1"
+      },
+      {
+       "reason": "WAF not required for this workshop API",
+       "id": "AwsSolutions-APIG3"
+      },
+      {
+       "reason": "CloudWatch logging not required for workshop environment",
+       "id": "AwsSolutions-APIG6"
+      },
+      {
+       "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerResumeHandlerFunctionServiceRole04181C22": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "edgelambda.amazonaws.com",
+         "lambda.amazonaws.com"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for Lambda@Edge functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Runtime version compatible with Lambda@Edge",
+       "id": "AwsSolutions-L1"
+      },
+      {
+       "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1C43E109": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "IntegVSCodeServerStateTable3BED34EE",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": "ec2:DescribeInstances",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "ec2:StartInstances",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:ec2:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":instance/",
+          {
+           "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+          }
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1C43E109",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerResumeHandlerFunctionServiceRole04181C22"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for Lambda@Edge functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Runtime version compatible with Lambda@Edge",
+       "id": "AwsSolutions-L1"
+      },
+      {
+       "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerResumeHandlerFunction07E71710": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "be32b0612603a7f494fa025039cd0e90a509cc52bb19723e1b206f6d2ccec8d3.zip"
+    },
+    "Handler": "index.handler",
+    "MemorySize": 128,
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerResumeHandlerFunctionServiceRole04181C22",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 5
+   },
+   "DependsOn": [
+    "IntegVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1C43E109",
+    "IntegVSCodeServerResumeHandlerFunctionServiceRole04181C22"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for Lambda@Edge functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "Runtime version compatible with Lambda@Edge",
+       "id": "AwsSolutions-L1"
+      },
+      {
+       "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+       "id": "AwsSolutions-IAM5",
+       "applies_to": [
+        "Resource::*"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerResumeHandlerFunctionCurrentVersionF249BB419f0f0d5b390078bc004b3091d3bfcf0b": {
+   "Type": "AWS::Lambda::Version",
+   "Properties": {
+    "FunctionName": {
+     "Ref": "IntegVSCodeServerResumeHandlerFunction07E71710"
+    }
+   }
+  },
+  "IntegVSCodeServercfdistributionFDBE873F": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "CacheBehaviors": [
+      {
+       "AllowedMethods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT",
+        "PATCH",
+        "POST",
+        "DELETE"
+       ],
+       "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+       "Compress": false,
+       "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3",
+       "PathPattern": "/proxy/*",
+       "TargetOriginId": "Cloudfront-IntegTestStackStopOnIdle-IntegTestStackStopOnIdle",
+       "ViewerProtocolPolicy": "allow-all"
+      }
+     ],
+     "Comment": "Distribution for VSCodeServer",
+     "DefaultCacheBehavior": {
+      "AllowedMethods": [
+       "GET",
+       "HEAD",
+       "OPTIONS",
+       "PUT",
+       "PATCH",
+       "POST",
+       "DELETE"
+      ],
+      "CachePolicyId": {
+       "Ref": "IntegVSCodeServercfcachepolicy8F5F1F69"
+      },
+      "Compress": true,
+      "LambdaFunctionAssociations": [
+       {
+        "EventType": "viewer-request",
+        "LambdaFunctionARN": {
+         "Ref": "IntegVSCodeServerResumeHandlerFunctionCurrentVersionF249BB419f0f0d5b390078bc004b3091d3bfcf0b"
+        }
+       }
+      ],
+      "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3",
+      "TargetOriginId": "Cloudfront-IntegTestStackStopOnIdle-IntegTestStackStopOnIdle",
+      "ViewerProtocolPolicy": "allow-all"
+     },
+     "Enabled": true,
+     "HttpVersion": "http2and3",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "CustomOriginConfig": {
+        "OriginProtocolPolicy": "http-only",
+        "OriginSSLProtocols": [
+         "TLSv1.2"
+        ]
+       },
+       "DomainName": {
+        "Fn::GetAtt": [
+         "IntegVSCodeServerserverinstance0A3D62D7",
+         "PublicDnsName"
+        ]
+       },
+       "Id": "Cloudfront-IntegTestStackStopOnIdle-IntegTestStackStopOnIdle"
+      }
+     ],
+     "PriceClass": "PriceClass_All"
+    },
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this tmp distribution we do not need geo restrictions",
+       "id": "AwsSolutions-CFR1"
+      },
+      {
+       "reason": "For this tmp distribution we do not need waf integration",
+       "id": "AwsSolutions-CFR2"
+      },
+      {
+       "reason": "For this tmp distribution we do not need access logging enabled",
+       "id": "AwsSolutions-CFR3"
+      },
+      {
+       "reason": "For this tmp distribution we do not need limit SSL protocols as we use the default viewer cert",
+       "id": "AwsSolutions-CFR4"
+      },
+      {
+       "reason": "For this tmp distribution we do not need limit SSL protocols as we use the default viewer cert",
+       "id": "AwsSolutions-CFR5"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerssmdocumentubuntuED32BACB": {
+   "Type": "AWS::SSM::Document",
+   "Properties": {
+    "Content": {
+     "schemaVersion": "2.2",
+     "description": "Bootstrap VSCode code-server instance",
+     "parameters": {
+      "VSCodePassword": {
+       "type": "String",
+       "default": {
+        "Ref": "AWS::StackId"
+       }
+      },
+      "NodeVersion": {
+       "type": "String",
+       "default": "20",
+       "allowedValues": [
+        "22",
+        "20",
+        "18"
+       ]
+      },
+      "DotNetVersion": {
+       "type": "String",
+       "default": "8.0",
+       "allowedValues": [
+        "8.0",
+        "7.0"
+       ]
+      }
+     },
+     "mainSteps": [
+      {
+       "action": "aws:configurePackage",
+       "name": "InstallCloudWatchAgent",
+       "inputs": {
+        "name": "AmazonCloudWatchAgent",
+        "action": "Install"
+       }
+      },
+      {
+       "action": "aws:runDocument",
+       "name": "ConfigureCloudWatchAgent",
+       "inputs": {
+        "documentType": "SSMDocument",
+        "documentPath": "AmazonCloudWatch-ManageAgent",
+        "documentParameters": {
+         "action": "configure",
+         "mode": "ec2",
+         "optionalConfigurationSource": "default",
+         "optionalRestart": "yes"
+        }
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallAptPackagesApt",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils",
+         "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q needrestart unattended-upgrades",
+         "sed -i 's/#$nrconf{kernelhints} = -1;/$nrconf{kernelhints} = 0;/' /etc/needrestart/needrestart.conf",
+         "sed -i 's/#$nrconf{verbosity} = 2;/$nrconf{verbosity} = 0;/' /etc/needrestart/needrestart.conf",
+         "sed -i \"s/#$nrconf{restart} = 'i';/$nrconf{restart} = 'a';/\" /etc/needrestart/needrestart.conf",
+         "echo \"Apt helper packages added. Checking configuration\"",
+         "cat /etc/needrestart/needrestart.conf"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallBasePackagesApt",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl gnupg whois argon2 openssl locales locales-all unzip apt-transport-https ca-certificates software-properties-common nginx"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "AddUserApt",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "echo 'Adding user: ${VSCodeUser}'",
+         "adduser --disabled-password --gecos '' participant",
+         "echo \"participant:{{ VSCodePassword }}\" | chpasswd",
+         "usermod -aG sudo participant",
+         "tee /etc/sudoers.d/91-vscode-user <<EOF\nparticipant ALL=(ALL) NOPASSWD:ALL\nEOF",
+         "mkdir -p /home/participant && chown -R participant:participant /home/participant",
+         "echo \"User added. Checking configuration\"",
+         "getent passwd participant"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallNodeApt",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /usr/share/keyrings/nodesource.gpg",
+         "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_{{ NodeVersion }}.x nodistro main\" > /etc/apt/sources.list.d/nodesource.list",
+         "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q nodejs",
+         "npm install -g npm@latest",
+         "echo \"Node and npm installed. Checking configuration\"",
+         "node -v",
+         "npm -v"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallDockerApt",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
+         "echo \"deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable\" > /etc/apt/sources.list.d/docker.list",
+         "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q docker-ce docker-ce-cli containerd.io",
+         "systemctl restart code-server@participant.service",
+         "systemctl start docker.service",
+         "echo \"Docker installed. Checking configuration\"",
+         "docker --version",
+         "systemctl status docker.service"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallGitApt",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "add-apt-repository ppa:git-core/ppa",
+         "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q git",
+         "sudo -u participant git config --global user.email \"participant@example.com\"",
+         "sudo -u participant git config --global user.name \"Workshop participant\"",
+         "sudo -u participant git config --global init.defaultBranch \"main\"",
+         "echo \"Git installed. Checking configuration\"",
+         "git --version"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallPythonApt",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3-pip python3-venv python3-boto3 python3-pytest",
+         "echo 'alias pytest=pytest-3' >> /home/participant/.bashrc",
+         "systemctl restart code-server@participant.service",
+         "systemctl start multipathd.service packagekit.service",
+         "systemctl restart unattended-upgrades.service",
+         "echo \"Python and Pip installed. Checking configuration\"",
+         "python3 --version",
+         "pip3 --version"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallAWSCLI",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip -o /tmp/aws-cli.zip",
+         "unzip -q -d /tmp /tmp/aws-cli.zip",
+         "sudo /tmp/aws/install",
+         "rm -rf /tmp/aws",
+         "echo \"AWS CLI installed. Checking configuration\"",
+         "aws --version"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "ConfigureCodeServer",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "export HOME=/home/participant",
+         "curl -fsSL https://code-server.dev/install.sh | bash -s -- 2>&1",
+         "systemctl enable --now code-server@participant 2>&1",
+         "tee /etc/nginx/conf.d/code-server.conf <<EOF\nserver {\n    listen 80;\n    listen [::]:80;\n    # server_name distribution.distributionDomainName;\n    server_name *.cloudfront.net;\n    location / {\n      proxy_pass http://localhost:8080/;\n      proxy_set_header Host \\$host;\n      proxy_set_header Upgrade \\$http_upgrade;\n      proxy_set_header Connection upgrade;\n      proxy_set_header Accept-Encoding gzip;\n    }\n    location /app {\n      proxy_pass http://localhost:8081/app;\n      proxy_set_header Host \\$host;\n      proxy_set_header Upgrade \\$http_upgrade;\n      proxy_set_header Connection upgrade;\n      proxy_set_header Accept-Encoding gzip;\n    }\n}\nEOF",
+         "mkdir -p /home/participant/.config/code-server",
+         "tee /home/participant/.config/code-server/config.yaml <<EOF\ncert: false\nauth: password\nhashed-password: \"$(echo -n {{ VSCodePassword }} | argon2 $(openssl rand -base64 12) -e)\"\nEOF",
+         "mkdir -p /home/participant/.local/share/code-server/User/",
+         "touch /home/participant/.hushlogin",
+         "mkdir -p /Workshop && chown -R participant:participant /Workshop",
+         "tee /home/participant/.local/share/code-server/User/settings.json <<EOF\n{\n  \"extensions.autoUpdate\": false,\n  \"extensions.autoCheckUpdates\": false,\n  \"telemetry.telemetryLevel\": \"off\",\n  \"security.workspace.trust.startupPrompt\": \"never\",\n  \"security.workspace.trust.enabled\": false,\n  \"security.workspace.trust.banner\": \"never\",\n  \"security.workspace.trust.emptyWindow\": false,\n  \"python.testing.pytestEnabled\": true,\n  \"auto-run-command.rules\": [\n    {\n      \"command\": \"workbench.action.terminal.new\"\n    }\n  ]\n}\nEOF",
+         "chown -R participant:participant /home/participant",
+         "systemctl restart code-server@participant",
+         "systemctl restart nginx",
+         "sudo -u participant --login code-server --install-extension AmazonWebServices.aws-toolkit-vscode --force",
+         "sudo -u participant --login code-server --install-extension AmazonWebServices.amazon-q-vscode --force",
+         "sudo -u participant --login code-server --install-extension synedra.auto-run-command --force",
+         "sudo -u participant --login code-server --install-extension vscjava.vscode-java-pack --force",
+         "sudo -u participant --login code-server --install-extension ms-vscode.live-server --force",
+         "chown -R participant:participant /home/participant",
+         "echo \"Nginx installed. Checking configuration\"",
+         "nginx -t 2>&1",
+         "systemctl status nginx",
+         "echo \"CodeServer installed. Checking configuration\"",
+         "code-server -v",
+         "systemctl status code-server@participant"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "UpdateProfile",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "echo LANG=en_US.utf-8 >> /etc/environment",
+         "echo LC_ALL=en_US.UTF-8 >> /etc/environment",
+         "echo 'PATH=$PATH:/home/participant/.local/bin' >> /home/participant/.bashrc",
+         "echo 'export PATH' >> /home/participant/.bashrc",
+         {
+          "Fn::Join": [
+           "",
+           [
+            "echo 'export AWS_REGION=",
+            {
+             "Ref": "AWS::Region"
+            },
+            "' >> /home/participant/.bashrc"
+           ]
+          ]
+         },
+         {
+          "Fn::Join": [
+           "",
+           [
+            "echo 'export AWS_ACCOUNTID=",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            "' >> /home/participant/.bashrc"
+           ]
+          ]
+         },
+         "echo 'export NEXT_TELEMETRY_DISABLED=1' >> /home/participant/.bashrc",
+         "echo \"export PS1='\\[\\033[01;32m\\]\\u:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '\" >> /home/participant/.bashrc",
+         "chown -R participant:participant /home/participant"
+        ]
+       }
+      },
+      {
+       "action": "aws:runShellScript",
+       "name": "InstallCDK",
+       "inputs": {
+        "runCommand": [
+         "#!/bin/bash",
+         "npm install -g aws-cdk",
+         "echo \"AWS CDK installed. Checking configuration\"",
+         "cdk --version"
+        ]
+       }
+      }
+     ]
+    },
+    "DocumentType": "Command",
+    "Name": "vscode-server-ubuntu-IntegTestStackStopOnIdle",
+    "Tags": [
+     {
+      "Key": "app",
+      "Value": "vscode-server"
+     },
+     {
+      "Key": "IntegTest",
+      "Value": "True"
+     },
+     {
+      "Key": "TestType",
+      "Value": "StopOnIdle"
+     }
+    ]
+   }
+  },
+  "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this event handler we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this lambda the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy1CAD86C2": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ssm:GetCommandInvocation",
+        "ssm:ListCommandInvocations",
+        "ssm:SendCommand"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":ec2:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":instance/",
+           {
+            "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":ssm:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":document/AmazonCloudWatch-ManageAgent"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":ssm:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":document/vscode-server-ubuntu-IntegTestStackStopOnIdle"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy1CAD86C2",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF"
+     }
+    ]
+   }
+  },
+  "IntegVSCodeServerInstallerOnEventHandler6FF91542": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "33da23274e25bd9f43638c5d83dad26e3931cbe78d462ffd9a9f565e948b4f5f.zip"
+    },
+    "Description": "src/installer/installer.lambda.ts",
+    "Handler": "index.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 300
+   },
+   "DependsOn": [
+    "IntegVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy1CAD86C2",
+    "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this event handler we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this lambda the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "For this provider the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleDefaultPolicy3E54FC3A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "IntegVSCodeServerInstallerOnEventHandler6FF91542",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "IntegVSCodeServerInstallerOnEventHandler6FF91542",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "IntegVSCodeServerInstallerOnEventHandler6FF91542",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleDefaultPolicy3E54FC3A",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "For this provider the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerInstallerProviderframeworkonEvent7B6C1190": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "IntegVSCodeServerInstallerOnEventHandler6FF91542",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleDefaultPolicy3E54FC3A",
+    "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "For this provider we do not need to restrict managed policies",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "For this provider wildcards are fine",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "For this provider the latest runtime is not needed",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerSSMInstallerCustomResource9F9AFE68": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerInstallerProviderframeworkonEvent7B6C1190",
+      "Arn"
+     ]
+    },
+    "ServiceTimeout": 305,
+    "InstanceId": {
+     "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+    },
+    "DocumentName": "vscode-server-ubuntu-IntegTestStackStopOnIdle",
+    "CloudWatchLogGroupName": "/aws/ssm/vscode-server-ubuntu-IntegTestStackStopOnIdle",
+    "VSCodePassword": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD",
+      "secretPasswordValue"
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "IntegVSCodeServerIdleMonitorFunctionServiceRoleC1088A0D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for workshop Lambda functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "CloudWatch metrics require wildcard permissions",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "Latest runtime not required for this function",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerIdleMonitorFunctionServiceRoleDefaultPolicyE13A3890": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "IntegVSCodeServerStateTable3BED34EE",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudwatch:GetMetricData",
+        "cloudwatch:GetMetricStatistics",
+        "ec2:DescribeInstanceStatus",
+        "ec2:DescribeInstances"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "ec2:StopInstances",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:ec2:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":instance/",
+          {
+           "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+          }
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IntegVSCodeServerIdleMonitorFunctionServiceRoleDefaultPolicyE13A3890",
+    "Roles": [
+     {
+      "Ref": "IntegVSCodeServerIdleMonitorFunctionServiceRoleC1088A0D"
+     }
+    ]
+   },
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for workshop Lambda functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "CloudWatch metrics require wildcard permissions",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "Latest runtime not required for this function",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerIdleMonitorFunctionCACBFA32": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "d07a86bb27e79c6ebd351c62b38d5de0f596c620d666a5ce163bccfe36e4109b.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "INSTANCE_ID": {
+       "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+      },
+      "DISTRIBUTION_ID": {
+       "Ref": "IntegVSCodeServercfdistributionFDBE873F"
+      },
+      "TABLE_NAME": {
+       "Ref": "IntegVSCodeServerStateTable3BED34EE"
+      },
+      "IDLE_TIMEOUT_MINUTES": "2"
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerIdleMonitorFunctionServiceRoleC1088A0D",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "IntegVSCodeServerIdleMonitorFunctionServiceRoleDefaultPolicyE13A3890",
+    "IntegVSCodeServerIdleMonitorFunctionServiceRoleC1088A0D"
+   ],
+   "Metadata": {
+    "cdk_nag": {
+     "rules_to_suppress": [
+      {
+       "reason": "Managed policies acceptable for workshop Lambda functions",
+       "id": "AwsSolutions-IAM4"
+      },
+      {
+       "reason": "CloudWatch metrics require wildcard permissions",
+       "id": "AwsSolutions-IAM5"
+      },
+      {
+       "reason": "Latest runtime not required for this function",
+       "id": "AwsSolutions-L1"
+      }
+     ]
+    }
+   }
+  },
+  "IntegVSCodeServerIdleMonitorScheduleRuleCF2E60F5": {
+   "Type": "AWS::Events::Rule",
+   "Properties": {
+    "ScheduleExpression": "rate(1 minute)",
+    "State": "ENABLED",
+    "Targets": [
+     {
+      "Arn": {
+       "Fn::GetAtt": [
+        "IntegVSCodeServerIdleMonitorFunctionCACBFA32",
+        "Arn"
+       ]
+      },
+      "Id": "Target0"
+     }
+    ]
+   }
+  },
+  "IntegVSCodeServerIdleMonitorScheduleRuleAllowEventRuleIntegTestStackStopOnIdleIntegVSCodeServerIdleMonitorFunction8C52CC5D407CFD6D": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerIdleMonitorFunctionCACBFA32",
+      "Arn"
+     ]
+    },
+    "Principal": "events.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServerIdleMonitorScheduleRuleCF2E60F5",
+      "Arn"
+     ]
+    }
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:",
+             {
+              "Ref": "AWS::Partition"
+             },
+             ":ec2:",
+             {
+              "Ref": "AWS::Region"
+             },
+             ":",
+             {
+              "Ref": "AWS::AccountId"
+             },
+             ":security-group/",
+             {
+              "Fn::GetAtt": [
+               "IntegVSCodeServervpc93DDE887",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ]
+  },
+  "AWS679f53fac002430cb0da5b7982bd22872D164C4C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "9d043014be736e8162bcc7ec5590cc6d2ff24fd0d9c73a5c5d595151c5fdad00.zip"
+    },
+    "Handler": "index.handler",
+    "LoggingConfig": {
+     "LogGroup": {
+      "Ref": "IntegVSCodeServercfprefixlistIdGetPrefixListIdLogGroup171C2803"
+     }
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 120
+   },
+   "DependsOn": [
+    "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1"
+   ]
+  },
+  "idletesthandlerServiceRoleBB9B4624": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "idletesthandlerServiceRoleDefaultPolicyB0C00EC7": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "cloudwatch:GetMetricStatistics",
+        "ec2:DescribeInstanceStatus",
+        "ec2:DescribeInstances"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "idletesthandlerServiceRoleDefaultPolicyB0C00EC7",
+    "Roles": [
+     {
+      "Ref": "idletesthandlerServiceRoleBB9B4624"
+     }
+    ]
+   }
+  },
+  "idletesthandler1A304024": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "d861fbf8a31fe06de3b52da3de86b80b9bcb26b86a8af844cb0cfa395c5de817.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "INSTANCE_ID": {
+       "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+      },
+      "CLOUDFRONT_DOMAIN": {
+       "Fn::Join": [
+        "",
+        [
+         "https://",
+         {
+          "Fn::GetAtt": [
+           "IntegVSCodeServercfdistributionFDBE873F",
+           "DomainName"
+          ]
+         },
+         "/?folder=/Workshop"
+        ]
+       ]
+      },
+      "IDLE_TIMEOUT_MINUTES": "2"
+     }
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "idletesthandlerServiceRoleBB9B4624",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "idletesthandlerServiceRoleDefaultPolicyB0C00EC7",
+    "idletesthandlerServiceRoleBB9B4624"
+   ]
+  },
+  "idletesthandlerLogRetentionEE227743": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "idletesthandler1A304024"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 1
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:DeleteRetentionPolicy",
+        "logs:PutRetentionPolicy"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "Roles": [
+     {
+      "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+     }
+    ]
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Handler": "index.handler",
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900,
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "2819175352ad1ce0dae768e83fc328fb70fb5f10b4a8ff0ccbcb791f02b0716d.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+   ]
+  },
+  "loginhandlerServiceRole330B0B32": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "loginhandler99CCCCFD": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "0ad50fc42afd768c3d0bfdd4701e43284fb077a25f19eea1e8c51a5ca36ebfe4.zip"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "loginhandlerServiceRole330B0B32",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "loginhandlerServiceRole330B0B32"
+   ]
+  },
+  "loginhandlerLogRetentionFD323A9B": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "loginhandler99CCCCFD"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 1
+   }
+  }
+ },
+ "Outputs": {
+  "IntegVSCodeServerStatusApiEndpoint06670A0D": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "IntegVSCodeServerStatusApi80BFD768"
+      },
+      ".execute-api.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "IntegVSCodeServerStatusApiDeploymentStageprod40EC088F"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "IntegVSCodeServerstatusApiUrlD422EC4A": {
+   "Description": "Status check API URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "IntegVSCodeServerStatusApi80BFD768"
+      },
+      ".execute-api.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "IntegVSCodeServerStatusApiDeploymentStageprod40EC088F"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "IntegVSCodeServerdomainName6B9F2604": {
+   "Description": "The domain name of the distribution",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Fn::GetAtt": [
+        "IntegVSCodeServercfdistributionFDBE873F",
+        "DomainName"
+       ]
+      },
+      "/?folder=/Workshop"
+     ]
+    ]
+   }
+  },
+  "IntegVSCodeServerpasswordE38D3B2C": {
+   "Description": "The password for the VSCode server",
+   "Value": {
+    "Fn::GetAtt": [
+     "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD",
+     "secretPasswordValue"
+    ]
+   }
+  },
+  "ExportsOutputRefloginhandler99CCCCFD29CE21C0": {
+   "Value": {
+    "Ref": "loginhandler99CCCCFD"
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+   }
+  },
+  "ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D": {
+   "Value": {
+    "Fn::GetAtt": [
+     "IntegVSCodeServercfdistributionFDBE873F",
+     "DomainName"
+    ]
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
+   }
+  },
+  "ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B": {
+   "Value": {
+    "Fn::GetAtt": [
+     "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD",
+     "secretPasswordValue"
+    ]
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
+   }
+  },
+  "ExportsOutputRefidletesthandler1A304024FDE25B36": {
+   "Value": {
+    "Ref": "idletesthandler1A304024"
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputRefidletesthandler1A304024FDE25B36"
+   }
+  },
+  "ExportsOutputRefIntegVSCodeServerserverinstance0A3D62D7BC0861E5": {
+   "Value": {
+    "Ref": "IntegVSCodeServerserverinstance0A3D62D7"
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputRefIntegVSCodeServerserverinstance0A3D62D7BC0861E5"
+   }
+  }
+ },
+ "Mappings": {
+  "LatestNodeRuntimeMap": {
+   "af-south-1": {
+    "value": "nodejs20.x"
+   },
+   "ap-east-1": {
+    "value": "nodejs20.x"
+   },
+   "ap-northeast-1": {
+    "value": "nodejs20.x"
+   },
+   "ap-northeast-2": {
+    "value": "nodejs20.x"
+   },
+   "ap-northeast-3": {
+    "value": "nodejs20.x"
+   },
+   "ap-south-1": {
+    "value": "nodejs20.x"
+   },
+   "ap-south-2": {
+    "value": "nodejs20.x"
+   },
+   "ap-southeast-1": {
+    "value": "nodejs20.x"
+   },
+   "ap-southeast-2": {
+    "value": "nodejs20.x"
+   },
+   "ap-southeast-3": {
+    "value": "nodejs20.x"
+   },
+   "ap-southeast-4": {
+    "value": "nodejs20.x"
+   },
+   "ap-southeast-5": {
+    "value": "nodejs20.x"
+   },
+   "ap-southeast-7": {
+    "value": "nodejs20.x"
+   },
+   "ca-central-1": {
+    "value": "nodejs20.x"
+   },
+   "ca-west-1": {
+    "value": "nodejs20.x"
+   },
+   "cn-north-1": {
+    "value": "nodejs20.x"
+   },
+   "cn-northwest-1": {
+    "value": "nodejs20.x"
+   },
+   "eu-central-1": {
+    "value": "nodejs20.x"
+   },
+   "eu-central-2": {
+    "value": "nodejs20.x"
+   },
+   "eu-isoe-west-1": {
+    "value": "nodejs18.x"
+   },
+   "eu-north-1": {
+    "value": "nodejs20.x"
+   },
+   "eu-south-1": {
+    "value": "nodejs20.x"
+   },
+   "eu-south-2": {
+    "value": "nodejs20.x"
+   },
+   "eu-west-1": {
+    "value": "nodejs20.x"
+   },
+   "eu-west-2": {
+    "value": "nodejs20.x"
+   },
+   "eu-west-3": {
+    "value": "nodejs20.x"
+   },
+   "il-central-1": {
+    "value": "nodejs20.x"
+   },
+   "me-central-1": {
+    "value": "nodejs20.x"
+   },
+   "me-south-1": {
+    "value": "nodejs20.x"
+   },
+   "mx-central-1": {
+    "value": "nodejs20.x"
+   },
+   "sa-east-1": {
+    "value": "nodejs20.x"
+   },
+   "us-east-1": {
+    "value": "nodejs20.x"
+   },
+   "us-east-2": {
+    "value": "nodejs20.x"
+   },
+   "us-gov-east-1": {
+    "value": "nodejs20.x"
+   },
+   "us-gov-west-1": {
+    "value": "nodejs20.x"
+   },
+   "us-iso-east-1": {
+    "value": "nodejs18.x"
+   },
+   "us-iso-west-1": {
+    "value": "nodejs18.x"
+   },
+   "us-isob-east-1": {
+    "value": "nodejs18.x"
+   },
+   "us-west-1": {
+    "value": "nodejs20.x"
+   },
+   "us-west-2": {
+    "value": "nodejs20.x"
+   }
+  }
+ },
+ "Parameters": {
+  "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter": {
+   "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+   "Default": "/aws/service/canonical/ubuntu/server/jammy/stable/current/arm64/hvm/ebs-gp2/ami-id"
+  },
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

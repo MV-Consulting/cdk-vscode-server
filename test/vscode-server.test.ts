@@ -450,13 +450,14 @@ describe('vscode-server-auto-stop', () => {
 
     const testProps: VSCodeServerProps = {
       enableAutoStop: false,
+      enableAutoResume: false, // Also disable auto-resume to prevent StatusApi creation
     };
 
     new VSCodeServer(stack, 'testVSCodeServer', testProps);
 
     const template = Template.fromStack(stack);
 
-    // Should NOT have API Gateway
+    // Should NOT have API Gateway (both auto-stop and auto-resume disabled)
     template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
 
     // Should NOT have EventBridge rule with 5 minutes schedule
@@ -537,8 +538,12 @@ describe('vscode-server-auto-stop', () => {
 
     const template = Template.fromStack(stack);
 
-    // Should NOT have auto-stop resources
-    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
+    // enableAutoResume defaults to true, so API Gateway will exist (for StatusApi)
+    // To truly disable auto-stop resources, need enableAutoResume: false as well
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 1);
+
+    // Should NOT have IdleMonitor (EventBridge rule)
+    template.resourceCountIs('AWS::Events::Rule', 0);
   });
 
   test('should create resume handler when enableAutoResume is true', () => {
@@ -592,9 +597,7 @@ describe('vscode-server-auto-stop', () => {
       Description: 'Status check API URL',
     });
 
-    // Should have resume handler info output
-    template.hasOutput('*', {
-      Description: Match.stringLikeRegexp('Lambda@Edge.*auto-resume'),
-    });
+    // Lambda@Edge is now properly attached to CloudFront, so no separate output needed
+    // The resume handler exists as part of the CloudFront distribution's edge lambdas
   });
 });

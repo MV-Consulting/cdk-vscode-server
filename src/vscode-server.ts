@@ -730,6 +730,34 @@ export class VSCodeServer extends Construct {
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,
     });
 
+    // Auto-stop/resume infrastructure (create BEFORE distribution if needed)
+    // State table and status API are shared between auto-stop and auto-resume features
+    let stateTable: InstanceStateTable | undefined;
+    let statusApi: StatusCheckApi | undefined;
+    let resumeHandler: ResumeHandler | undefined;
+
+    if (props?.enableAutoStop || (props?.enableAutoResume ?? true)) {
+      // Create state table (shared by both features)
+      stateTable = new InstanceStateTable(this, 'StateTable', {
+        tableName: `${instanceName}-StateTable`,
+      });
+
+      // Create status check API (shared by both features)
+      statusApi = new StatusCheckApi(this, 'StatusApi', {
+        instance: this.instance,
+        stateTable: stateTable.table,
+      });
+
+      // Create resume handler Lambda@Edge if enabled
+      if (props?.enableAutoResume ?? true) {
+        resumeHandler = new ResumeHandler(this, 'ResumeHandler', {
+          instance: this.instance,
+          stateTable: stateTable.table,
+          statusApiUrl: statusApi.apiUrl,
+        });
+      }
+    }
+
     const distribution = new cf.Distribution(this, 'cf-distribution', {
       enabled: true,
       httpVersion: cf.HttpVersion.HTTP2_AND_3,
@@ -755,6 +783,15 @@ export class VSCodeServer extends Construct {
         },
         viewerProtocolPolicy: cf.ViewerProtocolPolicy.ALLOW_ALL,
         origin,
+        // Attach Lambda@Edge for auto-resume functionality
+        ...(resumeHandler ? {
+          edgeLambdas: [
+            {
+              eventType: cf.LambdaEdgeEventType.VIEWER_REQUEST,
+              functionVersion: resumeHandler.function.currentVersion,
+            },
+          ],
+        } : {}),
       },
       additionalBehaviors: {
         '/proxy/*': {
@@ -856,20 +893,8 @@ export class VSCodeServer extends Construct {
     // NOTE: maybe have a healhcheck CFN custom resource to see if the vscode server is healthy
     // atm this is achieved by the integ tests
 
-    // Auto-stop/resume feature
-    if (props?.enableAutoStop) {
-      // Create state table
-      const stateTable = new InstanceStateTable(this, 'StateTable', {
-        tableName: `${instanceName}-StateTable`,
-      });
-
-      // Create status check API
-      const statusApi = new StatusCheckApi(this, 'StatusApi', {
-        instance: this.instance,
-        stateTable: stateTable.table,
-      });
-
-      // Create idle monitor
+    // Create idle monitor for auto-stop feature
+    if (props?.enableAutoStop && stateTable) {
       new IdleMonitor(this, 'IdleMonitor', {
         instance: this.instance,
         distribution: distribution,
@@ -877,24 +902,10 @@ export class VSCodeServer extends Construct {
         idleTimeoutMinutes: props?.idleTimeoutMinutes ?? 30,
         checkIntervalMinutes: props?.idleCheckIntervalMinutes ?? 5,
       });
+    }
 
-      // Create and attach resume handler (Lambda@Edge) if enabled
-      if (props?.enableAutoResume ?? true) {
-        new ResumeHandler(this, 'ResumeHandler', {
-          instance: this.instance,
-          stateTable: stateTable.table,
-          statusApiUrl: statusApi.apiUrl,
-        });
-
-        // Note: Lambda@Edge association with CloudFront requires manual setup
-        // or using escape hatch to modify the CfnDistribution
-        // This is left as a TODO for complete implementation
-        new CfnOutput(this, 'resumeHandlerInfo', {
-          description: 'Lambda@Edge function for auto-resume (requires manual CloudFront association)',
-          value: 'Auto-resume handler created - manual CloudFront association required',
-        });
-      }
-
+    // Output status API URL if created
+    if (statusApi) {
       new CfnOutput(this, 'statusApiUrl', {
         description: 'Status check API URL',
         value: statusApi.apiUrl,

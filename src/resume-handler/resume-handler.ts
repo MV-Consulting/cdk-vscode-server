@@ -44,12 +44,13 @@ export class ResumeHandler extends Construct {
       code: Code.fromAsset(path.join(__dirname, '../../assets/resume-handler/resume-handler.lambda')),
       timeout: Duration.seconds(5), // Lambda@Edge viewer request max
       memorySize: 128, // Lambda@Edge minimum
-      environment: {
-        TABLE_NAME: props.stateTable.tableName,
-        INSTANCE_ID: props.instance.instanceId,
-        STATUS_API_URL: props.statusApiUrl,
-      },
     });
+
+    // Add environment variables with removeInEdge flag
+    // These will be stripped when the function is replicated to edge locations
+    this.function.addEnvironment('TABLE_NAME', props.stateTable.tableName, { removeInEdge: true });
+    this.function.addEnvironment('INSTANCE_ID', props.instance.instanceId, { removeInEdge: true });
+    this.function.addEnvironment('STATUS_API_URL', props.statusApiUrl, { removeInEdge: true });
 
     // Grant permissions
     props.stateTable.grantReadWriteData(this.function);
@@ -87,6 +88,11 @@ export class ResumeHandler extends Construct {
         {
           id: 'AwsSolutions-L1',
           reason: 'Runtime version compatible with Lambda@Edge',
+        },
+        {
+          id: 'AwsSolutions-IAM5',
+          reason: 'Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)',
+          appliesTo: ['Resource::*'],
         },
       ],
       true,

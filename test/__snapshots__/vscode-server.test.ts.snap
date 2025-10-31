@@ -3,6 +3,28 @@
 exports[`vscode-server vscode-server-custom-props 1`] = `
 {
   "Outputs": {
+    "testVSCodeServerStatusApiEndpoint4C9D9721": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "testVSCodeServerStatusApiC1940AE9",
+            },
+            ".execute-api.us-east-1.",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
     "testVSCodeServerdomainName7B7DBBBC": {
       "Description": "The domain name of the distribution",
       "Value": {
@@ -27,6 +49,29 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
         "Fn::GetAtt": [
           "testVSCodeServerSecretRetrieverCustomResource3FC6DE1D",
           "secretPasswordValue",
+        ],
+      },
+    },
+    "testVSCodeServerstatusApiUrlBE34AFB6": {
+      "Description": "Status check API URL",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "testVSCodeServerStatusApiC1940AE9",
+            },
+            ".execute-api.us-east-1.",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD",
+            },
+            "/",
+          ],
         ],
       },
     },
@@ -387,6 +432,202 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "testVSCodeServerResumeHandlerFunction58FAA5E4": {
+      "DependsOn": [
+        "testVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1520DB3A",
+        "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for Lambda@Edge functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Runtime version compatible with Lambda@Edge",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Key": "be32b0612603a7f494fa025039cd0e90a509cc52bb19723e1b206f6d2ccec8d3.zip",
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Timeout": 5,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testVSCodeServerResumeHandlerFunctionCurrentVersionD16B3BA1656e3b5404ea7f80d9e2a65e1b9556e9": {
+      "Properties": {
+        "FunctionName": {
+          "Ref": "testVSCodeServerResumeHandlerFunction58FAA5E4",
+        },
+      },
+      "Type": "AWS::Lambda::Version",
+    },
+    "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for Lambda@Edge functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Runtime version compatible with Lambda@Edge",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "edgelambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1520DB3A": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for Lambda@Edge functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Runtime version compatible with Lambda@Edge",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testVSCodeServerStateTable6F407251",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": "ec2:DescribeInstances",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": "ec2:StartInstances",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ec2:us-east-1:1234:instance/",
+                    {
+                      "Ref": "testVSCodeServerserverinstance48076E15",
+                    },
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1520DB3A",
+        "Roles": [
+          {
+            "Ref": "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "testVSCodeServerSSMInstallerCustomResourceCC9A01E3": {
       "DeletionPolicy": "Delete",
       "Properties": {
@@ -705,6 +946,1107 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "testVSCodeServerStateTable6F407251": {
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-DDB3",
+              "reason": "Point-in-time recovery not needed for workshop/dev environments",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "instanceId",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "instanceId",
+            "KeyType": "HASH",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": false,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+        "TableName": "VSCodeServer-StateTable",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+          {
+            "Key": "unit-test",
+            "Value": "True",
+          },
+        ],
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testVSCodeServerStatusApiAccount7C2A6FFE": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "testVSCodeServerStatusApiC1940AE9",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiCloudWatchRoleBCD492D3",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testVSCodeServerStatusApiC1940AE9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "API for checking VS Code Server instance status",
+        "Name": "VSCodeStatusCheckApi",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+          {
+            "Key": "unit-test",
+            "Value": "True",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "testVSCodeServerStatusApiCloudWatchRoleBCD492D3": {
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testVSCodeServerStatusApiDeployment6CB02BC976016ddc958f5131dbe97394122e4838": {
+      "DependsOn": [
+        "testVSCodeServerStatusApiOPTIONSD26EA8A9",
+        "testVSCodeServerStatusApistatusinstanceIdGET3F6E91C8",
+        "testVSCodeServerStatusApistatusinstanceIdOPTIONSD826C043",
+        "testVSCodeServerStatusApistatusinstanceIdA80785CA",
+        "testVSCodeServerStatusApistatusOPTIONS8FAB1CEE",
+        "testVSCodeServerStatusApistatus681A6DD8",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "API for checking VS Code Server instance status",
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD": {
+      "DependsOn": [
+        "testVSCodeServerStatusApiAccount7C2A6FFE",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "DeploymentId": {
+          "Ref": "testVSCodeServerStatusApiDeployment6CB02BC976016ddc958f5131dbe97394122e4838",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+        "StageName": "prod",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+          {
+            "Key": "unit-test",
+            "Value": "True",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "testVSCodeServerStatusApiFunction0E3180C6": {
+      "DependsOn": [
+        "testVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy2F0888BF",
+        "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop Lambda functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime not required for this function",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Key": "5c4f22e5b0cd2afb5f98af8ce7e3035667e5f8274b5eb8e5f0e09d2a9dfcc00f.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "TABLE_NAME": {
+              "Ref": "testVSCodeServerStateTable6F407251",
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Timeout": 10,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop Lambda functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime not required for this function",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy2F0888BF": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop Lambda functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime not required for this function",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testVSCodeServerStateTable6F407251",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "ec2:DescribeInstanceStatus",
+                "ec2:DescribeInstances",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ec2:us-east-1:1234:instance/",
+                    {
+                      "Ref": "testVSCodeServerserverinstance48076E15",
+                    },
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy2F0888BF",
+        "Roles": [
+          {
+            "Ref": "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testVSCodeServerStatusApiOPTIONSD26EA8A9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiC1940AE9",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "testVSCodeServerStatusApistatus681A6DD8": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiC1940AE9",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "status",
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "testVSCodeServerStatusApistatusOPTIONS8FAB1CEE": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "testVSCodeServerStatusApistatus681A6DD8",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdA80785CA": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ParentId": {
+          "Ref": "testVSCodeServerStatusApistatus681A6DD8",
+        },
+        "PathPart": "{instanceId}",
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdGET3F6E91C8": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "testVSCodeServerStatusApiFunction0E3180C6",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "testVSCodeServerStatusApistatusinstanceIdA80785CA",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdGETApiPermissionTesttestStacktestVSCodeServerStatusApiF8BD718BGETstatusinstanceIdE79618CD": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiFunction0E3180C6",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:us-east-1:1234:",
+              {
+                "Ref": "testVSCodeServerStatusApiC1940AE9",
+              },
+              "/test-invoke-stage/GET/status/*",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdGETApiPermissiontestStacktestVSCodeServerStatusApiF8BD718BGETstatusinstanceId3B66D8CB": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiFunction0E3180C6",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:us-east-1:1234:",
+              {
+                "Ref": "testVSCodeServerStatusApiC1940AE9",
+              },
+              "/",
+              {
+                "Ref": "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD",
+              },
+              "/GET/status/*",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdOPTIONSD826C043": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "testVSCodeServerStatusApistatusinstanceIdA80785CA",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
     "testVSCodeServercfcachepolicy9DCAAA93": {
       "Properties": {
         "CachePolicyConfig": {
@@ -804,6 +2146,14 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
               "Ref": "testVSCodeServercfcachepolicy9DCAAA93",
             },
             "Compress": true,
+            "LambdaFunctionAssociations": [
+              {
+                "EventType": "viewer-request",
+                "LambdaFunctionARN": {
+                  "Ref": "testVSCodeServerResumeHandlerFunctionCurrentVersionD16B3BA1656e3b5404ea7f80d9e2a65e1b9556e9",
+                },
+              },
+            ],
             "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3",
             "TargetOriginId": "Cloudfront-testStack-testStack",
             "ViewerProtocolPolicy": "allow-all",
@@ -2030,6 +3380,28 @@ EOF",
 exports[`vscode-server vscode-server-default-props 1`] = `
 {
   "Outputs": {
+    "testVSCodeServerStatusApiEndpoint4C9D9721": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "testVSCodeServerStatusApiC1940AE9",
+            },
+            ".execute-api.us-east-1.",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
     "testVSCodeServerdomainName7B7DBBBC": {
       "Description": "The domain name of the distribution",
       "Value": {
@@ -2054,6 +3426,29 @@ exports[`vscode-server vscode-server-default-props 1`] = `
         "Fn::GetAtt": [
           "testVSCodeServerSecretRetrieverCustomResource3FC6DE1D",
           "secretPasswordValue",
+        ],
+      },
+    },
+    "testVSCodeServerstatusApiUrlBE34AFB6": {
+      "Description": "Status check API URL",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "testVSCodeServerStatusApiC1940AE9",
+            },
+            ".execute-api.us-east-1.",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD",
+            },
+            "/",
+          ],
         ],
       },
     },
@@ -2414,6 +3809,202 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "testVSCodeServerResumeHandlerFunction58FAA5E4": {
+      "DependsOn": [
+        "testVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1520DB3A",
+        "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for Lambda@Edge functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Runtime version compatible with Lambda@Edge",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Key": "be32b0612603a7f494fa025039cd0e90a509cc52bb19723e1b206f6d2ccec8d3.zip",
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Timeout": 5,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testVSCodeServerResumeHandlerFunctionCurrentVersionD16B3BA1656e3b5404ea7f80d9e2a65e1b9556e9": {
+      "Properties": {
+        "FunctionName": {
+          "Ref": "testVSCodeServerResumeHandlerFunction58FAA5E4",
+        },
+      },
+      "Type": "AWS::Lambda::Version",
+    },
+    "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for Lambda@Edge functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Runtime version compatible with Lambda@Edge",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "edgelambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1520DB3A": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for Lambda@Edge functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Runtime version compatible with Lambda@Edge",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for EC2:DescribeInstances (does not support resource-level permissions)",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testVSCodeServerStateTable6F407251",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": "ec2:DescribeInstances",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": "ec2:StartInstances",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ec2:us-east-1:1234:instance/",
+                    {
+                      "Ref": "testVSCodeServerserverinstance48076E15",
+                    },
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testVSCodeServerResumeHandlerFunctionServiceRoleDefaultPolicy1520DB3A",
+        "Roles": [
+          {
+            "Ref": "testVSCodeServerResumeHandlerFunctionServiceRole9C644E5F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "testVSCodeServerSSMInstallerCustomResourceCC9A01E3": {
       "DeletionPolicy": "Delete",
       "Properties": {
@@ -2732,6 +4323,1095 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "testVSCodeServerStateTable6F407251": {
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-DDB3",
+              "reason": "Point-in-time recovery not needed for workshop/dev environments",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "instanceId",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "instanceId",
+            "KeyType": "HASH",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": false,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+        "TableName": "VSCodeServer-StateTable",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+        ],
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testVSCodeServerStatusApiAccount7C2A6FFE": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "testVSCodeServerStatusApiC1940AE9",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiCloudWatchRoleBCD492D3",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testVSCodeServerStatusApiC1940AE9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "API for checking VS Code Server instance status",
+        "Name": "VSCodeStatusCheckApi",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "testVSCodeServerStatusApiCloudWatchRoleBCD492D3": {
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testVSCodeServerStatusApiDeployment6CB02BC93aadef9629586715aad967a9cc1449f1": {
+      "DependsOn": [
+        "testVSCodeServerStatusApiOPTIONSD26EA8A9",
+        "testVSCodeServerStatusApistatusinstanceIdGET3F6E91C8",
+        "testVSCodeServerStatusApistatusinstanceIdOPTIONSD826C043",
+        "testVSCodeServerStatusApistatusinstanceIdA80785CA",
+        "testVSCodeServerStatusApistatusOPTIONS8FAB1CEE",
+        "testVSCodeServerStatusApistatus681A6DD8",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "API for checking VS Code Server instance status",
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD": {
+      "DependsOn": [
+        "testVSCodeServerStatusApiAccount7C2A6FFE",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "DeploymentId": {
+          "Ref": "testVSCodeServerStatusApiDeployment6CB02BC93aadef9629586715aad967a9cc1449f1",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+        "StageName": "prod",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "testVSCodeServerStatusApiFunction0E3180C6": {
+      "DependsOn": [
+        "testVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy2F0888BF",
+        "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop Lambda functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime not required for this function",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Key": "5c4f22e5b0cd2afb5f98af8ce7e3035667e5f8274b5eb8e5f0e09d2a9dfcc00f.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "TABLE_NAME": {
+              "Ref": "testVSCodeServerStateTable6F407251",
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Timeout": 10,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop Lambda functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime not required for this function",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy2F0888BF": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop Lambda functions",
+            },
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime not required for this function",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "testVSCodeServerStateTable6F407251",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "ec2:DescribeInstanceStatus",
+                "ec2:DescribeInstances",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ec2:us-east-1:1234:instance/",
+                    {
+                      "Ref": "testVSCodeServerserverinstance48076E15",
+                    },
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testVSCodeServerStatusApiFunctionServiceRoleDefaultPolicy2F0888BF",
+        "Roles": [
+          {
+            "Ref": "testVSCodeServerStatusApiFunctionServiceRole6F18BB4D",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testVSCodeServerStatusApiOPTIONSD26EA8A9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiC1940AE9",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "testVSCodeServerStatusApistatus681A6DD8": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiC1940AE9",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "status",
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "testVSCodeServerStatusApistatusOPTIONS8FAB1CEE": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "testVSCodeServerStatusApistatus681A6DD8",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdA80785CA": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ParentId": {
+          "Ref": "testVSCodeServerStatusApistatus681A6DD8",
+        },
+        "PathPart": "{instanceId}",
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdGET3F6E91C8": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "testVSCodeServerStatusApiFunction0E3180C6",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "testVSCodeServerStatusApistatusinstanceIdA80785CA",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdGETApiPermissionTesttestStacktestVSCodeServerStatusApiF8BD718BGETstatusinstanceIdE79618CD": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiFunction0E3180C6",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:us-east-1:1234:",
+              {
+                "Ref": "testVSCodeServerStatusApiC1940AE9",
+              },
+              "/test-invoke-stage/GET/status/*",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdGETApiPermissiontestStacktestVSCodeServerStatusApiF8BD718BGETstatusinstanceId3B66D8CB": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "testVSCodeServerStatusApiFunction0E3180C6",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:us-east-1:1234:",
+              {
+                "Ref": "testVSCodeServerStatusApiC1940AE9",
+              },
+              "/",
+              {
+                "Ref": "testVSCodeServerStatusApiDeploymentStageprodE4CFBFCD",
+              },
+              "/GET/status/*",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "testVSCodeServerStatusApistatusinstanceIdOPTIONSD826C043": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Request validation not required for this simple API",
+            },
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Managed policies acceptable for workshop API Gateway",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Authorization not required for status check endpoint",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Cognito not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG1",
+              "reason": "Access logging not required for workshop environment",
+            },
+            {
+              "id": "AwsSolutions-APIG3",
+              "reason": "WAF not required for this workshop API",
+            },
+            {
+              "id": "AwsSolutions-APIG6",
+              "reason": "CloudWatch logging not required for workshop environment",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions acceptable for workshop API Gateway execution role",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "testVSCodeServerStatusApistatusinstanceIdA80785CA",
+        },
+        "RestApiId": {
+          "Ref": "testVSCodeServerStatusApiC1940AE9",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
     "testVSCodeServercfcachepolicy9DCAAA93": {
       "Properties": {
         "CachePolicyConfig": {
@@ -2831,6 +5511,14 @@ exports[`vscode-server vscode-server-default-props 1`] = `
               "Ref": "testVSCodeServercfcachepolicy9DCAAA93",
             },
             "Compress": true,
+            "LambdaFunctionAssociations": [
+              {
+                "EventType": "viewer-request",
+                "LambdaFunctionARN": {
+                  "Ref": "testVSCodeServerResumeHandlerFunctionCurrentVersionD16B3BA1656e3b5404ea7f80d9e2a65e1b9556e9",
+                },
+              },
+            ],
             "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3",
             "TargetOriginId": "Cloudfront-testStack-testStack",
             "ViewerProtocolPolicy": "allow-all",

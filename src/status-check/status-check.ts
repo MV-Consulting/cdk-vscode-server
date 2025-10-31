@@ -124,6 +124,19 @@ export class StatusCheckApi extends Construct {
           id: 'AwsSolutions-APIG1',
           reason: 'Access logging not required for workshop environment',
         },
+        {
+          id: 'AwsSolutions-APIG3',
+          reason: 'WAF not required for this workshop API',
+        },
+        {
+          id: 'AwsSolutions-APIG6',
+          reason: 'CloudWatch logging not required for workshop environment',
+        },
+        {
+          id: 'AwsSolutions-IAM5',
+          reason: 'Wildcard permissions acceptable for workshop API Gateway execution role',
+          appliesTo: ['Resource::*'],
+        },
       ],
       true,
     );

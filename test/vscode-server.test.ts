@@ -422,20 +422,13 @@ describe('vscode-server-auto-stop', () => {
       ScheduleExpression: 'rate(5 minutes)',
     });
 
-    // Verify API Gateway
+    // Verify API Gateway with start endpoint
     template.hasResourceProperties('AWS::ApiGateway::RestApi', {
       Name: 'VSCodeStatusCheckApi',
     });
 
-    // Verify ResumeHandler Lambda
-    template.resourcePropertiesCountIs(
-      'AWS::Lambda::Function',
-      {
-        Runtime: 'nodejs20.x',
-        Timeout: 5,
-      },
-      1,
-    );
+    // Note: ResumeHandler Lambda@Edge has been replaced with client-side resume
+    // via POST /status/{instanceId}/start API endpoint
   });
 
   test('should not create auto-stop resources when disabled', () => {
@@ -543,7 +536,7 @@ describe('vscode-server-auto-stop', () => {
     template.resourceCountIs('AWS::Events::Rule', 0);
   });
 
-  test('should create resume handler when enableAutoStop is true', () => {
+  test('should expose statusApiUrl when enableAutoStop is true', () => {
     const app = new App();
     const stack = new Stack(app, 'testStack', {
       env: {
@@ -556,19 +549,10 @@ describe('vscode-server-auto-stop', () => {
       enableAutoStop: true,
     };
 
-    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+    const construct = new VSCodeServer(stack, 'testVSCodeServer', testProps);
 
-    const template = Template.fromStack(stack);
-
-    // Should have Lambda function with 5 second timeout (Lambda@Edge requirement)
-    // Auto-resume is automatically enabled when auto-stop is enabled
-    template.resourcePropertiesCountIs(
-      'AWS::Lambda::Function',
-      {
-        Timeout: 5,
-      },
-      1,
-    );
+    // Should expose statusApiUrl for client-side resume functionality
+    expect(construct.statusApiUrl).toBeDefined();
   });
 
   test('should create outputs for auto-stop resources', () => {
@@ -593,8 +577,7 @@ describe('vscode-server-auto-stop', () => {
       Description: 'Status check API URL',
     });
 
-    // Lambda@Edge is now properly attached to CloudFront, so no separate output needed
-    // The resume handler exists as part of the CloudFront distribution's edge lambdas
-    // Auto-resume is automatically enabled when auto-stop is enabled
+    // Note: Auto-resume is now client-side via POST /status/{instanceId}/start
+    // No Lambda@Edge functions are created
   });
 });

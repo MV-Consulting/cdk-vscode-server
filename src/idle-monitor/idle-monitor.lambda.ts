@@ -51,7 +51,14 @@ export const handler = async (event: ScheduledEvent): Promise<void> => {
 
     console.log('Current instance state:', instanceState);
 
-    // 3. If no requests and instance is running, stop it
+    // 3. Skip if instance is in a transitional state (starting, stopping, pending)
+    const transitionalStates = ['pending', 'stopping', 'shutting-down', 'rebooting'];
+    if (transitionalStates.includes(instanceState || '')) {
+      console.log(`Instance is in transitional state '${instanceState}', skipping idle check`);
+      return;
+    }
+
+    // 4. If no requests and instance is running, stop it
     if (requestCount === 0 && instanceState === 'running') {
       console.log('No activity detected, stopping instance');
 

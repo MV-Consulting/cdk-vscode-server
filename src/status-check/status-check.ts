@@ -61,6 +61,7 @@ export class StatusCheckApi extends Construct {
         actions: [
           'ec2:DescribeInstanceStatus',
           'ec2:DescribeInstances',
+          'ec2:StartInstances', // Allow starting instances for resume functionality
         ],
         resources: [
           `arn:aws:ec2:${Stack.of(this).region}:${Stack.of(this).account}:instance/${props.instance.instanceId}`,
@@ -81,7 +82,12 @@ export class StatusCheckApi extends Construct {
     const statusResource = this.api.root.addResource('status');
     const instanceResource = statusResource.addResource('{instanceId}');
 
+    // GET /status/{instanceId} - Check instance status
     instanceResource.addMethod('GET', new LambdaIntegration(this.function));
+
+    // POST /status/{instanceId}/start - Start stopped instance
+    const startResource = instanceResource.addResource('start');
+    startResource.addMethod('POST', new LambdaIntegration(this.function));
 
     this.apiUrl = this.api.url;
 

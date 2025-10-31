@@ -20,7 +20,6 @@ import { IdleMonitor } from './idle-monitor/idle-monitor';
 import { Installer } from './installer/installer';
 import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from './mappings';
 import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retriever';
-import { ResumeHandler } from './resume-handler/resume-handler';
 import { SecretRetriever } from './secret-retriever/secret-retriever';
 import { InstanceStateTable } from './state-table/state-table';
 import { StatusCheckApi } from './status-check/status-check';
@@ -235,6 +234,11 @@ export class VSCodeServer extends Construct {
    * The EC2 instance running VS Code Server
    */
   public readonly instance: ec2.IInstance;
+
+  /**
+   * The URL of the status check API (only available when enableAutoStop is true)
+   */
+  public readonly statusApiUrl?: string;
 
   constructor(scope: Construct, id: string, props?: VSCodeServerProps) {
     super(scope, id);
@@ -721,12 +725,11 @@ export class VSCodeServer extends Construct {
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,
     });
 
-    // Auto-stop/resume infrastructure (create BEFORE distribution if needed)
+    // Auto-stop/resume infrastructure
     // State table and status API are shared between auto-stop and auto-resume features
-    // Auto-resume is automatically enabled when auto-stop is enabled
+    // Auto-resume is automatically enabled when auto-stop is enabled (client-side via status API)
     let stateTable: InstanceStateTable | undefined;
     let statusApi: StatusCheckApi | undefined;
-    let resumeHandler: ResumeHandler | undefined;
 
     if (props?.enableAutoStop) {
       // Create state table (shared by both features)
@@ -735,29 +738,14 @@ export class VSCodeServer extends Construct {
       });
 
       // Create status check API (shared by both features)
+      // The API supports both checking status AND starting instances (for client-side resume)
       statusApi = new StatusCheckApi(this, 'StatusApi', {
         instance: this.instance,
         stateTable: stateTable.table,
       });
 
-      // Create resume handler Lambda@Edge (auto-resume is implied when auto-stop is enabled)
-      // Lambda@Edge can only be created in us-east-1, so we check the stack region
-      const stackRegion = Stack.of(this).region;
-      const isUsEast1 = stackRegion === 'us-east-1' || stackRegion.includes('${Token[');
-
-      if (isUsEast1) {
-        resumeHandler = new ResumeHandler(this, 'ResumeHandler', {
-          instance: this.instance,
-          stateTable: stateTable.table,
-          statusApiUrl: statusApi.apiUrl,
-        });
-      } else {
-        // Warn user that Lambda@Edge requires us-east-1
-        new CfnOutput(this, 'autoResumeWarning', {
-          description: 'Auto-resume feature requires stack to be in us-east-1 for Lambda@Edge',
-          value: `Lambda@Edge cannot be created in ${stackRegion}. Deploy to us-east-1 for auto-resume functionality.`,
-        });
-      }
+      // Expose the status API URL for external use (e.g., client-side resume)
+      this.statusApiUrl = statusApi.apiUrl;
     }
 
     const distribution = new cf.Distribution(this, 'cf-distribution', {
@@ -785,15 +773,6 @@ export class VSCodeServer extends Construct {
         },
         viewerProtocolPolicy: cf.ViewerProtocolPolicy.ALLOW_ALL,
         origin,
-        // Attach Lambda@Edge for auto-resume functionality
-        ...(resumeHandler ? {
-          edgeLambdas: [
-            {
-              eventType: cf.LambdaEdgeEventType.VIEWER_REQUEST,
-              functionVersion: resumeHandler.function.currentVersion,
-            },
-          ],
-        } : {}),
       },
       additionalBehaviors: {
         '/proxy/*': {

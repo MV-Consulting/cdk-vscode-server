@@ -55,9 +55,6 @@
           "spawn": "bundle:installer/installer.lambda"
         },
         {
-          "spawn": "bundle:resume-handler/resume-handler.lambda"
-        },
-        {
           "spawn": "bundle:secret-retriever/secret-retriever.lambda"
         },
         {
@@ -98,24 +95,6 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
-        }
-      ]
-    },
-    "bundle:resume-handler/resume-handler.lambda": {
-      "name": "bundle:resume-handler/resume-handler.lambda",
-      "description": "Create a JavaScript bundle from src/resume-handler/resume-handler.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/resume-handler/resume-handler.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/resume-handler/resume-handler.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
-        }
-      ]
-    },
-    "bundle:resume-handler/resume-handler.lambda:watch": {
-      "name": "bundle:resume-handler/resume-handler.lambda:watch",
-      "description": "Continuously update the JavaScript bundle from src/resume-handler/resume-handler.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/resume-handler/resume-handler.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/resume-handler/resume-handler.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },

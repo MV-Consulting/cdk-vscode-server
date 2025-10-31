@@ -54,7 +54,6 @@ tsconfig.json
 /assets/
 !/src/idle-monitor/idle-monitor-function.ts
 !/src/installer/installer-function.ts
-!/src/resume-handler/resume-handler-function.ts
 !/src/secret-retriever/secret-retriever-function.ts
 !/src/status-check/status-check-function.ts
 tmp

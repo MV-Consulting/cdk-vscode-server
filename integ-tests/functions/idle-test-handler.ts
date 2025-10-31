@@ -71,11 +71,11 @@ async function verifyAutoStop(instanceId: string, idleTimeoutMinutes: number): P
 }
 
 /**
- * Verify auto-resume functionality
+ * Verify auto-resume functionality (client-side via status API)
  *
  * Test flow:
  * 1. Verify instance is currently stopped
- * 2. Make HTTP request to CloudFront domain (triggers Lambda@Edge)
+ * 2. Call status API POST /status/{instanceId}/start endpoint
  * 3. Poll instance state every 15 seconds for up to 5 minutes
  * 4. Verify instance transitions to 'running' state
  * 5. Wait for instance to be fully initialized (status checks pass)
@@ -83,33 +83,38 @@ async function verifyAutoStop(instanceId: string, idleTimeoutMinutes: number): P
 async function verifyAutoResume(instanceId: string, domainName: string): Promise<string> {
   console.log(`Starting auto-resume verification for instance ${instanceId}`);
 
-  // Step 1: Verify instance is stopped
-  console.log('Step 1: Verifying instance is stopped...');
-  const initialState = await getInstanceState(instanceId);
-  if (initialState !== 'stopped') {
-    throw new Error(`Expected instance to be stopped, but was: ${initialState}`);
-  }
+  // Step 1: Wait for instance to be stopped (it might still be stopping)
+  console.log('Step 1: Waiting for instance to be stopped...');
+  await waitForInstanceState(instanceId, 'stopped', 180); // 3 minute max wait
   console.log('Instance is stopped');
 
-  // Step 2: Trigger resume by accessing CloudFront
-  console.log(`Step 2: Accessing CloudFront domain ${domainName} to trigger resume...`);
-  try {
-    // Use fetch to access the domain (Lambda@Edge will intercept and start instance)
-    const response = await fetch(domainName, {
-      method: 'GET',
-      redirect: 'manual', // Don't follow redirects
-    });
-    console.log(`CloudFront response status: ${response.status}`);
-    console.log(`CloudFront response headers:`, Object.fromEntries(response.headers.entries()));
+  // Step 2: Trigger resume by calling status API start endpoint
+  console.log(`Step 2: Calling status API to start instance...`);
+  const statusApiUrl = process.env.STATUS_API_URL;
+  if (!statusApiUrl) {
+    throw new Error('STATUS_API_URL environment variable not set');
+  }
 
-    // We expect either:
-    // - 200 with resume page HTML
-    // - 503 if instance is starting
-    if (response.status !== 200 && response.status !== 503) {
-      console.warn(`Unexpected status code: ${response.status}`);
+  try {
+    const startUrl = `${statusApiUrl}status/${instanceId}/start`;
+    console.log(`Calling POST ${startUrl}`);
+
+    const response = await fetch(startUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to start instance: ${response.status} ${response.statusText}`);
     }
+
+    const data = await response.json();
+    console.log('Start API response:', data);
   } catch (error) {
-    console.log('CloudFront request completed (error expected if resume page served):', error);
+    console.error('Error calling start API:', error);
+    throw error;
   }
 
   // Step 3: Poll for running state
@@ -120,8 +125,8 @@ async function verifyAutoResume(instanceId: string, domainName: string): Promise
   console.log('Step 4: Waiting for instance status checks to pass...');
   await waitForStatusChecks(instanceId, 120); // 2 minute max wait
 
-  console.log('✅ Auto-resume verification successful: instance running after CloudFront access');
-  return 'SUCCESS: instance auto-resumed after CloudFront access';
+  console.log('✅ Auto-resume verification successful: instance running after start API call');
+  return 'SUCCESS: instance auto-resumed after start API call';
 }
 
 /**

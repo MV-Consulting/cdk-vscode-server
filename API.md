@@ -258,134 +258,6 @@ The DynamoDB table.
 ---
 
 
-### ResumeHandler <a name="ResumeHandler" id="@mavogel/cdk-vscode-server.ResumeHandler"></a>
-
-Lambda@Edge function that intercepts CloudFront requests and resumes stopped instances.
-
-#### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer"></a>
-
-```typescript
-import { ResumeHandler } from '@mavogel/cdk-vscode-server'
-
-new ResumeHandler(scope: Construct, id: string, props: ResumeHandlerProps)
-```
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.props">props</a></code> | <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps">ResumeHandlerProps</a></code> | *No description.* |
-
----
-
-##### `scope`<sup>Required</sup> <a name="scope" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.scope"></a>
-
-- *Type:* constructs.Construct
-
----
-
-##### `id`<sup>Required</sup> <a name="id" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.id"></a>
-
-- *Type:* string
-
----
-
-##### `props`<sup>Required</sup> <a name="props" id="@mavogel/cdk-vscode-server.ResumeHandler.Initializer.parameter.props"></a>
-
-- *Type:* <a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps">ResumeHandlerProps</a>
-
----
-
-#### Methods <a name="Methods" id="Methods"></a>
-
-| **Name** | **Description** |
-| --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.toString">toString</a></code> | Returns a string representation of this construct. |
-
----
-
-##### `toString` <a name="toString" id="@mavogel/cdk-vscode-server.ResumeHandler.toString"></a>
-
-```typescript
-public toString(): string
-```
-
-Returns a string representation of this construct.
-
-#### Static Functions <a name="Static Functions" id="Static Functions"></a>
-
-| **Name** | **Description** |
-| --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
-
----
-
-##### `isConstruct` <a name="isConstruct" id="@mavogel/cdk-vscode-server.ResumeHandler.isConstruct"></a>
-
-```typescript
-import { ResumeHandler } from '@mavogel/cdk-vscode-server'
-
-ResumeHandler.isConstruct(x: any)
-```
-
-Checks if `x` is a construct.
-
-Use this method instead of `instanceof` to properly detect `Construct`
-instances, even when the construct library is symlinked.
-
-Explanation: in JavaScript, multiple copies of the `constructs` library on
-disk are seen as independent, completely different libraries. As a
-consequence, the class `Construct` in each copy of the `constructs` library
-is seen as a different class, and an instance of one class will not test as
-`instanceof` the other class. `npm install` will not create installations
-like this, but users may manually symlink construct libraries together or
-use a monorepo tool: in those cases, multiple copies of the `constructs`
-library can be accidentally installed, and `instanceof` will behave
-unpredictably. It is safest to avoid using `instanceof`, and using
-this type-testing method instead.
-
-###### `x`<sup>Required</sup> <a name="x" id="@mavogel/cdk-vscode-server.ResumeHandler.isConstruct.parameter.x"></a>
-
-- *Type:* any
-
-Any object.
-
----
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandler.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda@Edge function that handles resume logic. |
-
----
-
-##### `node`<sup>Required</sup> <a name="node" id="@mavogel/cdk-vscode-server.ResumeHandler.property.node"></a>
-
-```typescript
-public readonly node: Node;
-```
-
-- *Type:* constructs.Node
-
-The tree node.
-
----
-
-##### `function`<sup>Required</sup> <a name="function" id="@mavogel/cdk-vscode-server.ResumeHandler.property.function"></a>
-
-```typescript
-public readonly function: Function;
-```
-
-- *Type:* aws-cdk-lib.aws_lambda.Function
-
-The Lambda@Edge function that handles resume logic.
-
----
-
-
 ### StatusCheckApi <a name="StatusCheckApi" id="@mavogel/cdk-vscode-server.StatusCheckApi"></a>
 
 API Gateway endpoint for checking instance status, used by resume page for polling.
@@ -642,6 +514,7 @@ Any object.
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.domainName">domainName</a></code> | <code>string</code> | The name of the domain the server is reachable. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance running VS Code Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.password">password</a></code> | <code>string</code> | The password to login to the server. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.statusApiUrl">statusApiUrl</a></code> | <code>string</code> | The URL of the status check API (only available when enableAutoStop is true). |
 
 ---
 
@@ -690,6 +563,18 @@ public readonly password: string;
 - *Type:* string
 
 The password to login to the server.
+
+---
+
+##### `statusApiUrl`<sup>Optional</sup> <a name="statusApiUrl" id="@mavogel/cdk-vscode-server.VSCodeServer.property.statusApiUrl"></a>
+
+```typescript
+public readonly statusApiUrl: string;
+```
+
+- *Type:* string
+
+The URL of the status check API (only available when enableAutoStop is true).
 
 ---
 
@@ -811,64 +696,6 @@ public readonly tableName: string;
 - *Default:* auto-generated
 
 Table name.
-
----
-
-### ResumeHandlerProps <a name="ResumeHandlerProps" id="@mavogel/cdk-vscode-server.ResumeHandlerProps"></a>
-
-Props for ResumeHandler construct.
-
-#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.Initializer"></a>
-
-```typescript
-import { ResumeHandlerProps } from '@mavogel/cdk-vscode-server'
-
-const resumeHandlerProps: ResumeHandlerProps = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to resume. |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | DynamoDB table for tracking instance state. |
-| <code><a href="#@mavogel/cdk-vscode-server.ResumeHandlerProps.property.statusApiUrl">statusApiUrl</a></code> | <code>string</code> | URL of the status check API endpoint. |
-
----
-
-##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.property.instance"></a>
-
-```typescript
-public readonly instance: IInstance;
-```
-
-- *Type:* aws-cdk-lib.aws_ec2.IInstance
-
-The EC2 instance to resume.
-
----
-
-##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.property.stateTable"></a>
-
-```typescript
-public readonly stateTable: ITable;
-```
-
-- *Type:* aws-cdk-lib.aws_dynamodb.ITable
-
-DynamoDB table for tracking instance state.
-
----
-
-##### `statusApiUrl`<sup>Required</sup> <a name="statusApiUrl" id="@mavogel/cdk-vscode-server.ResumeHandlerProps.property.statusApiUrl"></a>
-
-```typescript
-public readonly statusApiUrl: string;
-```
-
-- *Type:* string
-
-URL of the status check API endpoint.
 
 ---
 

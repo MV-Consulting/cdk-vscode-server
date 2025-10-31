@@ -16,9 +16,9 @@ import { VSCodeServer } from '../src/vscode-server';
 // CDK App for Integration Tests
 const app = new App();
 
-// Stack under test - MUST be us-east-1 for Lambda@Edge
+// Stack under test
 const stackUnderTest = new Stack(app, 'IntegTestStackStopOnIdle', {
-  description: "Integration test for stop-on-idle functionality with fast execution parameters. Requires us-east-1 for Lambda@Edge.",
+  description: "Integration test for stop-on-idle functionality with fast execution parameters.",
 });
 
 // Create VSCodeServer with optimized parameters for fast testing:
@@ -49,8 +49,6 @@ const integ = new IntegTest(app, 'IntegStopOnIdleFunctionality', {
       },
     },
   },
-  // Lambda@Edge REQUIRES us-east-1, so this test must only run there
-  regions: ['us-east-1'],
 });
 
 // Lambda function to test the stop-on-idle flow
@@ -69,6 +67,7 @@ const idleTestHandler = new NodejsFunction(stackUnderTest, 'idle-test-handler', 
     INSTANCE_ID: constructUnderTest.instance.instanceId,
     CLOUDFRONT_DOMAIN: constructUnderTest.domainName,
     IDLE_TIMEOUT_MINUTES: '2',
+    STATUS_API_URL: constructUnderTest.statusApiUrl || '',
   },
 });
 
@@ -102,6 +101,16 @@ const loginHandler = new NodejsFunction(stackUnderTest, 'login-handler', {
   },
 });
 
+/**
+ * Test execution order (must be defined in reverse order due to .next() chaining):
+ * 1. initialLoginAssertion - Verify initial deployment works
+ * 2. stopOnIdleAssertion - Wait for idle timeout and verify stop
+ * 3. autoResumeAssertion - Call status API and verify resume
+ */
+
+/**
+ * Assertion 1: Initial login to VS Code Server
+ */
 const initialLoginAssertion = integ.assertions
   .invokeFunction({
     functionName: loginHandler.functionName,
@@ -117,62 +126,53 @@ const initialLoginAssertion = integ.assertions
  * Assertion 2: Instance stops after idle timeout
  * This test:
  * 1. Waits for initial instance to be running
- * 2. Waits for idle timeout period (5 minutes + buffer)
+ * 2. Waits for idle timeout period (2 minutes + buffer)
  * 3. Verifies instance transitions to 'stopped' state
- * 4. Verifies CloudFront still serves traffic (returns resume page)
  */
-const stopOnIdleAssertion = integ.assertions
-  .invokeFunction({
-    functionName: idleTestHandler.functionName,
-    logType: LogType.TAIL,
-    invocationType: InvocationType.REQUEST_RESPONSE,
-    payload: JSON.stringify({
-      testPhase: 'verify-auto-stop',
-      domainName: constructUnderTest.domainName,
-      instanceId: constructUnderTest.instance.instanceId,
-      idleTimeoutMinutes: 2,
-    }),
-  })
-  .expect(ExpectedResult.objectLike({
-    Payload: ExpectedResult.stringLikeRegexp('.*instance.*stopped.*'),
-  }))
-  .next(initialLoginAssertion); // Run after login succeeds
+const stopOnIdleAssertion = initialLoginAssertion.next(
+  integ.assertions
+    .invokeFunction({
+      functionName: idleTestHandler.functionName,
+      logType: LogType.TAIL,
+      invocationType: InvocationType.REQUEST_RESPONSE,
+      payload: JSON.stringify({
+        testPhase: 'verify-auto-stop',
+        domainName: constructUnderTest.domainName,
+        instanceId: constructUnderTest.instance.instanceId,
+        idleTimeoutMinutes: 2,
+      }),
+    })
+    .expect(ExpectedResult.objectLike({
+      Payload: ExpectedResult.stringLikeRegexp('.*instance.*stopped.*'),
+    })),
+);
 
 /**
- * Assertion 3: Instance resumes on access
+ * Assertion 3: Instance resumes via status API
  * This test:
  * 1. Waits for instance to be stopped (from previous test)
- * 2. Makes a request to CloudFront domain
- * 3. Verifies Lambda@Edge starts the instance (only works in us-east-1)
- * 4. Waits for instance to be running
- * 5. Verifies VS Code Server is accessible again
+ * 2. Calls the status API start endpoint to resume the instance
+ * 3. Waits for instance to be running
+ * 4. Verifies VS Code Server is accessible again
  *
- * NOTE: Lambda@Edge can only be created in us-east-1, so auto-resume functionality
- * will not be available when this stack is deployed to other regions (eu-west-1, etc).
- * The test will fail in non-us-east-1 regions with "instance did not resume" message.
+ * NOTE: Uses client-side resume via POST /status/{instanceId}/start API endpoint
  */
-const autoResumeAssertion = integ.assertions
-  .invokeFunction({
-    functionName: idleTestHandler.functionName,
-    logType: LogType.TAIL,
-    invocationType: InvocationType.REQUEST_RESPONSE,
-    payload: JSON.stringify({
-      testPhase: 'verify-auto-resume',
-      domainName: constructUnderTest.domainName,
-      instanceId: constructUnderTest.instance.instanceId,
-    }),
-  })
-  .expect(ExpectedResult.objectLike({
-    Payload: ExpectedResult.stringLikeRegexp('.*instance.*running.*'),
-  }))
-  .next(stopOnIdleAssertion); // Run after stop verification
+const autoResumeAssertion = stopOnIdleAssertion.next(
+  integ.assertions
+    .invokeFunction({
+      functionName: idleTestHandler.functionName,
+      logType: LogType.TAIL,
+      invocationType: InvocationType.REQUEST_RESPONSE,
+      payload: JSON.stringify({
+        testPhase: 'verify-auto-resume',
+        domainName: constructUnderTest.domainName,
+        instanceId: constructUnderTest.instance.instanceId,
+      }),
+    })
+    .expect(ExpectedResult.objectLike({
+      Payload: ExpectedResult.stringLikeRegexp('.*instance.*running.*'),
+    })),
+);
 
 // Export the final assertion to ensure test execution
 autoResumeAssertion;
-
-/**
- * Test execution order:
- * 1. initialLoginAssertion - Verify initial deployment works
- * 2. stopOnIdleAssertion - Wait for idle timeout and verify stop
- * 3. autoResumeAssertion - Access domain and verify resume
- */

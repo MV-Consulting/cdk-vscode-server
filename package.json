@@ -13,8 +13,6 @@
     "bundle:idle-monitor/idle-monitor.lambda:watch": "npx projen bundle:idle-monitor/idle-monitor.lambda:watch",
     "bundle:installer/installer.lambda": "npx projen bundle:installer/installer.lambda",
     "bundle:installer/installer.lambda:watch": "npx projen bundle:installer/installer.lambda:watch",
-    "bundle:resume-handler/resume-handler.lambda": "npx projen bundle:resume-handler/resume-handler.lambda",
-    "bundle:resume-handler/resume-handler.lambda:watch": "npx projen bundle:resume-handler/resume-handler.lambda:watch",
     "bundle:secret-retriever/secret-retriever.lambda": "npx projen bundle:secret-retriever/secret-retriever.lambda",
     "bundle:secret-retriever/secret-retriever.lambda:watch": "npx projen bundle:secret-retriever/secret-retriever.lambda:watch",
     "bundle:status-check/status-check.lambda": "npx projen bundle:status-check/status-check.lambda",
@@ -41,7 +39,7 @@
     "projen": "npx projen",
     "prepare": "husky",
     "awslint": "awslint",
-    "integ-test": "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --parallel-regions eu-north-1 --parallel-regions eu-west-3 --parallel-regions us-east-1 --update-on-failed"
+    "integ-test": "integ-runner --directory ./integ-tests --parallel-regions eu-west-1 --parallel-regions eu-west-2 --parallel-regions eu-north-1 --parallel-regions eu-west-3 --update-on-failed"
   },
   "author": {
     "name": "Manuel Vogel",

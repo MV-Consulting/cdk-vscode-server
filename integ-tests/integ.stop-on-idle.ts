@@ -26,7 +26,7 @@ const constructUnderTest = new VSCodeServer(stackUnderTest, 'IntegVSCodeServer',
   instanceClass: InstanceClass.T4G,
   instanceSize: InstanceSize.LARGE,
   instanceVolumeSize: 8,
-  enableAutoStop: true, // Auto-resume is automatically enabled with auto-stop
+  enableAutoStop: true, // Enable automatic instance stop when idle
   idleTimeoutMinutes: 2, // Very short timeout for fast testing (2 minutes)
   idleCheckIntervalMinutes: 1, // Check every 1 minute for fast testing
   skipStatusChecks: true, // Skip status checks for integration tests (Option 2 fallback)

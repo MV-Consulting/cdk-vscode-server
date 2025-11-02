@@ -31,7 +31,7 @@ we implement new features. Therefore make sure you use an exact version in your 
 - 📏 **Best Practice Setup**: Set up with [projen](https://projen.io/) and a [single configuration file](./.projenrc.ts) to keep your changes centralized.
 - 🤹‍♂️ **Pre-installed packages**: Besides the [vscode](https://code.visualstudio.com/) server, other tools and software packages such as `git`, `docker`, `awscli` `nodejs` and `python` are pre-installed on the EC2 instance.
 - 🌐 **Custom Domain Support**: Use your own domain name with automatic ACM certificate creation and Route53 DNS configuration, or bring your existing certificate.
-- 💰 **Auto-Stop/Resume**: Automatically stop EC2 instances after inactivity and resume on access - save up to 75% on costs for development environments
+- 💰 **Auto-Stop**: Automatically stop EC2 instances after inactivity with Elastic IP retention - save up to 75% on costs for development environments
 - 🏗️ **Extensibility**: Pass in properties to the construct, which start with `additional*`. They allow you to extend the configuration to your needs. There are more to come...
 
 ## Usage
@@ -167,23 +167,23 @@ For complete examples, see [examples/custom-domain/main.ts](./examples/custom-do
 > [!Important]
 > There are issues with copy pasting into the VSCode terminal within the Firefox browser (2025-01-12)
 
-### Auto-Stop/Resume Configuration
+### Auto-Stop Configuration
 
-Save up to 75% on costs by automatically stopping EC2 instances when idle and resuming them on access:
+Save up to 75% on costs by automatically stopping EC2 instances when idle:
 
 ```ts
 new VSCodeServer(this, 'vscode', {
   enableAutoStop: true,              // Enable auto-stop feature
   idleTimeoutMinutes: 30,            // Stop after 30 minutes of no activity (default)
-  enableAutoResume: true,            // Enable auto-resume on access (default: true)
+  idleCheckIntervalMinutes: 5,       // Check for idle activity every 5 minutes (default)
 });
 ```
 
 **How it works:**
-1. **Idle Detection**: Monitors CloudFront request metrics every 5 minutes
-2. **Auto-Stop**: Stops the EC2 instance after the configured idle timeout (no requests)
-3. **Auto-Resume**: Lambda@Edge intercepts requests to stopped instances and starts them automatically
-4. **User Experience**: Users see a polished loading page with real-time status updates during startup
+1. **Idle Detection**: Monitors CloudFront request metrics at configured intervals (default: every 5 minutes)
+2. **Auto-Stop**: Stops the EC2 instance after the configured idle timeout when no requests are detected
+3. **Static IP**: Allocates an Elastic IP to maintain a consistent public IP address across stop/start cycles
+4. **Manual Resume**: Users can manually start the instance via AWS Console or CLI when needed
 
 **Cost Savings Example:**
 - **Without auto-stop**: m7g.xlarge running 24/7 = ~$120/month
@@ -191,17 +191,37 @@ new VSCodeServer(this, 'vscode', {
 - **Savings**: ~$90/month (75% reduction)
 
 **Additional costs:**
-- DynamoDB (state tracking): ~$0.25/month
-- Lambda functions: ~$0.20/month
-- **Net savings**: ~$89/month per instance
+- Elastic IP (allocated): ~$3.65/month
+- Lambda function (IdleMonitor): ~$0.10/month
+- EventBridge rule: Negligible
+- **Net savings**: ~$86/month per instance
 
 **Architecture Components:**
-- DynamoDB table for instance state tracking
-- EventBridge rule triggering idle monitor every 5 minutes
-- IdleMonitor Lambda function checking CloudWatch metrics
-- StatusCheck API for real-time instance status
-- ResumeHandler Lambda@Edge for intercepting requests
-- Beautiful HTML loading page with auto-refresh
+- Elastic IP for consistent public addressing
+- EventBridge rule triggering idle monitoring at configured intervals
+- IdleMonitor Lambda function checking CloudWatch metrics for request activity
+- CloudWatch metrics from CloudFront distribution
+
+**Integration Testing:**
+
+The stop-on-idle functionality includes comprehensive integration tests (`integ-tests/integ.stop-on-idle.ts`) that verify the complete workflow:
+
+1. **Phase 1 - Verify Auto-Stop**: Waits for the instance to automatically stop after the configured idle timeout
+2. **Phase 2 - Disable IdleMonitor**: Disables the EventBridge rule to prevent the instance from being stopped again during testing
+3. **Phase 3 - Start Instance**: Starts the stopped instance and waits for it to reach the running state
+4. **Phase 4 - Verify Login**: Confirms that VS Code Server is accessible through CloudFront after the instance has been restarted
+
+This 4-phase test ensures that:
+- Idle detection works correctly based on CloudWatch metrics
+- Instance stops automatically when no activity is detected
+- Instance can be successfully restarted after being stopped
+- VS Code Server remains accessible after stop/start cycles
+- Elastic IP maintains connectivity across state changes
+
+Run integration tests with:
+```bash
+npm run integ-test
+```
 
 ## Solution Design
 

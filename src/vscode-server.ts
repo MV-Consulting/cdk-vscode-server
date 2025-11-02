@@ -191,6 +191,50 @@ export interface VSCodeServerProps {
    * @default false
    */
   readonly skipStatusChecks?: boolean;
+
+  /**
+   * Remote git repository URL to clone into the home folder.
+   *
+   * If provided, the repository will be cloned into the user's home folder during instance setup.
+   * Useful for pre-populating workshop environments with starter code.
+   *
+   * @example 'https://github.com/aws-samples/my-workshop-repo.git'
+   * @default - no repo cloned
+   */
+  readonly repoUrl?: string;
+
+  /**
+   * S3 path to a zip file containing assets to extract into the home folder.
+   *
+   * The zip contents will be extracted to the user's home folder and committed to git.
+   * Use this to provide workshop materials, sample data, or configuration files.
+   *
+   * @example 'my-workshop-bucket/assets/workshop-materials.zip'
+   * @default - no assets downloaded
+   */
+  readonly assetZipS3Path?: string;
+
+  /**
+   * S3 path to a zip file containing git branches to create in the home folder repository.
+   *
+   * Each top-level folder in the zip becomes a separate git branch with that folder's contents.
+   * Ideal for creating step-by-step workshop branches (e.g., step-1, step-2, solution).
+   *
+   * @example 'my-workshop-bucket/branches/lab-branches.zip' (containing folders: step-1/, step-2/, solution/)
+   * @default - no branches created
+   */
+  readonly branchZipS3Path?: string;
+
+  /**
+   * S3 path to a zip file containing multiple folders to create as separate git repositories.
+   *
+   * Each top-level folder in the zip becomes a separate subfolder in the parent directory,
+   * initialized as its own git repository. Useful for multi-project workshops.
+   *
+   * @example 'my-workshop-bucket/folders/workshop-projects.zip' (containing folders: frontend/, backend/, infrastructure/)
+   * @default - no folders created
+   */
+  readonly folderZipS3Path?: string;
 }
 
 /**
@@ -883,6 +927,10 @@ export class VSCodeServer extends Construct {
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
           customDomainName: domainName,
+          repoUrl: props?.repoUrl,
+          assetZipS3Path: props?.assetZipS3Path,
+          branchZipS3Path: props?.branchZipS3Path,
+          folderZipS3Path: props?.folderZipS3Path,
         })._bind(this);
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
@@ -894,6 +942,10 @@ export class VSCodeServer extends Construct {
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
           customDomainName: domainName,
+          repoUrl: props?.repoUrl,
+          assetZipS3Path: props?.assetZipS3Path,
+          branchZipS3Path: props?.branchZipS3Path,
+          folderZipS3Path: props?.folderZipS3Path,
         })._bind(this);
         break;
       default:

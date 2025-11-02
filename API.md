@@ -618,12 +618,15 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.additionalInstanceRolePolicies">additionalInstanceRolePolicies</a></code> | <code>aws-cdk-lib.aws_iam.PolicyStatement[]</code> | Additional instance role policies. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.additionalTags">additionalTags</a></code> | <code>{[ key: string ]: string}</code> | Additional tags to add to the instance. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.assetZipS3Path">assetZipS3Path</a></code> | <code>string</code> | S3 path to a zip file containing assets to extract into the home folder. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.autoCreateCertificate">autoCreateCertificate</a></code> | <code>boolean</code> | Auto-create ACM certificate with DNS validation in us-east-1 region Requires hostedZoneId to be provided for DNS validation Cannot be used together with certificateArn Certificate will automatically be created in us-east-1 as required by CloudFront. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.branchZipS3Path">branchZipS3Path</a></code> | <code>string</code> | S3 path to a zip file containing git branches to create in the home folder repository. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.certificateArn">certificateArn</a></code> | <code>string</code> | ARN of existing ACM certificate for the domain Certificate must be in us-east-1 region for CloudFront Cannot be used together with autoCreateCertificate. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath">devServerBasePath</a></code> | <code>string</code> | Base path for the application to be added to Nginx sites-available list. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerPort">devServerPort</a></code> | <code>number</code> | Port for the DevServer. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.domainName">domainName</a></code> | <code>string</code> | Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoStop">enableAutoStop</a></code> | <code>boolean</code> | Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.folderZipS3Path">folderZipS3Path</a></code> | <code>string</code> | S3 path to a zip file containing multiple folders to create as separate git repositories. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder">homeFolder</a></code> | <code>string</code> | Folder to open in VS Code server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.hostedZoneId">hostedZoneId</a></code> | <code>string</code> | Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleCheckIntervalMinutes">idleCheckIntervalMinutes</a></code> | <code>number</code> | How often to check for idle activity (in minutes) Only applies when enableAutoStop is true. |
@@ -634,6 +637,7 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceOperatingSystem">instanceOperatingSystem</a></code> | <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType">LinuxFlavorType</a></code> | VSCode Server EC2 operating system. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceSize">instanceSize</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceSize</code> | VSCode Server EC2 instance size. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceVolumeSize">instanceVolumeSize</a></code> | <code>number</code> | VSCode Server EC2 instance volume size in GB. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.repoUrl">repoUrl</a></code> | <code>string</code> | Remote git repository URL to clone into the home folder. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.skipStatusChecks">skipStatusChecks</a></code> | <code>boolean</code> | Skip instance status checks in IdleMonitor When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds the test timeout limits. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.vscodePassword">vscodePassword</a></code> | <code>string</code> | Password for VSCode Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.vscodeUser">vscodeUser</a></code> | <code>string</code> | UserName for VSCode Server. |
@@ -666,6 +670,29 @@ Additional tags to add to the instance.
 
 ---
 
+##### `assetZipS3Path`<sup>Optional</sup> <a name="assetZipS3Path" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.assetZipS3Path"></a>
+
+```typescript
+public readonly assetZipS3Path: string;
+```
+
+- *Type:* string
+- *Default:* no assets downloaded
+
+S3 path to a zip file containing assets to extract into the home folder.
+
+The zip contents will be extracted to the user's home folder and committed to git.
+Use this to provide workshop materials, sample data, or configuration files.
+
+---
+
+*Example*
+
+```typescript
+'my-workshop-bucket/assets/workshop-materials.zip'
+```
+
+
 ##### `autoCreateCertificate`<sup>Optional</sup> <a name="autoCreateCertificate" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.autoCreateCertificate"></a>
 
 ```typescript
@@ -678,6 +705,29 @@ public readonly autoCreateCertificate: boolean;
 Auto-create ACM certificate with DNS validation in us-east-1 region Requires hostedZoneId to be provided for DNS validation Cannot be used together with certificateArn Certificate will automatically be created in us-east-1 as required by CloudFront.
 
 ---
+
+##### `branchZipS3Path`<sup>Optional</sup> <a name="branchZipS3Path" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.branchZipS3Path"></a>
+
+```typescript
+public readonly branchZipS3Path: string;
+```
+
+- *Type:* string
+- *Default:* no branches created
+
+S3 path to a zip file containing git branches to create in the home folder repository.
+
+Each top-level folder in the zip becomes a separate git branch with that folder's contents.
+Ideal for creating step-by-step workshop branches (e.g., step-1, step-2, solution).
+
+---
+
+*Example*
+
+```typescript
+'my-workshop-bucket/branches/lab-branches.zip' (containing folders: step-1/, step-2/, solution/)
+```
+
 
 ##### `certificateArn`<sup>Optional</sup> <a name="certificateArn" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.certificateArn"></a>
 
@@ -743,6 +793,29 @@ public readonly enableAutoStop: boolean;
 Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time.
 
 ---
+
+##### `folderZipS3Path`<sup>Optional</sup> <a name="folderZipS3Path" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.folderZipS3Path"></a>
+
+```typescript
+public readonly folderZipS3Path: string;
+```
+
+- *Type:* string
+- *Default:* no folders created
+
+S3 path to a zip file containing multiple folders to create as separate git repositories.
+
+Each top-level folder in the zip becomes a separate subfolder in the parent directory,
+initialized as its own git repository. Useful for multi-project workshops.
+
+---
+
+*Example*
+
+```typescript
+'my-workshop-bucket/folders/workshop-projects.zip' (containing folders: frontend/, backend/, infrastructure/)
+```
+
 
 ##### `homeFolder`<sup>Optional</sup> <a name="homeFolder" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder"></a>
 
@@ -873,6 +946,29 @@ public readonly instanceVolumeSize: number;
 VSCode Server EC2 instance volume size in GB.
 
 ---
+
+##### `repoUrl`<sup>Optional</sup> <a name="repoUrl" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.repoUrl"></a>
+
+```typescript
+public readonly repoUrl: string;
+```
+
+- *Type:* string
+- *Default:* no repo cloned
+
+Remote git repository URL to clone into the home folder.
+
+If provided, the repository will be cloned into the user's home folder during instance setup.
+Useful for pre-populating workshop environments with starter code.
+
+---
+
+*Example*
+
+```typescript
+'https://github.com/aws-samples/my-workshop-repo.git'
+```
+
 
 ##### `skipStatusChecks`<sup>Optional</sup> <a name="skipStatusChecks" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.skipStatusChecks"></a>
 

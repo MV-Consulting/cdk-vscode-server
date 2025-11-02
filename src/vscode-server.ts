@@ -2,6 +2,7 @@ import {
   Aspects,
   CfnOutput,
   Duration,
+  Fn,
   IAspect,
   Stack,
   Tags,
@@ -700,35 +701,39 @@ export class VSCodeServer extends Construct {
       true,
     );
 
-    // Allocate Elastic IP to ensure consistent public IP across stop/start cycles
-    // Without this, the instance gets a new public IP each time it's started,
-    // which would break CloudFront's connection to the instance
-    const eip = new ec2.CfnEIP(this, 'elastic-ip', {
-      domain: 'vpc',
-      tags: [
-        {
-          key: 'Name',
-          value: `${instanceName}-EIP`,
-        },
-      ],
-    });
+    // Conditionally allocate Elastic IP for auto-stop scenarios
+    // When auto-stop is enabled, the instance will be stopped and started, which changes
+    // the public IP each time. EIP ensures CloudFront can always reach the instance.
+    // When auto-stop is disabled, the instance runs continuously and doesn't need EIP.
+    let eip: ec2.CfnEIP | undefined;
+    if (props?.enableAutoStop) {
+      eip = new ec2.CfnEIP(this, 'elastic-ip', {
+        domain: 'vpc',
+        tags: [
+          {
+            key: 'Name',
+            value: `${instanceName}-EIP`,
+          },
+        ],
+      });
 
-    // Associate Elastic IP with the instance
-    new ec2.CfnEIPAssociation(this, 'eip-association', {
-      eip: eip.ref,
-      instanceId: this.instance.instanceId,
-    });
+      // Associate Elastic IP with the instance
+      new ec2.CfnEIPAssociation(this, 'eip-association', {
+        eip: eip.ref,
+        instanceId: this.instance.instanceId,
+      });
 
-    NagSuppressions.addResourceSuppressions(
-      [eip],
-      [
-        {
-          id: 'AwsSolutions-EC23',
-          reason: 'Elastic IP required for consistent public IP across stop/start cycles',
-        },
-      ],
-      true,
-    );
+      NagSuppressions.addResourceSuppressions(
+        [eip],
+        [
+          {
+            id: 'AwsSolutions-EC23',
+            reason: 'Elastic IP required for consistent public IP across stop/start cycles when auto-stop is enabled',
+          },
+        ],
+        true,
+      );
+    }
 
     // Create a CF distribution (special id) and special CachePolicy to instance
     const cfCachePolicy = new cf.CachePolicy(this, 'cf-cache-policy', {
@@ -756,10 +761,14 @@ export class VSCodeServer extends Construct {
       queryStringBehavior: cf.CacheQueryStringBehavior.all(),
     });
 
-    // Use instance's public DNS name for CloudFront origin
-    // After Elastic IP association, this will point to the Elastic IP's DNS
-    // This ensures CloudFront can always reach the instance even after stop/start cycles
-    const origin = new cfo.HttpOrigin(this.instance.instancePublicDnsName, {
+    // Determine CloudFront origin DNS name based on auto-stop configuration
+    // - If auto-stop enabled: Use Elastic IP DNS (persists across stop/start cycles)
+    // - If auto-stop disabled: Use instance public DNS (instance never stops)
+    const originDnsName = eip
+      ? `ec2-${Fn.join('-', Fn.split('.', eip.attrPublicIp))}.${Stack.of(this).region}.compute.amazonaws.com`
+      : this.instance.instancePublicDnsName;
+
+    const origin = new cfo.HttpOrigin(originDnsName, {
       protocolPolicy: cf.OriginProtocolPolicy.HTTP_ONLY,
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,
     });

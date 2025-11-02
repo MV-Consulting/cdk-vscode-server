@@ -26,7 +26,6 @@
     "eslint": "npx projen eslint",
     "package": "npx projen package",
     "package-all": "npx projen package-all",
-    "package:go": "npx projen package:go",
     "package:js": "npx projen package:js",
     "package:python": "npx projen package:python",
     "post-compile": "npx projen post-compile",
@@ -49,47 +48,47 @@
   "devDependencies": {
     "@aws-cdk/integ-runner": "^2.190.0-alpha.0",
     "@aws-cdk/integ-tests-alpha": "^2.190.0-alpha.0",
-    "@aws-sdk/client-cloudwatch": "^3.919.0",
-    "@aws-sdk/client-dynamodb": "^3.919.0",
-    "@aws-sdk/client-ec2": "^3.919.0",
-    "@aws-sdk/client-secrets-manager": "^3.864.0",
-    "@aws-sdk/client-ssm": "^3.864.0",
-    "@aws-sdk/lib-dynamodb": "^3.919.0",
+    "@aws-sdk/client-cloudwatch": "^3.922.0",
+    "@aws-sdk/client-dynamodb": "^3.922.0",
+    "@aws-sdk/client-ec2": "^3.922.0",
+    "@aws-sdk/client-secrets-manager": "^3.922.0",
+    "@aws-sdk/client-ssm": "^3.922.0",
+    "@aws-sdk/lib-dynamodb": "^3.922.0",
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@stylistic/eslint-plugin": "^2",
-    "@types/aws-lambda": "^8.10.152",
+    "@types/aws-lambda": "^8.10.157",
     "@types/jest": "^30.0.0",
-    "@types/jsdom": "^21.1.7",
-    "@types/node": "^20",
+    "@types/jsdom": "^27.0.0",
+    "@types/node": "^22",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk-lib": "2.190.0",
     "awslint": "^2.72.1",
     "commit-and-tag-version": "^12",
-    "esbuild": "^0.25.9",
+    "esbuild": "^0.25.12",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "husky": "^9.1.7",
-    "jest": "^30.0.5",
+    "jest": "^30.2.0",
     "jest-junit": "^16",
     "jsii": "~5.8.0",
-    "jsii-diff": "^1.113.0",
+    "jsii-diff": "^1.118.0",
     "jsii-docgen": "^10.5.0",
-    "jsii-pacmak": "^1.113.0",
+    "jsii-pacmak": "^1.118.0",
     "jsii-rosetta": "~5.8.0",
     "projen": "0.91.8",
-    "ts-jest": "^29.4.1",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "aws-cdk-lib": "^2.190.0",
     "constructs": "^10.0.5"
   },
   "dependencies": {
-    "@mavogel/mvc-projen": "^0.0.7",
+    "@mavogel/mvc-projen": "^0.0.11",
     "cdk-nag": "^2.35.0",
     "constructs": "^10.4.2",
     "node-html-parser": "^7.0.1"
@@ -105,7 +104,7 @@
     "vscode"
   ],
   "engines": {
-    "node": ">= 20.x"
+    "node": ">= 22.x"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
@@ -166,9 +165,6 @@
       "python": {
         "distName": "cdk-vscode-server",
         "module": "cdk-vscode-server"
-      },
-      "go": {
-        "moduleName": "github.com/MV-Consulting/cdk-vscode-server"
       }
     },
     "tsc": {

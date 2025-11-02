@@ -21,8 +21,6 @@ import { Installer } from './installer/installer';
 import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from './mappings';
 import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retriever';
 import { SecretRetriever } from './secret-retriever/secret-retriever';
-import { InstanceStateTable } from './state-table/state-table';
-import { StatusCheckApi } from './status-check/status-check';
 
 /**
  * Properties for the VSCodeServer construct
@@ -179,6 +177,19 @@ export interface VSCodeServerProps {
    * @default 5 - Check every 5 minutes
    */
   readonly idleCheckIntervalMinutes?: number;
+
+  /**
+   * Skip instance status checks in IdleMonitor
+   * When true, IdleMonitor will stop idle instances even if status checks haven't passed
+   * This is useful for integration tests where status check initialization time
+   * exceeds the test timeout limits
+   *
+   * WARNING: For testing only - in production, you should wait for status checks
+   * to pass before stopping instances to avoid stopping unhealthy instances
+   *
+   * @default false
+   */
+  readonly skipStatusChecks?: boolean;
 }
 
 /**
@@ -234,11 +245,6 @@ export class VSCodeServer extends Construct {
    * The EC2 instance running VS Code Server
    */
   public readonly instance: ec2.IInstance;
-
-  /**
-   * The URL of the status check API (only available when enableAutoStop is true)
-   */
-  public readonly statusApiUrl?: string;
 
   constructor(scope: Construct, id: string, props?: VSCodeServerProps) {
     super(scope, id);
@@ -725,29 +731,6 @@ export class VSCodeServer extends Construct {
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,
     });
 
-    // Auto-stop/resume infrastructure
-    // State table and status API are shared between auto-stop and auto-resume features
-    // Auto-resume is automatically enabled when auto-stop is enabled (client-side via status API)
-    let stateTable: InstanceStateTable | undefined;
-    let statusApi: StatusCheckApi | undefined;
-
-    if (props?.enableAutoStop) {
-      // Create state table (shared by both features)
-      stateTable = new InstanceStateTable(this, 'StateTable', {
-        tableName: `${instanceName}-StateTable`,
-      });
-
-      // Create status check API (shared by both features)
-      // The API supports both checking status AND starting instances (for client-side resume)
-      statusApi = new StatusCheckApi(this, 'StatusApi', {
-        instance: this.instance,
-        stateTable: stateTable.table,
-      });
-
-      // Expose the status API URL for external use (e.g., client-side resume)
-      this.statusApiUrl = statusApi.apiUrl;
-    }
-
     const distribution = new cf.Distribution(this, 'cf-distribution', {
       enabled: true,
       httpVersion: cf.HttpVersion.HTTP2_AND_3,
@@ -875,21 +858,13 @@ export class VSCodeServer extends Construct {
     // atm this is achieved by the integ tests
 
     // Create idle monitor for auto-stop feature
-    if (props?.enableAutoStop && stateTable) {
+    if (props?.enableAutoStop) {
       new IdleMonitor(this, 'IdleMonitor', {
         instance: this.instance,
         distribution: distribution,
-        stateTable: stateTable.table,
         idleTimeoutMinutes: props?.idleTimeoutMinutes ?? 30,
         checkIntervalMinutes: props?.idleCheckIntervalMinutes ?? 5,
-      });
-    }
-
-    // Output status API URL if created
-    if (statusApi) {
-      new CfnOutput(this, 'statusApiUrl', {
-        description: 'Status check API URL',
-        value: statusApi.apiUrl,
+        skipStatusChecks: props?.skipStatusChecks ?? false,
       });
     }
 

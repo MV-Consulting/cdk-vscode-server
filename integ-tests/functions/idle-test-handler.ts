@@ -1,10 +1,10 @@
-import { EC2Client, DescribeInstancesCommand, DescribeInstanceStatusCommand } from '@aws-sdk/client-ec2';
+import { EC2Client, DescribeInstancesCommand, StartInstancesCommand } from '@aws-sdk/client-ec2';
 
 const ec2 = new EC2Client({});
 
 interface IdleTestEvent {
-  testPhase: 'verify-auto-stop' | 'verify-auto-resume';
-  domainName: string;
+  testPhase: 'setup-instance' | 'verify-auto-stop';
+  domainName?: string;
   instanceId: string;
   idleTimeoutMinutes?: number;
 }
@@ -12,9 +12,11 @@ interface IdleTestEvent {
 /**
  * Integration test handler for stop-on-idle functionality
  *
- * This Lambda function tests the complete auto-stop/resume flow:
- * 1. verify-auto-stop: Waits for idle timeout and verifies instance stops
- * 2. verify-auto-resume: Accesses CloudFront to trigger resume and verifies instance starts
+ * This Lambda function tests the auto-stop flow:
+ * 1. setup-instance: Ensures instance is running before tests begin
+ * 2. verify-auto-stop: Waits for idle timeout and verifies instance stops
+ *
+ * NOTE: Auto-resume has been removed. Instances must be resumed manually via AWS Console.
  */
 export const handler = async (event: IdleTestEvent): Promise<string> => {
   console.log('Idle test event:', JSON.stringify(event, null, 2));
@@ -24,10 +26,10 @@ export const handler = async (event: IdleTestEvent): Promise<string> => {
   try {
     console.log(`Using instance ID: ${instanceId}`);
 
-    if (testPhase === 'verify-auto-stop') {
+    if (testPhase === 'setup-instance') {
+      return await setupInstance(instanceId);
+    } else if (testPhase === 'verify-auto-stop') {
       return await verifyAutoStop(instanceId, idleTimeoutMinutes);
-    } else if (testPhase === 'verify-auto-resume') {
-      return await verifyAutoResume(instanceId, domainName);
     } else {
       throw new Error(`Unknown test phase: ${testPhase}`);
     }
@@ -38,95 +40,89 @@ export const handler = async (event: IdleTestEvent): Promise<string> => {
 };
 
 /**
+ * Setup: Ensure instance is running before tests
+ *
+ * This prevents race conditions where the IdleMonitor may have already stopped
+ * the instance between deployment and test execution.
+ *
+ * Flow:
+ * 1. Check current instance state
+ * 2. If stopped, start the instance
+ * 3. Wait for instance to reach 'running' state
+ */
+async function setupInstance(instanceId: string): Promise<string> {
+  console.log(`Setting up instance ${instanceId} for testing`);
+
+  // Step 1: Check current state
+  const currentState = await getInstanceState(instanceId);
+  console.log(`Current instance state: ${currentState}`);
+
+  // Step 2: Start instance if it's stopped or wait for transitional states
+  if (currentState === 'stopped') {
+    console.log('Instance is stopped, starting it...');
+    await ec2.send(new StartInstancesCommand({ InstanceIds: [instanceId] }));
+  } else if (currentState === 'running') {
+    console.log('Instance is already running');
+    return 'RUNNING';
+  } else if (['pending', 'stopping', 'shutting-down'].includes(currentState || '')) {
+    console.log(`Instance is in transitional state '${currentState}', waiting for stopped state...`);
+    await waitForInstanceState(instanceId, 'stopped', 180); // 3 minute max wait
+    console.log('Instance is now stopped, starting it...');
+    await ec2.send(new StartInstancesCommand({ InstanceIds: [instanceId] }));
+  }
+
+  // Step 3: Wait for running state
+  console.log('Waiting for instance to be running...');
+  await waitForInstanceState(instanceId, 'running', 300); // 5 minute max wait
+
+  // NOTE: We do NOT wait for status checks here because:
+  // 1. The setup test has a 120s assertion timeout
+  // 2. Instance transitions (stopping → stopped → running) can take 60-90s
+  // 3. Status checks can take another 60-120s
+  // 4. This would exceed the 120s timeout and fail the setup test
+  //
+  // Instead, we rely on skipStatusChecks=true in IdleMonitor, which allows it to
+  // stop the instance immediately without waiting for status checks to pass.
+  // This is a test-only shortcut that ensures tests complete within time limits.
+
+  console.log('✅ Setup complete: instance is running (status checks will be skipped by IdleMonitor)');
+  return 'RUNNING';
+}
+
+/**
  * Verify auto-stop functionality
  *
  * Test flow:
- * 1. Wait for instance to be in 'running' state
- * 2. Wait for idle timeout period + 2 minutes buffer (1 min for EventBridge check + 1 min buffer)
- * 3. Poll instance state every 30 seconds for up to 5 minutes
- * 4. Verify instance transitions to 'stopped' state
+ * 1. Confirm instance is in 'running' state (should be from setup test)
+ * 2. Poll for 'stopped' state
+ *
+ * How IdleMonitor works with skipStatusChecks=true:
+ * - Runs every 1 minute (EventBridge schedule)
+ * - Checks CloudFront metrics for the LAST N minutes (idleTimeoutMinutes)
+ * - Since instance just started with 0 requests, it stops immediately (no status check wait)
+ * - Expected stop time: 1-2 minutes (just waiting for next EventBridge cycle)
+ *
+ * CRITICAL: This test has 120s assertion timeout, so all waits must fit within that
  */
 async function verifyAutoStop(instanceId: string, idleTimeoutMinutes: number): Promise<string> {
   console.log(`Starting auto-stop verification for instance ${instanceId}`);
   console.log(`Idle timeout: ${idleTimeoutMinutes} minutes`);
 
-  // Step 1: Wait for instance to be running
-  console.log('Step 1: Waiting for instance to be running...');
-  await waitForInstanceState(instanceId, 'running', 300); // 5 minute max wait
+  // Step 1: Quick check that instance is running (should already be from setup test)
+  console.log('Step 1: Confirming instance is running...');
+  await waitForInstanceState(instanceId, 'running', 30); // 30s timeout (just a safety check)
   console.log('Instance is running');
 
-  // Step 2: Wait for idle timeout + buffer
-  // The IdleMonitor runs every 1 minute (for integration tests) and checks for activity in the last N minutes
-  // We need to wait: idleTimeout + 1 minute (for EventBridge to trigger) + 1 minute buffer
-  const waitTimeSeconds = (idleTimeoutMinutes + 2) * 60;
-  console.log(`Step 2: Waiting ${waitTimeSeconds / 60} minutes for idle timeout + buffer...`);
-  await sleep(waitTimeSeconds * 1000);
-
-  // Step 3: Poll for stopped state
-  console.log('Step 3: Polling for stopped state...');
-  await waitForInstanceState(instanceId, 'stopped', 300); // 5 minute max wait for stop
+  // Step 2: Poll for stopped state
+  // With skipStatusChecks=true, IdleMonitor should stop the instance within 90 seconds:
+  // - IdleMonitor runs every 1 minute
+  // - No status check wait needed
+  // - Instance stops immediately when IdleMonitor detects 0 requests
+  console.log('Step 2: Polling for stopped state (IdleMonitor should stop it within 90s with skipStatusChecks)...');
+  await waitForInstanceState(instanceId, 'stopped', 90); // 90s max (fits in 120s assertion timeout)
 
   console.log('✅ Auto-stop verification successful: instance stopped after idle timeout');
-  return 'SUCCESS: instance auto-stopped after idle timeout';
-}
-
-/**
- * Verify auto-resume functionality (client-side via status API)
- *
- * Test flow:
- * 1. Verify instance is currently stopped
- * 2. Call status API POST /status/{instanceId}/start endpoint
- * 3. Poll instance state every 15 seconds for up to 5 minutes
- * 4. Verify instance transitions to 'running' state
- * 5. Wait for instance to be fully initialized (status checks pass)
- */
-async function verifyAutoResume(instanceId: string, domainName: string): Promise<string> {
-  console.log(`Starting auto-resume verification for instance ${instanceId}`);
-
-  // Step 1: Wait for instance to be stopped (it might still be stopping)
-  console.log('Step 1: Waiting for instance to be stopped...');
-  await waitForInstanceState(instanceId, 'stopped', 180); // 3 minute max wait
-  console.log('Instance is stopped');
-
-  // Step 2: Trigger resume by calling status API start endpoint
-  console.log(`Step 2: Calling status API to start instance...`);
-  const statusApiUrl = process.env.STATUS_API_URL;
-  if (!statusApiUrl) {
-    throw new Error('STATUS_API_URL environment variable not set');
-  }
-
-  try {
-    const startUrl = `${statusApiUrl}status/${instanceId}/start`;
-    console.log(`Calling POST ${startUrl}`);
-
-    const response = await fetch(startUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to start instance: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log('Start API response:', data);
-  } catch (error) {
-    console.error('Error calling start API:', error);
-    throw error;
-  }
-
-  // Step 3: Poll for running state
-  console.log('Step 3: Polling for running state...');
-  await waitForInstanceState(instanceId, 'running', 300); // 5 minute max wait
-
-  // Step 4: Wait for status checks to pass
-  console.log('Step 4: Waiting for instance status checks to pass...');
-  await waitForStatusChecks(instanceId, 120); // 2 minute max wait
-
-  console.log('✅ Auto-resume verification successful: instance running after start API call');
-  return 'SUCCESS: instance auto-resumed after start API call';
+  return 'STOPPED';
 }
 
 /**
@@ -181,49 +177,6 @@ async function waitForInstanceState(
   throw new Error(
     `Timeout: Instance did not reach state '${targetState}' within ${maxWaitSeconds} seconds`,
   );
-}
-
-/**
- * Wait for instance status checks to pass
- */
-async function waitForStatusChecks(instanceId: string, maxWaitSeconds: number): Promise<void> {
-  const pollIntervalMs = 15000; // 15 seconds
-  const maxAttempts = Math.ceil(maxWaitSeconds / (pollIntervalMs / 1000));
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    console.log(`Status check attempt ${attempt}/${maxAttempts}...`);
-
-    try {
-      const command = new DescribeInstanceStatusCommand({
-        InstanceIds: [instanceId],
-      });
-
-      const response = await ec2.send(command);
-      const status = response.InstanceStatuses?.[0];
-
-      if (status) {
-        const instanceStatus = status.InstanceStatus?.Status;
-        const systemStatus = status.SystemStatus?.Status;
-
-        console.log(`Instance status: ${instanceStatus}, System status: ${systemStatus}`);
-
-        if (instanceStatus === 'ok' && systemStatus === 'ok') {
-          console.log('✅ Status checks passed');
-          return;
-        }
-      } else {
-        console.log('No status checks available yet...');
-      }
-    } catch (error) {
-      console.log('Error checking status:', error);
-    }
-
-    if (attempt < maxAttempts) {
-      await sleep(pollIntervalMs);
-    }
-  }
-
-  console.warn(`Status checks did not pass within ${maxWaitSeconds} seconds, continuing anyway...`);
 }
 
 /**

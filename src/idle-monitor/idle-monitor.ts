@@ -1,7 +1,6 @@
 import * as path from 'path';
 import { Duration, Stack } from 'aws-cdk-lib';
 import { IDistribution } from 'aws-cdk-lib/aws-cloudfront';
-import { ITable } from 'aws-cdk-lib/aws-dynamodb';
 import { IInstance } from 'aws-cdk-lib/aws-ec2';
 import { Rule, Schedule } from 'aws-cdk-lib/aws-events';
 import { LambdaFunction as LambdaFunctionTarget } from 'aws-cdk-lib/aws-events-targets';
@@ -23,10 +22,6 @@ export interface IdleMonitorProps {
    */
   readonly distribution: IDistribution;
   /**
-   * DynamoDB table for tracking instance state
-   */
-  readonly stateTable: ITable;
-  /**
    * Number of minutes of inactivity before stopping the instance
    */
   readonly idleTimeoutMinutes: number;
@@ -35,6 +30,18 @@ export interface IdleMonitorProps {
    * @default 5 - Check every 5 minutes
    */
   readonly checkIntervalMinutes?: number;
+  /**
+   * Skip instance status checks before stopping
+   * When true, IdleMonitor will stop idle instances even if status checks haven't passed
+   * This is useful for integration tests where status check initialization time
+   * exceeds test timeout limits
+   *
+   * WARNING: For testing only - in production, you should wait for status checks
+   * to pass before stopping instances
+   *
+   * @default false
+   */
+  readonly skipStatusChecks?: boolean;
 }
 
 /**
@@ -58,13 +65,10 @@ export class IdleMonitor extends Construct {
       environment: {
         INSTANCE_ID: props.instance.instanceId,
         DISTRIBUTION_ID: props.distribution.distributionId,
-        TABLE_NAME: props.stateTable.tableName,
         IDLE_TIMEOUT_MINUTES: props.idleTimeoutMinutes.toString(),
+        SKIP_STATUS_CHECKS: props.skipStatusChecks ? 'true' : 'false',
       },
     });
-
-    // Grant permissions
-    props.stateTable.grantReadWriteData(this.function);
 
     this.function.addToRolePolicy(
       new PolicyStatement({

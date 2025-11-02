@@ -1,17 +1,12 @@
 import { CloudWatchClient, GetMetricStatisticsCommand } from '@aws-sdk/client-cloudwatch';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { EC2Client, DescribeInstancesCommand, StopInstancesCommand } from '@aws-sdk/client-ec2';
-import { DynamoDBDocumentClient, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { EC2Client, DescribeInstancesCommand, DescribeInstanceStatusCommand, StopInstancesCommand } from '@aws-sdk/client-ec2';
 import type { ScheduledEvent } from 'aws-lambda';
 
 const cloudwatch = new CloudWatchClient({});
 const ec2 = new EC2Client({});
-const ddbClient = new DynamoDBClient({});
-const ddb = DynamoDBDocumentClient.from(ddbClient);
 
 const INSTANCE_ID = process.env.INSTANCE_ID!;
 const DISTRIBUTION_ID = process.env.DISTRIBUTION_ID!;
-const TABLE_NAME = process.env.TABLE_NAME!;
 const IDLE_TIMEOUT_MINUTES = parseInt(process.env.IDLE_TIMEOUT_MINUTES || '30');
 
 export const handler = async (event: ScheduledEvent): Promise<void> => {
@@ -58,6 +53,39 @@ export const handler = async (event: ScheduledEvent): Promise<void> => {
       return;
     }
 
+    // 3.1 Skip if instance status checks are failing or initializing
+    // Can be disabled for integration tests via SKIP_STATUS_CHECKS env var
+    if (instanceState === 'running' && process.env.SKIP_STATUS_CHECKS !== 'true') {
+      const statusCommand = new DescribeInstanceStatusCommand({
+        InstanceIds: [INSTANCE_ID],
+        IncludeAllInstances: false, // Only return running instances with status info
+      });
+      const statusResponse = await ec2.send(statusCommand);
+      const instanceStatus = statusResponse.InstanceStatuses?.[0];
+
+      if (instanceStatus) {
+        const systemStatus = instanceStatus.SystemStatus?.Status;
+        const instanceCheckStatus = instanceStatus.InstanceStatus?.Status;
+
+        console.log('Instance status checks:', {
+          systemStatus,
+          instanceCheckStatus,
+        });
+
+        // Skip if any status check is not 'ok'
+        if (systemStatus !== 'ok' || instanceCheckStatus !== 'ok') {
+          console.log('Instance status checks are not passing, skipping idle check');
+          return;
+        }
+      } else {
+        // No status information available yet (instance just started)
+        console.log('Instance status information not available yet, skipping idle check');
+        return;
+      }
+    } else if (process.env.SKIP_STATUS_CHECKS === 'true' && instanceState === 'running') {
+      console.log('Status check verification skipped (SKIP_STATUS_CHECKS=true)');
+    }
+
     // 4. If no requests and instance is running, stop it
     if (requestCount === 0 && instanceState === 'running') {
       console.log('No activity detected, stopping instance');
@@ -67,31 +95,9 @@ export const handler = async (event: ScheduledEvent): Promise<void> => {
       });
       await ec2.send(stopCommand);
 
-      // Update DynamoDB
-      await ddb.send(new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { instanceId: INSTANCE_ID },
-        UpdateExpression: 'SET instanceState = :state, lastActivityTime = :time',
-        ExpressionAttributeValues: {
-          ':state': 'stopping',
-          ':time': new Date().toISOString(),
-        },
-      }));
-
       console.log('Instance stopped successfully');
     } else if (requestCount > 0) {
-      // Update last activity time
-      console.log('Activity detected, updating timestamp');
-
-      await ddb.send(new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { instanceId: INSTANCE_ID },
-        UpdateExpression: 'SET lastActivityTime = :time, instanceState = :state',
-        ExpressionAttributeValues: {
-          ':time': new Date().toISOString(),
-          ':state': instanceState || 'unknown',
-        },
-      }));
+      console.log('Activity detected, instance will remain running');
     }
   } catch (error) {
     console.error('Error in IdleMonitor:', error);

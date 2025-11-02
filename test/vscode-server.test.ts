@@ -397,17 +397,6 @@ describe('vscode-server-auto-stop', () => {
 
     const template = Template.fromStack(stack);
 
-    // Verify DynamoDB table
-    template.hasResourceProperties('AWS::DynamoDB::Table', {
-      BillingMode: 'PAY_PER_REQUEST',
-      KeySchema: [
-        {
-          AttributeName: 'instanceId',
-          KeyType: 'HASH',
-        },
-      ],
-    });
-
     // Verify IdleMonitor Lambda
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: Match.objectLike({
@@ -422,13 +411,10 @@ describe('vscode-server-auto-stop', () => {
       ScheduleExpression: 'rate(5 minutes)',
     });
 
-    // Verify API Gateway with start endpoint
-    template.hasResourceProperties('AWS::ApiGateway::RestApi', {
-      Name: 'VSCodeStatusCheckApi',
-    });
-
-    // Note: ResumeHandler Lambda@Edge has been replaced with client-side resume
-    // via POST /status/{instanceId}/start API endpoint
+    // DynamoDB table and API Gateway are no longer created (auto-resume removed)
+    // Resume must be done manually via AWS Console
+    template.resourceCountIs('AWS::DynamoDB::Table', 0);
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
   });
 
   test('should not create auto-stop resources when disabled', () => {
@@ -536,48 +522,5 @@ describe('vscode-server-auto-stop', () => {
     template.resourceCountIs('AWS::Events::Rule', 0);
   });
 
-  test('should expose statusApiUrl when enableAutoStop is true', () => {
-    const app = new App();
-    const stack = new Stack(app, 'testStack', {
-      env: {
-        region: 'us-east-1',
-        account: '1234',
-      },
-    });
-
-    const testProps: VSCodeServerProps = {
-      enableAutoStop: true,
-    };
-
-    const construct = new VSCodeServer(stack, 'testVSCodeServer', testProps);
-
-    // Should expose statusApiUrl for client-side resume functionality
-    expect(construct.statusApiUrl).toBeDefined();
-  });
-
-  test('should create outputs for auto-stop resources', () => {
-    const app = new App();
-    const stack = new Stack(app, 'testStack', {
-      env: {
-        region: 'us-east-1',
-        account: '1234',
-      },
-    });
-
-    const testProps: VSCodeServerProps = {
-      enableAutoStop: true,
-    };
-
-    new VSCodeServer(stack, 'testVSCodeServer', testProps);
-
-    const template = Template.fromStack(stack);
-
-    // Should have status API URL output
-    template.hasOutput('*', {
-      Description: 'Status check API URL',
-    });
-
-    // Note: Auto-resume is now client-side via POST /status/{instanceId}/start
-    // No Lambda@Edge functions are created
-  });
+  // Auto-resume functionality has been removed - instances must be resumed manually via AWS Console
 });

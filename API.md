@@ -514,7 +514,6 @@ Any object.
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.domainName">domainName</a></code> | <code>string</code> | The name of the domain the server is reachable. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance running VS Code Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.password">password</a></code> | <code>string</code> | The password to login to the server. |
-| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.statusApiUrl">statusApiUrl</a></code> | <code>string</code> | The URL of the status check API (only available when enableAutoStop is true). |
 
 ---
 
@@ -566,18 +565,6 @@ The password to login to the server.
 
 ---
 
-##### `statusApiUrl`<sup>Optional</sup> <a name="statusApiUrl" id="@mavogel/cdk-vscode-server.VSCodeServer.property.statusApiUrl"></a>
-
-```typescript
-public readonly statusApiUrl: string;
-```
-
-- *Type:* string
-
-The URL of the status check API (only available when enableAutoStop is true).
-
----
-
 
 ## Structs <a name="Structs" id="Structs"></a>
 
@@ -600,8 +587,8 @@ const idleMonitorProps: IdleMonitorProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.distribution">distribution</a></code> | <code>aws-cdk-lib.aws_cloudfront.IDistribution</code> | The CloudFront distribution to monitor for activity. |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | Number of minutes of inactivity before stopping the instance. |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to monitor. |
-| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | DynamoDB table for tracking instance state. |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.checkIntervalMinutes">checkIntervalMinutes</a></code> | <code>number</code> | How often to check for idle activity (in minutes). |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.skipStatusChecks">skipStatusChecks</a></code> | <code>boolean</code> | Skip instance status checks before stopping When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds test timeout limits. |
 
 ---
 
@@ -641,18 +628,6 @@ The EC2 instance to monitor.
 
 ---
 
-##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.stateTable"></a>
-
-```typescript
-public readonly stateTable: ITable;
-```
-
-- *Type:* aws-cdk-lib.aws_dynamodb.ITable
-
-DynamoDB table for tracking instance state.
-
----
-
 ##### `checkIntervalMinutes`<sup>Optional</sup> <a name="checkIntervalMinutes" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.checkIntervalMinutes"></a>
 
 ```typescript
@@ -663,6 +638,22 @@ public readonly checkIntervalMinutes: number;
 - *Default:* 5 - Check every 5 minutes
 
 How often to check for idle activity (in minutes).
+
+---
+
+##### `skipStatusChecks`<sup>Optional</sup> <a name="skipStatusChecks" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.skipStatusChecks"></a>
+
+```typescript
+public readonly skipStatusChecks: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Skip instance status checks before stopping When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds test timeout limits.
+
+WARNING: For testing only - in production, you should wait for status checks
+to pass before stopping instances
 
 ---
 
@@ -778,6 +769,7 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceOperatingSystem">instanceOperatingSystem</a></code> | <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType">LinuxFlavorType</a></code> | VSCode Server EC2 operating system. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceSize">instanceSize</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceSize</code> | VSCode Server EC2 instance size. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceVolumeSize">instanceVolumeSize</a></code> | <code>number</code> | VSCode Server EC2 instance volume size in GB. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.skipStatusChecks">skipStatusChecks</a></code> | <code>boolean</code> | Skip instance status checks in IdleMonitor When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds the test timeout limits. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.vscodePassword">vscodePassword</a></code> | <code>string</code> | Password for VSCode Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.vscodeUser">vscodeUser</a></code> | <code>string</code> | UserName for VSCode Server. |
 
@@ -1014,6 +1006,22 @@ public readonly instanceVolumeSize: number;
 - *Default:* 40
 
 VSCode Server EC2 instance volume size in GB.
+
+---
+
+##### `skipStatusChecks`<sup>Optional</sup> <a name="skipStatusChecks" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.skipStatusChecks"></a>
+
+```typescript
+public readonly skipStatusChecks: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Skip instance status checks in IdleMonitor When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds the test timeout limits.
+
+WARNING: For testing only - in production, you should wait for status checks
+to pass before stopping instances to avoid stopping unhealthy instances
 
 ---
 

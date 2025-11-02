@@ -1006,6 +1006,47 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       },
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
+    "testVSCodeServereipassociation371D1262": {
+      "Properties": {
+        "EIP": {
+          "Ref": "testVSCodeServerelasticipF66DA048",
+        },
+        "InstanceId": {
+          "Ref": "testVSCodeServerserverinstance48076E15",
+        },
+      },
+      "Type": "AWS::EC2::EIPAssociation",
+    },
+    "testVSCodeServerelasticipF66DA048": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-EC23",
+              "reason": "Elastic IP required for consistent public IP across stop/start cycles",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+          {
+            "Key": "Name",
+            "Value": "VSCodeServer-EIP",
+          },
+          {
+            "Key": "unit-test",
+            "Value": "True",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
     "testVSCodeServerpasswordsecret61CA6F59": {
       "DeletionPolicy": "Delete",
       "Metadata": {
@@ -3020,6 +3061,43 @@ exports[`vscode-server vscode-server-default-props 1`] = `
         "ToPort": 80,
       },
       "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testVSCodeServereipassociation371D1262": {
+      "Properties": {
+        "EIP": {
+          "Ref": "testVSCodeServerelasticipF66DA048",
+        },
+        "InstanceId": {
+          "Ref": "testVSCodeServerserverinstance48076E15",
+        },
+      },
+      "Type": "AWS::EC2::EIPAssociation",
+    },
+    "testVSCodeServerelasticipF66DA048": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-EC23",
+              "reason": "Elastic IP required for consistent public IP across stop/start cycles",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "app",
+            "Value": "vscode-server",
+          },
+          {
+            "Key": "Name",
+            "Value": "VSCodeServer-EIP",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
     },
     "testVSCodeServerpasswordsecret61CA6F59": {
       "DeletionPolicy": "Delete",

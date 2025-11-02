@@ -84,7 +84,7 @@ idleTestHandler.addToRolePolicy(
     ],
     resources: ['*'],
   }),
-});
+);
 
 const integ = new IntegTest(app, 'IntegStopOnIdleFunctionality', {
   testCases: [stackUnderTest],

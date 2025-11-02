@@ -700,6 +700,36 @@ export class VSCodeServer extends Construct {
       true,
     );
 
+    // Allocate Elastic IP to ensure consistent public IP across stop/start cycles
+    // Without this, the instance gets a new public IP each time it's started,
+    // which would break CloudFront's connection to the instance
+    const eip = new ec2.CfnEIP(this, 'elastic-ip', {
+      domain: 'vpc',
+      tags: [
+        {
+          key: 'Name',
+          value: `${instanceName}-EIP`,
+        },
+      ],
+    });
+
+    // Associate Elastic IP with the instance
+    new ec2.CfnEIPAssociation(this, 'eip-association', {
+      eip: eip.ref,
+      instanceId: this.instance.instanceId,
+    });
+
+    NagSuppressions.addResourceSuppressions(
+      [eip],
+      [
+        {
+          id: 'AwsSolutions-EC23',
+          reason: 'Elastic IP required for consistent public IP across stop/start cycles',
+        },
+      ],
+      true,
+    );
+
     // Create a CF distribution (special id) and special CachePolicy to instance
     const cfCachePolicy = new cf.CachePolicy(this, 'cf-cache-policy', {
       cachePolicyName: `cf-cache-policy-vscodeserver-${Stack.of(this).stackName}`,
@@ -726,6 +756,9 @@ export class VSCodeServer extends Construct {
       queryStringBehavior: cf.CacheQueryStringBehavior.all(),
     });
 
+    // Use instance's public DNS name for CloudFront origin
+    // After Elastic IP association, this will point to the Elastic IP's DNS
+    // This ensures CloudFront can always reach the instance even after stop/start cycles
     const origin = new cfo.HttpOrigin(this.instance.instancePublicDnsName, {
       protocolPolicy: cf.OriginProtocolPolicy.HTTP_ONLY,
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,

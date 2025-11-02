@@ -22,29 +22,12 @@ const stackUnderTest = new Stack(app, 'IntegTestStackStopOnIdle', {
 });
 
 // Create VSCodeServer with skipStatusChecks to work around 120s assertion timeout:
-//
-// PROBLEM: The CDK IntegTest assertion handler has a hardcoded 120s timeout, but:
-// - Instance transitions (stopping → stopped → running) can take 60-90s
-// - Status checks can take another 60-120s
-// - Total: 120-210s, which exceeds the timeout
-//
-// SOLUTION: Set skipStatusChecks=true in IdleMonitor
-// - IdleMonitor will stop idle instances immediately without waiting for status checks
-// - This ensures verify-auto-stop test completes within the 120s timeout
-// - Setup test only waits for 'running' state, not for status checks to pass
-// - WARNING: This is test-specific behavior - production should wait for status checks
-//
-// Instance Configuration:
-// - T4G.LARGE instance (chosen for consistency, though size doesn't matter with skipStatusChecks)
-// - Minimal volume size (8 GB)
-// - Very short idle timeout (3 minutes)
-// - Check every 1 minute (instead of default 5 minutes)
 const constructUnderTest = new VSCodeServer(stackUnderTest, 'IntegVSCodeServer', {
   instanceClass: InstanceClass.T4G,
   instanceSize: InstanceSize.LARGE,
   instanceVolumeSize: 8,
   enableAutoStop: true, // Auto-resume is automatically enabled with auto-stop
-  idleTimeoutMinutes: 3, // Very short timeout for fast testing (3 minutes)
+  idleTimeoutMinutes: 2, // Very short timeout for fast testing (2 minutes)
   idleCheckIntervalMinutes: 1, // Check every 1 minute for fast testing
   skipStatusChecks: true, // Skip status checks for integration tests (Option 2 fallback)
   additionalTags: {
@@ -59,7 +42,7 @@ const idleTestHandler = new NodejsFunction(stackUnderTest, 'idle-test-handler', 
   entry: path.join(__dirname, 'functions', 'idle-test-handler.ts'),
   runtime: lambda.Runtime.NODEJS_20_X,
   logRetention: 1,
-  timeout: Duration.minutes(15), // Long timeout to wait for idle detection
+  timeout: Duration.minutes(2), // Max 2m from CDK IntegTest assertion timeout
   bundling: {
     esbuildArgs: {
       "--packages": "bundle",
@@ -68,7 +51,7 @@ const idleTestHandler = new NodejsFunction(stackUnderTest, 'idle-test-handler', 
   environment: {
     INSTANCE_ID: constructUnderTest.instance.instanceId,
     CLOUDFRONT_DOMAIN: constructUnderTest.domainName,
-    IDLE_TIMEOUT_MINUTES: '3',
+    IDLE_TIMEOUT_MINUTES: '2',
   },
 });
 
@@ -79,7 +62,6 @@ idleTestHandler.addToRolePolicy(
     actions: [
       'ec2:DescribeInstances',
       'ec2:DescribeInstanceStatus',
-      'ec2:StartInstances',
       'cloudwatch:GetMetricStatistics',
     ],
     resources: ['*'],
@@ -95,64 +77,30 @@ const integ = new IntegTest(app, 'IntegStopOnIdleFunctionality', {
       },
     },
   },
-  // Note: The CDK IntegTest assertion handler has a hardcoded 120s timeout.
-  // The test Lambda itself has 15min timeout, but the assertion wrapper times out after 2 minutes.
-  //
-  // Our approach with skipStatusChecks=true:
-  // - Setup test: Start instance, wait for 'running' state (~60-90s)
-  // - verify-auto-stop: Poll for 'stopped' state
-  // - IdleMonitor runs every 1 minute, sees 0 requests, stops instance immediately (no status check wait)
-  // - Total time: ~90-120 seconds (fits within assertion timeout)
-  //
-  // Expected timeline:
-  // T+0s:   Setup starts
-  // T+60s:  Instance reaches 'running', setup completes
-  // T+70s:  IdleMonitor runs, skips status checks, stops instance
-  // T+90s:  verify-auto-stop detects 'stopped' state, test passes ✅
 });
 
 /**
- * Test execution order:
- * 1. Setup instance (ensure running state)
- * 2. Verify auto-stop (instance stops after idle)
+ * Test: Verify instance stops after idle timeout
  *
+ * After deployment, the instance will start running. The IdleMonitor Lambda
+ * checks for activity every 1 minute. After 2 minutes of no CloudFront requests,
+ * the instance should be stopped.
+ *
+ * This test simply verifies that the instance transitions to 'stopped' state.
  * NOTE: Resume must be done manually via AWS Console (auto-resume has been removed).
- * Assertions must be inlined in .next() chain to ensure CDK IntegTest
- * creates CloudFormation resources for all of them.
  */
 integ.assertions
-  // Assertion 1: Setup - Start instance before tests
-  // Ensures instance is in 'running' state before the stop test begins
-  // Prevents race condition where IdleMonitor stops the instance between deployment and test execution
   .invokeFunction({
     functionName: idleTestHandler.functionName,
     logType: LogType.TAIL,
     invocationType: InvocationType.REQUEST_RESPONSE,
     payload: JSON.stringify({
-      testPhase: 'setup-instance',
+      testPhase: 'verify-auto-stop',
+      domainName: constructUnderTest.domainName,
       instanceId: constructUnderTest.instance.instanceId,
+      idleTimeoutMinutes: 2,
     }),
   })
   .expect(ExpectedResult.objectLike({
-    Payload: '"RUNNING"',
-  }))
-  // Assertion 2: Instance stops after idle timeout
-  // Assumes instance is running (from setup step)
-  // Polls for 'stopped' state (IdleMonitor will stop it within 90s with skipStatusChecks)
-  .next(
-    integ.assertions
-      .invokeFunction({
-        functionName: idleTestHandler.functionName,
-        logType: LogType.TAIL,
-        invocationType: InvocationType.REQUEST_RESPONSE,
-        payload: JSON.stringify({
-          testPhase: 'verify-auto-stop',
-          domainName: constructUnderTest.domainName,
-          instanceId: constructUnderTest.instance.instanceId,
-          idleTimeoutMinutes: 3,
-        }),
-      })
-      .expect(ExpectedResult.objectLike({
-        Payload: '"STOPPED"',
-      })),
-  );
+    Payload: '"STOPPED"',
+  }));

@@ -24,6 +24,7 @@ const project = new MvcCdkConstructLibrary({
     '@aws-sdk/lib-dynamodb',
     '@aws-sdk/client-cloudwatch',
     '@aws-sdk/client-ec2',
+    '@aws-sdk/client-eventbridge',
     '@types/aws-lambda',
     '@types/jsdom',
   ],

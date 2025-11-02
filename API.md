@@ -102,6 +102,7 @@ Any object.
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that performs idle monitoring. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.scheduleRule">scheduleRule</a></code> | <code>aws-cdk-lib.aws_events.Rule</code> | The EventBridge rule that triggers idle monitoring checks. |
 
 ---
 
@@ -126,6 +127,18 @@ public readonly function: Function;
 - *Type:* aws-cdk-lib.aws_lambda.Function
 
 The Lambda function that performs idle monitoring.
+
+---
+
+##### `scheduleRule`<sup>Required</sup> <a name="scheduleRule" id="@mavogel/cdk-vscode-server.IdleMonitor.property.scheduleRule"></a>
+
+```typescript
+public readonly scheduleRule: Rule;
+```
+
+- *Type:* aws-cdk-lib.aws_events.Rule
+
+The EventBridge rule that triggers idle monitoring checks.
 
 ---
 
@@ -386,6 +399,7 @@ Any object.
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.domainName">domainName</a></code> | <code>string</code> | The name of the domain the server is reachable. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance running VS Code Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.password">password</a></code> | <code>string</code> | The password to login to the server. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.idleMonitor">idleMonitor</a></code> | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor">IdleMonitor</a></code> | The IdleMonitor construct (only present if enableAutoStop is true). |
 
 ---
 
@@ -434,6 +448,18 @@ public readonly password: string;
 - *Type:* string
 
 The password to login to the server.
+
+---
+
+##### `idleMonitor`<sup>Optional</sup> <a name="idleMonitor" id="@mavogel/cdk-vscode-server.VSCodeServer.property.idleMonitor"></a>
+
+```typescript
+public readonly idleMonitor: IdleMonitor;
+```
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.IdleMonitor">IdleMonitor</a>
+
+The IdleMonitor construct (only present if enableAutoStop is true).
 
 ---
 

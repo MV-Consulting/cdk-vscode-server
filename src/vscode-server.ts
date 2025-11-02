@@ -247,6 +247,11 @@ export class VSCodeServer extends Construct {
    */
   public readonly instance: ec2.IInstance;
 
+  /**
+   * The IdleMonitor construct (only present if enableAutoStop is true)
+   */
+  public readonly idleMonitor?: IdleMonitor;
+
   constructor(scope: Construct, id: string, props?: VSCodeServerProps) {
     super(scope, id);
 
@@ -901,7 +906,7 @@ export class VSCodeServer extends Construct {
 
     // Create idle monitor for auto-stop feature
     if (props?.enableAutoStop) {
-      new IdleMonitor(this, 'IdleMonitor', {
+      this.idleMonitor = new IdleMonitor(this, 'IdleMonitor', {
         instance: this.instance,
         distribution: distribution,
         idleTimeoutMinutes: props?.idleTimeoutMinutes ?? 30,

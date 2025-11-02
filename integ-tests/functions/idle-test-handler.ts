@@ -1,34 +1,42 @@
-import { EC2Client, DescribeInstancesCommand } from '@aws-sdk/client-ec2';
+import { EC2Client, DescribeInstancesCommand, StartInstancesCommand } from '@aws-sdk/client-ec2';
+import { EventBridgeClient, DisableRuleCommand } from '@aws-sdk/client-eventbridge';
 
 const ec2 = new EC2Client({});
+const eventBridge = new EventBridgeClient({});
 
 interface IdleTestEvent {
-  testPhase: 'verify-auto-stop';
+  testPhase: 'verify-auto-stop' | 'disable-idle-monitor' | 'start-instance';
   domainName?: string;
-  instanceId: string;
+  instanceId?: string;
   idleTimeoutMinutes?: number;
+  idleMonitorRuleName?: string;
 }
 
 /**
  * Integration test handler for stop-on-idle functionality
  *
- * This Lambda function verifies that the instance stops after being idle.
- * After deployment, the instance starts running. The IdleMonitor checks for
- * CloudFront activity every 1 minute. After detecting no requests for the
- * idle timeout period, it stops the instance.
+ * This Lambda function tests the stop-on-idle workflow:
+ * 1. verify-auto-stop: Instance stops after being idle
+ * 2. disable-idle-monitor: Disable EventBridge rule to prevent re-stopping
+ * 3. start-instance: Start the instance and wait for running state
  *
- * NOTE: Auto-resume has been removed. Instances must be resumed manually via AWS Console.
+ * Note: Login verification is handled by a separate login-handler Lambda
  */
 export const handler = async (event: IdleTestEvent): Promise<string> => {
   console.log('Idle test event:', JSON.stringify(event, null, 2));
 
-  const { testPhase, instanceId, idleTimeoutMinutes = 5 } = event;
+  const { testPhase, instanceId, idleTimeoutMinutes = 5, idleMonitorRuleName } = event;
 
   try {
-    console.log(`Using instance ID: ${instanceId}`);
-
     if (testPhase === 'verify-auto-stop') {
+      if (!instanceId) throw new Error('instanceId is required for verify-auto-stop');
       return await verifyAutoStop(instanceId, idleTimeoutMinutes);
+    } else if (testPhase === 'disable-idle-monitor') {
+      if (!idleMonitorRuleName) throw new Error('idleMonitorRuleName is required for disable-idle-monitor');
+      return await disableIdleMonitor(idleMonitorRuleName);
+    } else if (testPhase === 'start-instance') {
+      if (!instanceId) throw new Error('instanceId is required for start-instance');
+      return await startInstance(instanceId);
     } else {
       throw new Error(`Unknown test phase: ${testPhase}`);
     }
@@ -128,4 +136,43 @@ async function waitForInstanceState(
  */
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Disable the IdleMonitor EventBridge rule
+ * This prevents the instance from being stopped again after we start it
+ */
+async function disableIdleMonitor(ruleName: string): Promise<string> {
+  console.log(`Disabling IdleMonitor EventBridge rule: ${ruleName}`);
+
+  const command = new DisableRuleCommand({
+    Name: ruleName,
+  });
+
+  await eventBridge.send(command);
+
+  console.log('✅ IdleMonitor EventBridge rule disabled successfully');
+  return 'DISABLED';
+}
+
+/**
+ * Start the EC2 instance and wait for it to be running
+ */
+async function startInstance(instanceId: string): Promise<string> {
+  console.log(`Starting instance: ${instanceId}`);
+
+  // Start the instance
+  const startCommand = new StartInstancesCommand({
+    InstanceIds: [instanceId],
+  });
+
+  await ec2.send(startCommand);
+  console.log('Instance start command sent');
+
+  // Wait for instance to be running (max 2 minutes)
+  console.log('Waiting for instance to be running...');
+  await waitForInstanceState(instanceId, 'running', 120);
+
+  console.log('✅ Instance started successfully and is running');
+  return 'RUNNING';
 }

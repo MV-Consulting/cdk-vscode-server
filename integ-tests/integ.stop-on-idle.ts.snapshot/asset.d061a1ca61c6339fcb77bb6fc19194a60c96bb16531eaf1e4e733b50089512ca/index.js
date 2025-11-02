@@ -24,14 +24,22 @@ __export(idle_test_handler_exports, {
 });
 module.exports = __toCommonJS(idle_test_handler_exports);
 var import_client_ec2 = require("@aws-sdk/client-ec2");
+var import_client_eventbridge = require("@aws-sdk/client-eventbridge");
 var ec2 = new import_client_ec2.EC2Client({});
+var eventBridge = new import_client_eventbridge.EventBridgeClient({});
 var handler = async (event) => {
   console.log("Idle test event:", JSON.stringify(event, null, 2));
-  const { testPhase, instanceId, idleTimeoutMinutes = 5 } = event;
+  const { testPhase, instanceId, idleTimeoutMinutes = 5, idleMonitorRuleName } = event;
   try {
-    console.log(`Using instance ID: ${instanceId}`);
     if (testPhase === "verify-auto-stop") {
+      if (!instanceId) throw new Error("instanceId is required for verify-auto-stop");
       return await verifyAutoStop(instanceId, idleTimeoutMinutes);
+    } else if (testPhase === "disable-idle-monitor") {
+      if (!idleMonitorRuleName) throw new Error("idleMonitorRuleName is required for disable-idle-monitor");
+      return await disableIdleMonitor(idleMonitorRuleName);
+    } else if (testPhase === "start-instance") {
+      if (!instanceId) throw new Error("instanceId is required for start-instance");
+      return await startInstance(instanceId);
     } else {
       throw new Error(`Unknown test phase: ${testPhase}`);
     }
@@ -82,6 +90,27 @@ async function waitForInstanceState(instanceId, targetState, maxWaitSeconds) {
 }
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+async function disableIdleMonitor(ruleName) {
+  console.log(`Disabling IdleMonitor EventBridge rule: ${ruleName}`);
+  const command = new import_client_eventbridge.DisableRuleCommand({
+    Name: ruleName
+  });
+  await eventBridge.send(command);
+  console.log("\u2705 IdleMonitor EventBridge rule disabled successfully");
+  return "DISABLED";
+}
+async function startInstance(instanceId) {
+  console.log(`Starting instance: ${instanceId}`);
+  const startCommand = new import_client_ec2.StartInstancesCommand({
+    InstanceIds: [instanceId]
+  });
+  await ec2.send(startCommand);
+  console.log("Instance start command sent");
+  console.log("Waiting for instance to be running...");
+  await waitForInstanceState(instanceId, "running", 120);
+  console.log("\u2705 Instance started successfully and is running");
+  return "RUNNING";
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

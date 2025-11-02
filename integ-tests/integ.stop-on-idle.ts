@@ -52,17 +52,35 @@ const idleTestHandler = new NodejsFunction(stackUnderTest, 'idle-test-handler', 
     INSTANCE_ID: constructUnderTest.instance.instanceId,
     CLOUDFRONT_DOMAIN: constructUnderTest.domainName,
     IDLE_TIMEOUT_MINUTES: '2',
+    IDLE_MONITOR_RULE_NAME: constructUnderTest.idleMonitor?.scheduleRule.ruleName ?? '',
   },
 });
 
-// Grant permissions to check instance status and start instances
+// Lambda function to test login functionality
+const loginHandler = new NodejsFunction(stackUnderTest, 'login-handler', {
+  functionName: PhysicalName.GENERATE_IF_NEEDED,
+  entry: path.join(__dirname, 'functions', 'login-handler.ts'),
+  runtime: lambda.Runtime.NODEJS_20_X,
+  logRetention: 1,
+  timeout: Duration.seconds(30),
+  bundling: {
+    esbuildArgs: {
+      "--packages": "bundle",
+    },
+  },
+});
+
+// Grant permissions to check instance status, start instances, and manage EventBridge rules
 idleTestHandler.addToRolePolicy(
   new PolicyStatement({
     effect: Effect.ALLOW,
     actions: [
       'ec2:DescribeInstances',
       'ec2:DescribeInstanceStatus',
+      'ec2:StartInstances',
       'cloudwatch:GetMetricStatistics',
+      'events:DisableRule',
+      'events:DescribeRule',
     ],
     resources: ['*'],
   }),
@@ -80,16 +98,19 @@ const integ = new IntegTest(app, 'IntegStopOnIdleFunctionality', {
 });
 
 /**
- * Test: Verify instance stops after idle timeout
+ * Test: Complete stop-on-idle workflow
  *
- * After deployment, the instance will start running. The IdleMonitor Lambda
- * checks for activity every 1 minute. After 2 minutes of no CloudFront requests,
- * the instance should be stopped.
+ * Test phases:
+ * 1. verify-auto-stop: Wait for instance to stop after being idle (idle-test-handler)
+ * 2. disable-idle-monitor: Disable EventBridge rule to prevent re-stopping (idle-test-handler)
+ * 3. start-instance: Start the instance and wait for running state (idle-test-handler)
+ * 4. verify-login: Check that VS Code Server is accessible via CloudFront (login-handler)
  *
- * This test simply verifies that the instance transitions to 'stopped' state.
- * NOTE: Resume must be done manually via AWS Console (auto-resume has been removed).
+ * This verifies the complete workflow including recovery after auto-stop.
+ * Uses the existing login-handler.ts (same as integ.ubuntu.ts) for login verification.
  */
 integ.assertions
+  // Phase 1: Wait for instance to stop after idle timeout
   .invokeFunction({
     functionName: idleTestHandler.functionName,
     logType: LogType.TAIL,
@@ -103,4 +124,52 @@ integ.assertions
   })
   .expect(ExpectedResult.objectLike({
     Payload: '"STOPPED"',
-  }));
+  }))
+  // Phase 2: Disable IdleMonitor EventBridge rule
+  .next(
+    integ.assertions
+      .invokeFunction({
+        functionName: idleTestHandler.functionName,
+        logType: LogType.TAIL,
+        invocationType: InvocationType.REQUEST_RESPONSE,
+        payload: JSON.stringify({
+          testPhase: 'disable-idle-monitor',
+          idleMonitorRuleName: constructUnderTest.idleMonitor?.scheduleRule.ruleName ?? '',
+        }),
+      })
+      .expect(ExpectedResult.objectLike({
+        Payload: '"DISABLED"',
+      })),
+  )
+  // Phase 3: Start instance and wait for running state
+  .next(
+    integ.assertions
+      .invokeFunction({
+        functionName: idleTestHandler.functionName,
+        logType: LogType.TAIL,
+        invocationType: InvocationType.REQUEST_RESPONSE,
+        payload: JSON.stringify({
+          testPhase: 'start-instance',
+          instanceId: constructUnderTest.instance.instanceId,
+        }),
+      })
+      .expect(ExpectedResult.objectLike({
+        Payload: '"RUNNING"',
+      })),
+  )
+  // Phase 4: Verify login is accessible
+  .next(
+    integ.assertions
+      .invokeFunction({
+        functionName: loginHandler.functionName,
+        logType: LogType.TAIL,
+        invocationType: InvocationType.REQUEST_RESPONSE,
+        payload: JSON.stringify({
+          domainName: constructUnderTest.domainName,
+          password: constructUnderTest.password,
+        }),
+      })
+      .expect(ExpectedResult.objectLike({
+        Payload: '"OK"',
+      })),
+  );

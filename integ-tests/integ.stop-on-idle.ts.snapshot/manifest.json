@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/2ed2dccf8f78fb794391640846a3d533353c0e24fb46208fe1d3cba3f2b577ca.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/20d0b68d1b4a8b31c7496d70270c59985cd269942bb3df6b984b2c05ca07d06e.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -1403,6 +1403,10 @@
             "data": {}
           },
           {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
             "type": "aws:cdk:analytics:construct",
             "data": {
               "functionName": "*",
@@ -1611,6 +1615,76 @@
             "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
           }
         ],
+        "/IntegTestStackStopOnIdle/login-handler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              },
+              "code": "*",
+              "handler": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              }
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandlerServiceRole330B0B32"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandler99CCCCFD"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandlerLogRetentionFD323A9B"
+          }
+        ],
         "/IntegTestStackStopOnIdle/Exports/Output{\"Ref\":\"idletesthandler1A304024\"}": [
           {
             "type": "aws:cdk:logicalId",
@@ -1627,6 +1701,24 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "ExportsOutputRefIntegVSCodeServerserverinstance0A3D62D7BC0861E5"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Ref\":\"loginhandler99CCCCFD\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Ref\":\"IntegVSCodeServerIdleMonitorScheduleRuleCF2E60F5\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefIntegVSCodeServerIdleMonitorScheduleRuleCF2E60F550AA072C"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD\",\"secretPasswordValue\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
           }
         ],
         "/IntegTestStackStopOnIdle/BootstrapVersion": [
@@ -1661,7 +1753,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/97452c4074ed487c3492f25436db2be38aeb67278e4dfa2cbb63365e4da41941.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/7446b7708749cdac710dac533fa614a603bd7b53819cf0c11fb5fe9d42247d16.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -1726,6 +1818,102 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921bInvokeE3C593A0"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvokedc3da1442e925b8c33569d5fea03b0f7"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvokedc3da1442e925b8c33569d5fea03b0f7Invoke9C84C933"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvokedc3da1442e925b8c33569d5fea03b0f7"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4Invoke4806B64D"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvoke493987f824f978002013a8ed7c9980f4"
           }
         ],
         "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/BootstrapVersion": [

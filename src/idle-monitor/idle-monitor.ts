@@ -53,6 +53,11 @@ export class IdleMonitor extends Construct {
    */
   public readonly function: LambdaFunction;
 
+  /**
+   * The EventBridge rule that triggers idle monitoring checks
+   */
+  public readonly scheduleRule: Rule;
+
   constructor(scope: Construct, id: string, props: IdleMonitorProps) {
     super(scope, id);
 
@@ -106,11 +111,11 @@ export class IdleMonitor extends Construct {
 
     // Create EventBridge rule to trigger at specified interval
     const checkInterval = props.checkIntervalMinutes ?? 5;
-    const rule = new Rule(this, 'ScheduleRule', {
+    this.scheduleRule = new Rule(this, 'ScheduleRule', {
       schedule: Schedule.rate(Duration.minutes(checkInterval)),
     });
 
-    rule.addTarget(new LambdaFunctionTarget(this.function));
+    this.scheduleRule.addTarget(new LambdaFunctionTarget(this.function));
 
     // CDK-nag suppressions
     NagSuppressions.addResourceSuppressions(

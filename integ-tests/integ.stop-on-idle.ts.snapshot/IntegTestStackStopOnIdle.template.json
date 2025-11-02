@@ -2572,7 +2572,10 @@
        "Action": [
         "cloudwatch:GetMetricStatistics",
         "ec2:DescribeInstanceStatus",
-        "ec2:DescribeInstances"
+        "ec2:DescribeInstances",
+        "ec2:StartInstances",
+        "events:DescribeRule",
+        "events:DisableRule"
        ],
        "Effect": "Allow",
        "Resource": "*"
@@ -2595,7 +2598,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "9cb022bc74eb0adeedb33b0ea49efa0f96972ffa6bb45a5793f3e023184e0a2e.zip"
+     "S3Key": "d061a1ca61c6339fcb77bb6fc19194a60c96bb16531eaf1e4e733b50089512ca.zip"
     },
     "Environment": {
      "Variables": {
@@ -2617,7 +2620,10 @@
         ]
        ]
       },
-      "IDLE_TIMEOUT_MINUTES": "2"
+      "IDLE_TIMEOUT_MINUTES": "2",
+      "IDLE_MONITOR_RULE_NAME": {
+       "Ref": "IntegVSCodeServerIdleMonitorScheduleRuleCF2E60F5"
+      }
      }
     },
     "Handler": "index.handler",
@@ -2744,6 +2750,83 @@
     "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
     "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
    ]
+  },
+  "loginhandlerServiceRole330B0B32": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "loginhandler99CCCCFD": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "efac30c7091c58fed492058fa6403c14f7e58aab8cf4fd595d838b8d5eeec2b9.zip"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "loginhandlerServiceRole330B0B32",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "loginhandlerServiceRole330B0B32"
+   ]
+  },
+  "loginhandlerLogRetentionFD323A9B": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "loginhandler99CCCCFD"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 1
+   }
   }
  },
  "Outputs": {
@@ -2799,6 +2882,33 @@
    },
    "Export": {
     "Name": "IntegTestStackStopOnIdle:ExportsOutputRefIntegVSCodeServerserverinstance0A3D62D7BC0861E5"
+   }
+  },
+  "ExportsOutputRefloginhandler99CCCCFD29CE21C0": {
+   "Value": {
+    "Ref": "loginhandler99CCCCFD"
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+   }
+  },
+  "ExportsOutputRefIntegVSCodeServerIdleMonitorScheduleRuleCF2E60F550AA072C": {
+   "Value": {
+    "Ref": "IntegVSCodeServerIdleMonitorScheduleRuleCF2E60F5"
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputRefIntegVSCodeServerIdleMonitorScheduleRuleCF2E60F550AA072C"
+   }
+  },
+  "ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B": {
+   "Value": {
+    "Fn::GetAtt": [
+     "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD",
+     "secretPasswordValue"
+    ]
+   },
+   "Export": {
+    "Name": "IntegTestStackStopOnIdle:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
    }
   }
  },

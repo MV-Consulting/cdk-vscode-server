@@ -23,6 +23,10 @@
       "type": "build"
     },
     {
+      "name": "@aws-sdk/client-eventbridge",
+      "type": "build"
+    },
+    {
       "name": "@aws-sdk/client-secrets-manager",
       "type": "build"
     },

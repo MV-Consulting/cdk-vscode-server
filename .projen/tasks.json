@@ -49,10 +49,34 @@
       "description": "Prepare assets",
       "steps": [
         {
+          "spawn": "bundle:idle-monitor/idle-monitor.lambda"
+        },
+        {
           "spawn": "bundle:installer/installer.lambda"
         },
         {
           "spawn": "bundle:secret-retriever/secret-retriever.lambda"
+        },
+        {
+          "spawn": "bundle:status-check/status-check.lambda"
+        }
+      ]
+    },
+    "bundle:idle-monitor/idle-monitor.lambda": {
+      "name": "bundle:idle-monitor/idle-monitor.lambda",
+      "description": "Create a JavaScript bundle from src/idle-monitor/idle-monitor.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/idle-monitor/idle-monitor.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/idle-monitor/idle-monitor.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+        }
+      ]
+    },
+    "bundle:idle-monitor/idle-monitor.lambda:watch": {
+      "name": "bundle:idle-monitor/idle-monitor.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/idle-monitor/idle-monitor.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/idle-monitor/idle-monitor.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/idle-monitor/idle-monitor.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },
@@ -89,6 +113,24 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+        }
+      ]
+    },
+    "bundle:status-check/status-check.lambda": {
+      "name": "bundle:status-check/status-check.lambda",
+      "description": "Create a JavaScript bundle from src/status-check/status-check.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+        }
+      ]
+    },
+    "bundle:status-check/status-check.lambda:watch": {
+      "name": "bundle:status-check/status-check.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/status-check/status-check.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },
@@ -226,18 +268,6 @@
         },
         {
           "spawn": "package:python"
-        },
-        {
-          "spawn": "package:go"
-        }
-      ]
-    },
-    "package:go": {
-      "name": "package:go",
-      "description": "Create go language bindings",
-      "steps": [
-        {
-          "exec": "jsii-pacmak -v --target go"
         }
       ]
     },

@@ -2,6 +2,7 @@ import {
   Aspects,
   CfnOutput,
   Duration,
+  Fn,
   IAspect,
   Stack,
   Tags,
@@ -16,6 +17,7 @@ import * as route53targets from 'aws-cdk-lib/aws-route53-targets';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct, IConstruct } from 'constructs';
+import { IdleMonitor } from './idle-monitor/idle-monitor';
 import { Installer } from './installer/installer';
 import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from './mappings';
 import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retriever';
@@ -152,6 +154,43 @@ export interface VSCodeServerProps {
    * @default false
    */
   readonly autoCreateCertificate?: boolean;
+
+  /**
+   * Enable automatic instance stop when idle
+   * Monitors CloudFront metrics and stops the EC2 instance after specified idle time
+   *
+   * @default false
+   */
+  readonly enableAutoStop?: boolean;
+
+  /**
+   * Minutes of inactivity before stopping the instance
+   * Only applies when enableAutoStop is true
+   *
+   * @default 30
+   */
+  readonly idleTimeoutMinutes?: number;
+
+  /**
+   * How often to check for idle activity (in minutes)
+   * Only applies when enableAutoStop is true
+   *
+   * @default 5 - Check every 5 minutes
+   */
+  readonly idleCheckIntervalMinutes?: number;
+
+  /**
+   * Skip instance status checks in IdleMonitor
+   * When true, IdleMonitor will stop idle instances even if status checks haven't passed
+   * This is useful for integration tests where status check initialization time
+   * exceeds the test timeout limits
+   *
+   * WARNING: For testing only - in production, you should wait for status checks
+   * to pass before stopping instances to avoid stopping unhealthy instances
+   *
+   * @default false
+   */
+  readonly skipStatusChecks?: boolean;
 }
 
 /**
@@ -202,6 +241,16 @@ export class VSCodeServer extends Construct {
    * The password to login to the server
    */
   public readonly password: string;
+
+  /**
+   * The EC2 instance running VS Code Server
+   */
+  public readonly instance: ec2.IInstance;
+
+  /**
+   * The IdleMonitor construct (only present if enableAutoStop is true)
+   */
+  public readonly idleMonitor?: IdleMonitor;
 
   constructor(scope: Construct, id: string, props?: VSCodeServerProps) {
     super(scope, id);
@@ -611,7 +660,7 @@ export class VSCodeServer extends Construct {
       true,
     );
 
-    const instance = new ec2.Instance(this, 'server-instance', {
+    this.instance = new ec2.Instance(this, 'server-instance', {
       vpc,
       instanceName,
       instanceType,
@@ -647,7 +696,7 @@ export class VSCodeServer extends Construct {
       `),
     });
     NagSuppressions.addResourceSuppressions(
-      [instance],
+      [this.instance],
       [
         {
           id: 'AwsSolutions-EC29',
@@ -656,6 +705,40 @@ export class VSCodeServer extends Construct {
       ],
       true,
     );
+
+    // Conditionally allocate Elastic IP for auto-stop scenarios
+    // When auto-stop is enabled, the instance will be stopped and started, which changes
+    // the public IP each time. EIP ensures CloudFront can always reach the instance.
+    // When auto-stop is disabled, the instance runs continuously and doesn't need EIP.
+    let eip: ec2.CfnEIP | undefined;
+    if (props?.enableAutoStop) {
+      eip = new ec2.CfnEIP(this, 'elastic-ip', {
+        domain: 'vpc',
+        tags: [
+          {
+            key: 'Name',
+            value: `${instanceName}-EIP`,
+          },
+        ],
+      });
+
+      // Associate Elastic IP with the instance
+      new ec2.CfnEIPAssociation(this, 'eip-association', {
+        eip: eip.ref,
+        instanceId: this.instance.instanceId,
+      });
+
+      NagSuppressions.addResourceSuppressions(
+        [eip],
+        [
+          {
+            id: 'AwsSolutions-EC23',
+            reason: 'Elastic IP required for consistent public IP across stop/start cycles when auto-stop is enabled',
+          },
+        ],
+        true,
+      );
+    }
 
     // Create a CF distribution (special id) and special CachePolicy to instance
     const cfCachePolicy = new cf.CachePolicy(this, 'cf-cache-policy', {
@@ -683,7 +766,14 @@ export class VSCodeServer extends Construct {
       queryStringBehavior: cf.CacheQueryStringBehavior.all(),
     });
 
-    const origin = new cfo.HttpOrigin(instance.instancePublicDnsName, {
+    // Determine CloudFront origin DNS name based on auto-stop configuration
+    // - If auto-stop enabled: Use Elastic IP DNS (persists across stop/start cycles)
+    // - If auto-stop disabled: Use instance public DNS (instance never stops)
+    const originDnsName = eip
+      ? `ec2-${Fn.join('-', Fn.split('.', eip.attrPublicIp))}.${Stack.of(this).region}.compute.amazonaws.com`
+      : this.instance.instancePublicDnsName;
+
+    const origin = new cfo.HttpOrigin(originDnsName, {
       protocolPolicy: cf.OriginProtocolPolicy.HTTP_ONLY,
       originId: `Cloudfront-${Stack.of(this).stackName}-${Stack.of(this).stackName}`,
     });
@@ -786,7 +876,7 @@ export class VSCodeServer extends Construct {
       case LinuxFlavorType.UBUNTU_22:
       case LinuxFlavorType.UBUNTU_24:
         Installer.ubuntu({
-          instanceId: instance.instanceId,
+          instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
           devServerBasePath: props?.devServerBasePath,
@@ -797,7 +887,7 @@ export class VSCodeServer extends Construct {
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
         Installer.amazonLinux2023({
-          instanceId: instance.instanceId,
+          instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
           devServerBasePath: props?.devServerBasePath,
@@ -813,6 +903,17 @@ export class VSCodeServer extends Construct {
 
     // NOTE: maybe have a healhcheck CFN custom resource to see if the vscode server is healthy
     // atm this is achieved by the integ tests
+
+    // Create idle monitor for auto-stop feature
+    if (props?.enableAutoStop) {
+      this.idleMonitor = new IdleMonitor(this, 'IdleMonitor', {
+        instance: this.instance,
+        distribution: distribution,
+        idleTimeoutMinutes: props?.idleTimeoutMinutes ?? 30,
+        checkIntervalMinutes: props?.idleCheckIntervalMinutes ?? 5,
+        skipStatusChecks: props?.skipStatusChecks ?? false,
+      });
+    }
 
     // Outputs
     const finalDomainName = domainName || distribution.domainName;

@@ -2,6 +2,301 @@
 
 ## Constructs <a name="Constructs" id="Constructs"></a>
 
+### IdleMonitor <a name="IdleMonitor" id="@mavogel/cdk-vscode-server.IdleMonitor"></a>
+
+Construct that monitors CloudFront request metrics and stops the EC2 instance when idle.
+
+#### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer"></a>
+
+```typescript
+import { IdleMonitor } from '@mavogel/cdk-vscode-server'
+
+new IdleMonitor(scope: Construct, id: string, props: IdleMonitorProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.props">props</a></code> | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps">IdleMonitorProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="@mavogel/cdk-vscode-server.IdleMonitor.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.IdleMonitorProps">IdleMonitorProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="@mavogel/cdk-vscode-server.IdleMonitor.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@mavogel/cdk-vscode-server.IdleMonitor.isConstruct"></a>
+
+```typescript
+import { IdleMonitor } from '@mavogel/cdk-vscode-server'
+
+IdleMonitor.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@mavogel/cdk-vscode-server.IdleMonitor.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that performs idle monitoring. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor.property.scheduleRule">scheduleRule</a></code> | <code>aws-cdk-lib.aws_events.Rule</code> | The EventBridge rule that triggers idle monitoring checks. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@mavogel/cdk-vscode-server.IdleMonitor.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `function`<sup>Required</sup> <a name="function" id="@mavogel/cdk-vscode-server.IdleMonitor.property.function"></a>
+
+```typescript
+public readonly function: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+The Lambda function that performs idle monitoring.
+
+---
+
+##### `scheduleRule`<sup>Required</sup> <a name="scheduleRule" id="@mavogel/cdk-vscode-server.IdleMonitor.property.scheduleRule"></a>
+
+```typescript
+public readonly scheduleRule: Rule;
+```
+
+- *Type:* aws-cdk-lib.aws_events.Rule
+
+The EventBridge rule that triggers idle monitoring checks.
+
+---
+
+
+### StatusCheckApi <a name="StatusCheckApi" id="@mavogel/cdk-vscode-server.StatusCheckApi"></a>
+
+API Gateway endpoint for checking instance status, used by resume page for polling.
+
+#### Initializers <a name="Initializers" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer"></a>
+
+```typescript
+import { StatusCheckApi } from '@mavogel/cdk-vscode-server'
+
+new StatusCheckApi(scope: Construct, id: string, props: StatusCheckApiProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.props">props</a></code> | <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps">StatusCheckApiProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="@mavogel/cdk-vscode-server.StatusCheckApi.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps">StatusCheckApiProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="@mavogel/cdk-vscode-server.StatusCheckApi.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@mavogel/cdk-vscode-server.StatusCheckApi.isConstruct"></a>
+
+```typescript
+import { StatusCheckApi } from '@mavogel/cdk-vscode-server'
+
+StatusCheckApi.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@mavogel/cdk-vscode-server.StatusCheckApi.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.api">api</a></code> | <code>aws-cdk-lib.aws_apigateway.RestApi</code> | The API Gateway REST API. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.apiUrl">apiUrl</a></code> | <code>string</code> | The URL of the status check API endpoint. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApi.property.function">function</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that handles status check requests. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `api`<sup>Required</sup> <a name="api" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.api"></a>
+
+```typescript
+public readonly api: RestApi;
+```
+
+- *Type:* aws-cdk-lib.aws_apigateway.RestApi
+
+The API Gateway REST API.
+
+---
+
+##### `apiUrl`<sup>Required</sup> <a name="apiUrl" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.apiUrl"></a>
+
+```typescript
+public readonly apiUrl: string;
+```
+
+- *Type:* string
+
+The URL of the status check API endpoint.
+
+---
+
+##### `function`<sup>Required</sup> <a name="function" id="@mavogel/cdk-vscode-server.StatusCheckApi.property.function"></a>
+
+```typescript
+public readonly function: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+The Lambda function that handles status check requests.
+
+---
+
+
 ### VSCodeServer <a name="VSCodeServer" id="@mavogel/cdk-vscode-server.VSCodeServer"></a>
 
 VSCodeServer - spin it up in under 10 minutes.
@@ -102,7 +397,9 @@ Any object.
 | --- | --- | --- |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.domainName">domainName</a></code> | <code>string</code> | The name of the domain the server is reachable. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance running VS Code Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.password">password</a></code> | <code>string</code> | The password to login to the server. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServer.property.idleMonitor">idleMonitor</a></code> | <code><a href="#@mavogel/cdk-vscode-server.IdleMonitor">IdleMonitor</a></code> | The IdleMonitor construct (only present if enableAutoStop is true). |
 
 ---
 
@@ -130,6 +427,18 @@ The name of the domain the server is reachable.
 
 ---
 
+##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.VSCodeServer.property.instance"></a>
+
+```typescript
+public readonly instance: IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IInstance
+
+The EC2 instance running VS Code Server.
+
+---
+
 ##### `password`<sup>Required</sup> <a name="password" id="@mavogel/cdk-vscode-server.VSCodeServer.property.password"></a>
 
 ```typescript
@@ -142,8 +451,154 @@ The password to login to the server.
 
 ---
 
+##### `idleMonitor`<sup>Optional</sup> <a name="idleMonitor" id="@mavogel/cdk-vscode-server.VSCodeServer.property.idleMonitor"></a>
+
+```typescript
+public readonly idleMonitor: IdleMonitor;
+```
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.IdleMonitor">IdleMonitor</a>
+
+The IdleMonitor construct (only present if enableAutoStop is true).
+
+---
+
 
 ## Structs <a name="Structs" id="Structs"></a>
+
+### IdleMonitorProps <a name="IdleMonitorProps" id="@mavogel/cdk-vscode-server.IdleMonitorProps"></a>
+
+Props for IdleMonitor construct.
+
+#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.IdleMonitorProps.Initializer"></a>
+
+```typescript
+import { IdleMonitorProps } from '@mavogel/cdk-vscode-server'
+
+const idleMonitorProps: IdleMonitorProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.distribution">distribution</a></code> | <code>aws-cdk-lib.aws_cloudfront.IDistribution</code> | The CloudFront distribution to monitor for activity. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | Number of minutes of inactivity before stopping the instance. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to monitor. |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.checkIntervalMinutes">checkIntervalMinutes</a></code> | <code>number</code> | How often to check for idle activity (in minutes). |
+| <code><a href="#@mavogel/cdk-vscode-server.IdleMonitorProps.property.skipStatusChecks">skipStatusChecks</a></code> | <code>boolean</code> | Skip instance status checks before stopping When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds test timeout limits. |
+
+---
+
+##### `distribution`<sup>Required</sup> <a name="distribution" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.distribution"></a>
+
+```typescript
+public readonly distribution: IDistribution;
+```
+
+- *Type:* aws-cdk-lib.aws_cloudfront.IDistribution
+
+The CloudFront distribution to monitor for activity.
+
+---
+
+##### `idleTimeoutMinutes`<sup>Required</sup> <a name="idleTimeoutMinutes" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.idleTimeoutMinutes"></a>
+
+```typescript
+public readonly idleTimeoutMinutes: number;
+```
+
+- *Type:* number
+
+Number of minutes of inactivity before stopping the instance.
+
+---
+
+##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.instance"></a>
+
+```typescript
+public readonly instance: IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IInstance
+
+The EC2 instance to monitor.
+
+---
+
+##### `checkIntervalMinutes`<sup>Optional</sup> <a name="checkIntervalMinutes" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.checkIntervalMinutes"></a>
+
+```typescript
+public readonly checkIntervalMinutes: number;
+```
+
+- *Type:* number
+- *Default:* 5 - Check every 5 minutes
+
+How often to check for idle activity (in minutes).
+
+---
+
+##### `skipStatusChecks`<sup>Optional</sup> <a name="skipStatusChecks" id="@mavogel/cdk-vscode-server.IdleMonitorProps.property.skipStatusChecks"></a>
+
+```typescript
+public readonly skipStatusChecks: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Skip instance status checks before stopping When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds test timeout limits.
+
+WARNING: For testing only - in production, you should wait for status checks
+to pass before stopping instances
+
+---
+
+### StatusCheckApiProps <a name="StatusCheckApiProps" id="@mavogel/cdk-vscode-server.StatusCheckApiProps"></a>
+
+Props for StatusCheckApi construct.
+
+#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.Initializer"></a>
+
+```typescript
+import { StatusCheckApiProps } from '@mavogel/cdk-vscode-server'
+
+const statusCheckApiProps: StatusCheckApiProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.IInstance</code> | The EC2 instance to check status for. |
+| <code><a href="#@mavogel/cdk-vscode-server.StatusCheckApiProps.property.stateTable">stateTable</a></code> | <code>aws-cdk-lib.aws_dynamodb.ITable</code> | DynamoDB table for tracking instance state. |
+
+---
+
+##### `instance`<sup>Required</sup> <a name="instance" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.property.instance"></a>
+
+```typescript
+public readonly instance: IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IInstance
+
+The EC2 instance to check status for.
+
+---
+
+##### `stateTable`<sup>Required</sup> <a name="stateTable" id="@mavogel/cdk-vscode-server.StatusCheckApiProps.property.stateTable"></a>
+
+```typescript
+public readonly stateTable: ITable;
+```
+
+- *Type:* aws-cdk-lib.aws_dynamodb.ITable
+
+DynamoDB table for tracking instance state.
+
+---
 
 ### VSCodeServerProps <a name="VSCodeServerProps" id="@mavogel/cdk-vscode-server.VSCodeServerProps"></a>
 
@@ -168,14 +623,18 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath">devServerBasePath</a></code> | <code>string</code> | Base path for the application to be added to Nginx sites-available list. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerPort">devServerPort</a></code> | <code>number</code> | Port for the DevServer. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.domainName">domainName</a></code> | <code>string</code> | Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoStop">enableAutoStop</a></code> | <code>boolean</code> | Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder">homeFolder</a></code> | <code>string</code> | Folder to open in VS Code server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.hostedZoneId">hostedZoneId</a></code> | <code>string</code> | Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleCheckIntervalMinutes">idleCheckIntervalMinutes</a></code> | <code>number</code> | How often to check for idle activity (in minutes) Only applies when enableAutoStop is true. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleTimeoutMinutes">idleTimeoutMinutes</a></code> | <code>number</code> | Minutes of inactivity before stopping the instance Only applies when enableAutoStop is true. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceClass">instanceClass</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceClass</code> | VSCode Server EC2 instance class. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceCpuArchitecture">instanceCpuArchitecture</a></code> | <code><a href="#@mavogel/cdk-vscode-server.LinuxArchitectureType">LinuxArchitectureType</a></code> | VSCode Server EC2 cpu architecture for the operating system. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceName">instanceName</a></code> | <code>string</code> | VSCode Server EC2 instance name. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceOperatingSystem">instanceOperatingSystem</a></code> | <code><a href="#@mavogel/cdk-vscode-server.LinuxFlavorType">LinuxFlavorType</a></code> | VSCode Server EC2 operating system. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceSize">instanceSize</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceSize</code> | VSCode Server EC2 instance size. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.instanceVolumeSize">instanceVolumeSize</a></code> | <code>number</code> | VSCode Server EC2 instance volume size in GB. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.skipStatusChecks">skipStatusChecks</a></code> | <code>boolean</code> | Skip instance status checks in IdleMonitor When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds the test timeout limits. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.vscodePassword">vscodePassword</a></code> | <code>string</code> | Password for VSCode Server. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.vscodeUser">vscodeUser</a></code> | <code>string</code> | UserName for VSCode Server. |
 
@@ -272,6 +731,19 @@ Custom domain name for the VS Code server When provided, creates a CloudFront di
 
 ---
 
+##### `enableAutoStop`<sup>Optional</sup> <a name="enableAutoStop" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.enableAutoStop"></a>
+
+```typescript
+public readonly enableAutoStop: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable automatic instance stop when idle Monitors CloudFront metrics and stops the EC2 instance after specified idle time.
+
+---
+
 ##### `homeFolder`<sup>Optional</sup> <a name="homeFolder" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.homeFolder"></a>
 
 ```typescript
@@ -295,6 +767,32 @@ public readonly hostedZoneId: string;
 - *Default:* auto-discover from domain name
 
 Route53 hosted zone ID for the domain Required when using autoCreateCertificate If not provided, will attempt to lookup hosted zone from domain name.
+
+---
+
+##### `idleCheckIntervalMinutes`<sup>Optional</sup> <a name="idleCheckIntervalMinutes" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleCheckIntervalMinutes"></a>
+
+```typescript
+public readonly idleCheckIntervalMinutes: number;
+```
+
+- *Type:* number
+- *Default:* 5 - Check every 5 minutes
+
+How often to check for idle activity (in minutes) Only applies when enableAutoStop is true.
+
+---
+
+##### `idleTimeoutMinutes`<sup>Optional</sup> <a name="idleTimeoutMinutes" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.idleTimeoutMinutes"></a>
+
+```typescript
+public readonly idleTimeoutMinutes: number;
+```
+
+- *Type:* number
+- *Default:* 30
+
+Minutes of inactivity before stopping the instance Only applies when enableAutoStop is true.
 
 ---
 
@@ -373,6 +871,22 @@ public readonly instanceVolumeSize: number;
 - *Default:* 40
 
 VSCode Server EC2 instance volume size in GB.
+
+---
+
+##### `skipStatusChecks`<sup>Optional</sup> <a name="skipStatusChecks" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.skipStatusChecks"></a>
+
+```typescript
+public readonly skipStatusChecks: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Skip instance status checks in IdleMonitor When true, IdleMonitor will stop idle instances even if status checks haven't passed This is useful for integration tests where status check initialization time exceeds the test timeout limits.
+
+WARNING: For testing only - in production, you should wait for status checks
+to pass before stopping instances to avoid stopping unhealthy instances
 
 ---
 

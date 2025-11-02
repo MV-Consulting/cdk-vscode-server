@@ -377,3 +377,150 @@ describe('VSCodeServer Tagging', () => {
     }).not.toThrow();
   });
 });
+
+describe('vscode-server-auto-stop', () => {
+  test('should create auto-stop resources when enabled', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+      idleTimeoutMinutes: 30,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Verify IdleMonitor Lambda
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: Match.objectLike({
+        Variables: Match.objectLike({
+          IDLE_TIMEOUT_MINUTES: '30',
+        }),
+      }),
+    });
+
+    // Verify EventBridge rule
+    template.hasResourceProperties('AWS::Events::Rule', {
+      ScheduleExpression: 'rate(5 minutes)',
+    });
+
+    // DynamoDB table and API Gateway are no longer created (auto-resume removed)
+    // Resume must be done manually via AWS Console
+    template.resourceCountIs('AWS::DynamoDB::Table', 0);
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
+  });
+
+  test('should not create auto-stop resources when disabled', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: false,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should NOT have API Gateway (auto-stop disabled, so no auto-resume either)
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
+
+    // Should NOT have EventBridge rule with 5 minutes schedule
+    const rules = template.findResources('AWS::Events::Rule');
+    const hasIdleMonitorRule = Object.values(rules).some(
+      (rule: any) => rule.Properties?.ScheduleExpression === 'rate(5 minutes)',
+    );
+    expect(hasIdleMonitorRule).toBe(false);
+  });
+
+  test('should use default idle timeout when not specified', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should use default 30 minutes
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: Match.objectLike({
+        Variables: Match.objectLike({
+          IDLE_TIMEOUT_MINUTES: '30',
+        }),
+      }),
+    });
+  });
+
+  test('should use custom idle timeout when specified', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      enableAutoStop: true,
+      idleTimeoutMinutes: 60,
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should use custom 60 minutes
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: Match.objectLike({
+        Variables: Match.objectLike({
+          IDLE_TIMEOUT_MINUTES: '60',
+        }),
+      }),
+    });
+  });
+
+  test('should maintain backward compatibility when auto-stop not specified', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {};
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Without enableAutoStop, no auto-stop/resume resources should be created
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 0);
+
+    // Should NOT have IdleMonitor (EventBridge rule)
+    template.resourceCountIs('AWS::Events::Rule', 0);
+  });
+
+  // Auto-resume functionality has been removed - instances must be resumed manually via AWS Console
+});

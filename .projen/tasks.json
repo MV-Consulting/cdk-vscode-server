@@ -56,9 +56,6 @@
         },
         {
           "spawn": "bundle:secret-retriever/secret-retriever.lambda"
-        },
-        {
-          "spawn": "bundle:status-check/status-check.lambda"
         }
       ]
     },
@@ -113,24 +110,6 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
-        }
-      ]
-    },
-    "bundle:status-check/status-check.lambda": {
-      "name": "bundle:status-check/status-check.lambda",
-      "description": "Create a JavaScript bundle from src/status-check/status-check.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
-        }
-      ]
-    },
-    "bundle:status-check/status-check.lambda:watch": {
-      "name": "bundle:status-check/status-check.lambda:watch",
-      "description": "Continuously update the JavaScript bundle from src/status-check/status-check.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },

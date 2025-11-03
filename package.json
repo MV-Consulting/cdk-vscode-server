@@ -15,8 +15,6 @@
     "bundle:installer/installer.lambda:watch": "npx projen bundle:installer/installer.lambda:watch",
     "bundle:secret-retriever/secret-retriever.lambda": "npx projen bundle:secret-retriever/secret-retriever.lambda",
     "bundle:secret-retriever/secret-retriever.lambda:watch": "npx projen bundle:secret-retriever/secret-retriever.lambda:watch",
-    "bundle:status-check/status-check.lambda": "npx projen bundle:status-check/status-check.lambda",
-    "bundle:status-check/status-check.lambda:watch": "npx projen bundle:status-check/status-check.lambda:watch",
     "clobber": "npx projen clobber",
     "compat": "npx projen compat",
     "compile": "npx projen compile",

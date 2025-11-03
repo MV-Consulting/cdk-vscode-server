@@ -103,7 +103,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
           ],
         },
         "Runtime": "nodejs22.x",
-        "Timeout": 300,
+        "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -395,7 +395,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
         "InstanceId": {
           "Ref": "testVSCodeServerserverinstance48076E15",
         },
-        "ServiceTimeout": 305,
+        "ServiceTimeout": 905,
         "ServiceToken": {
           "Fn::GetAtt": [
             "testVSCodeServerInstallerProviderframeworkonEvent1CA2C6CB",
@@ -2381,7 +2381,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
           ],
         },
         "Runtime": "nodejs22.x",
-        "Timeout": 300,
+        "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -2673,7 +2673,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
         "InstanceId": {
           "Ref": "testVSCodeServerserverinstance48076E15",
         },
-        "ServiceTimeout": 305,
+        "ServiceTimeout": 905,
         "ServiceToken": {
           "Fn::GetAtt": [
             "testVSCodeServerInstallerProviderframeworkonEvent1CA2C6CB",

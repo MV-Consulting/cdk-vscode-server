@@ -1299,7 +1299,7 @@ class CustomResourceInstaller extends Installer {
       scope,
       'InstallerOnEventHandler',
       {
-        timeout: Duration.seconds(300), // TODO configurable
+        timeout: Duration.minutes(15), // 15 minutes to allow for VS Code Server installation
         memorySize: 512, // TODO configurable
       },
     );
@@ -1383,7 +1383,7 @@ class CustomResourceInstaller extends Installer {
     new CustomResource(scope, 'SSMInstallerCustomResource', {
       serviceToken: provider.serviceToken,
       properties: {
-        ServiceTimeout: 305, // TODO configurable
+        ServiceTimeout: Duration.minutes(15).toSeconds() + 5, // Lambda timeout + 5 seconds buffer
         InstanceId: options.instanceId,
         DocumentName: options.documentName,
         CloudWatchLogGroupName: options.cloudWatchLogGroupName,

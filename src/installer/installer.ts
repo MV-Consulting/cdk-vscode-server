@@ -1346,15 +1346,36 @@ class CustomResourceInstaller extends Installer {
       Stack.of(scope),
     );
 
+    // SendCommand supports resource-level permissions
     onEvent.addToRolePolicy(
       new PolicyStatement({
-        actions: [
-          'ssm:SendCommand',
-          'ssm:GetCommandInvocation',
-          'ssm:ListCommandInvocations',
-        ],
+        actions: ['ssm:SendCommand'],
         resources: [documentArn, cwManageAgentArn, targetEc2InstanceArn],
       }),
+    );
+
+    // GetCommandInvocation and ListCommandInvocations require wildcard resources
+    // They don't support resource-level permissions
+    onEvent.addToRolePolicy(
+      new PolicyStatement({
+        actions: ['ssm:GetCommandInvocation', 'ssm:ListCommandInvocations'],
+        resources: ['*'],
+      }),
+    );
+
+    // Suppress cdk-nag warning for wildcard permissions on GetCommandInvocation
+    // These SSM actions don't support resource-level permissions per AWS documentation
+    NagSuppressions.addResourceSuppressions(
+      onEvent,
+      [
+        {
+          id: 'AwsSolutions-IAM5',
+          reason:
+            'ssm:GetCommandInvocation and ssm:ListCommandInvocations do not support resource-level permissions and require wildcard resources',
+          appliesTo: ['Resource::*'],
+        },
+      ],
+      true,
     );
 
     const provider = new Provider(scope, 'InstallerProvider', {

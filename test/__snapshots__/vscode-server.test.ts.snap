@@ -85,6 +85,13 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
               "id": "AwsSolutions-L1",
               "reason": "For this lambda the latest runtime is not needed",
             },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "ssm:GetCommandInvocation and ssm:ListCommandInvocations do not support resource-level permissions and require wildcard resources",
+            },
           ],
         },
       },
@@ -108,15 +115,24 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "testVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy16C3BD69": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "ssm:GetCommandInvocation and ssm:ListCommandInvocations do not support resource-level permissions and require wildcard resources",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": [
-                "ssm:SendCommand",
-                "ssm:GetCommandInvocation",
-                "ssm:ListCommandInvocations",
-              ],
+              "Action": "ssm:SendCommand",
               "Effect": "Allow",
               "Resource": [
                 {
@@ -160,6 +176,14 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                 },
               ],
             },
+            {
+              "Action": [
+                "ssm:GetCommandInvocation",
+                "ssm:ListCommandInvocations",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
           ],
           "Version": "2012-10-17",
         },
@@ -183,6 +207,13 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
             {
               "id": "AwsSolutions-L1",
               "reason": "For this lambda the latest runtime is not needed",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "ssm:GetCommandInvocation and ssm:ListCommandInvocations do not support resource-level permissions and require wildcard resources",
             },
           ],
         },
@@ -2363,6 +2394,13 @@ exports[`vscode-server vscode-server-default-props 1`] = `
               "id": "AwsSolutions-L1",
               "reason": "For this lambda the latest runtime is not needed",
             },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "ssm:GetCommandInvocation and ssm:ListCommandInvocations do not support resource-level permissions and require wildcard resources",
+            },
           ],
         },
       },
@@ -2386,15 +2424,24 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "testVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy16C3BD69": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "ssm:GetCommandInvocation and ssm:ListCommandInvocations do not support resource-level permissions and require wildcard resources",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": [
-                "ssm:SendCommand",
-                "ssm:GetCommandInvocation",
-                "ssm:ListCommandInvocations",
-              ],
+              "Action": "ssm:SendCommand",
               "Effect": "Allow",
               "Resource": [
                 {
@@ -2438,6 +2485,14 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                 },
               ],
             },
+            {
+              "Action": [
+                "ssm:GetCommandInvocation",
+                "ssm:ListCommandInvocations",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
           ],
           "Version": "2012-10-17",
         },
@@ -2461,6 +2516,13 @@ exports[`vscode-server vscode-server-default-props 1`] = `
             {
               "id": "AwsSolutions-L1",
               "reason": "For this lambda the latest runtime is not needed",
+            },
+            {
+              "applies_to": [
+                "Resource::*",
+              ],
+              "id": "AwsSolutions-IAM5",
+              "reason": "ssm:GetCommandInvocation and ssm:ListCommandInvocations do not support resource-level permissions and require wildcard resources",
             },
           ],
         },

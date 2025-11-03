@@ -67,7 +67,7 @@
       "description": "Create a JavaScript bundle from src/idle-monitor/idle-monitor.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/idle-monitor/idle-monitor.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/idle-monitor/idle-monitor.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+          "exec": "esbuild --bundle src/idle-monitor/idle-monitor.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/idle-monitor/idle-monitor.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
         }
       ]
     },
@@ -76,7 +76,7 @@
       "description": "Continuously update the JavaScript bundle from src/idle-monitor/idle-monitor.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/idle-monitor/idle-monitor.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/idle-monitor/idle-monitor.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+          "exec": "esbuild --bundle src/idle-monitor/idle-monitor.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/idle-monitor/idle-monitor.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },
@@ -85,7 +85,7 @@
       "description": "Create a JavaScript bundle from src/installer/installer.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
         }
       ]
     },
@@ -94,7 +94,7 @@
       "description": "Continuously update the JavaScript bundle from src/installer/installer.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+          "exec": "esbuild --bundle src/installer/installer.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/installer/installer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },
@@ -103,7 +103,7 @@
       "description": "Create a JavaScript bundle from src/secret-retriever/secret-retriever.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
         }
       ]
     },
@@ -112,7 +112,7 @@
       "description": "Continuously update the JavaScript bundle from src/secret-retriever/secret-retriever.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+          "exec": "esbuild --bundle src/secret-retriever/secret-retriever.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/secret-retriever/secret-retriever.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },
@@ -121,7 +121,7 @@
       "description": "Create a JavaScript bundle from src/status-check/status-check.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
         }
       ]
     },
@@ -130,7 +130,7 @@
       "description": "Continuously update the JavaScript bundle from src/status-check/status-check.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+          "exec": "esbuild --bundle src/status-check/status-check.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/status-check/status-check.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },

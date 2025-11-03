@@ -13,7 +13,7 @@ const project = new MvcCdkConstructLibrary({
   projenrcTs: true,
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
-  deps: ['@mavogel/mvc-projen@^0.0.7', 'constructs@^10.4.2', 'cdk-nag'],
+  deps: ['@mavogel/mvc-projen@^0.0.11', 'constructs@^10.4.2', 'cdk-nag'],
   // If this module is not jsii-enabled, it must also be declared under bundledDependencie
   bundledDeps: ['node-html-parser'],
   description: 'Running VS Code Server on AWS',

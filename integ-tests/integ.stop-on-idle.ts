@@ -25,7 +25,7 @@ const stackUnderTest = new Stack(app, 'IntegTestStackStopOnIdle', {
 const constructUnderTest = new VSCodeServer(stackUnderTest, 'IntegVSCodeServer', {
   instanceClass: InstanceClass.T4G,
   instanceSize: InstanceSize.LARGE,
-  instanceVolumeSize: 8,
+  instanceVolumeSize: 16,
   enableAutoStop: true, // Enable automatic instance stop when idle
   idleTimeoutMinutes: 2, // Very short timeout for fast testing (2 minutes)
   idleCheckIntervalMinutes: 1, // Check every 1 minute for fast testing

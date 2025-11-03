@@ -1571,11 +1571,11 @@ else
   if  [[ -d /Workshop/.git ]]
   then
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m 'Workshop commit'
+    sudo -u participant git -C /Workshop commit -m 'chore: workshop commit'
   else
     sudo -u participant git -C /Workshop init
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m 'Initial commit'
+    sudo -u participant git -C /Workshop commit -m 'chore: nitial commit'
   fi
   echo "Assets downloaded. Checking configuration: /Workshop"
   ls -la /Workshop
@@ -1622,7 +1622,7 @@ else
     chown -R participant:participant $targetFolder
     sudo -u participant git -C $targetFolder init
     sudo -u participant git -C $targetFolder add .
-    sudo -u participant git -C $targetFolder commit -m "Initial commit"
+    sudo -u participant git -C $targetFolder commit -m "chore: initial commit"
     echo "Folder downloaded. Checking configuration: $targetFolder"
     ls -la $targetFolder
   done
@@ -1661,7 +1661,7 @@ else
     sudo -u participant git -C /Workshop checkout -b $branch 2>&1
     cp -a $sourceFolder/. /Workshop
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m "Initial commit $branch"
+    sudo -u participant git -C /Workshop commit -m "chore: initial commit $branch"
     mv /Workshop/.git /tmp/git
     rm -rf /Workshop
     mkdir /Workshop && chown -R participant:participant /Workshop
@@ -1853,10 +1853,13 @@ fi",
                   "echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" > /etc/apt/sources.list.d/corretto.list",
                   "DEBIAN_FRONTEND=noninteractive apt-get update",
                   "DEBIAN_FRONTEND=noninteractive apt-get install -y -q java-21-amazon-corretto-jdk java-17-amazon-corretto-jdk java-1.8.0-amazon-corretto-jdk maven",
-                  "echo 'export JAVA_1_8_HOME=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_8_HOME=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
                   "echo 'export JAVA_8_PATH=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
                   "echo 'export JAVA_17_PATH=$(update-alternatives --list java | grep "java-17-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
-                  "echo 'export JAVA_HOME=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_17_HOME=$(update-alternatives --list java | grep "java-17-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_21_PATH=$(update-alternatives --list java | grep "java-21-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_21_HOME=$(update-alternatives --list java | grep "java-21-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_HOME=$(update-alternatives --list java | grep "java-21-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
                   "echo 'export PATH=$PATH:$JAVA_HOME/bin:/usr/share/maven/bin' >> /home/participant/.bashrc",
                   "sudo -u participant --login code-server --install-extension vscjava.vscode-java-pack --force",
                   "echo "Java and Maven installed. Checking configuration"",
@@ -1900,6 +1903,19 @@ fi",
                 ],
               },
               "name": "InstallDockerApt",
+            },
+            {
+              "action": "aws:runShellScript",
+              "inputs": {
+                "runCommand": [
+                  "#!/bin/bash",
+                  "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q golang",
+                  "echo 'PATH=$PATH:/home/participant/go/bin' >> /home/participant/.bashrc",
+                  "echo "Golang installed. Checking configuration"",
+                  "go version",
+                ],
+              },
+              "name": "InstallGolangApt",
             },
           ],
           "parameters": {
@@ -3860,11 +3876,11 @@ else
   if  [[ -d /Workshop/.git ]]
   then
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m 'Workshop commit'
+    sudo -u participant git -C /Workshop commit -m 'chore: workshop commit'
   else
     sudo -u participant git -C /Workshop init
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m 'Initial commit'
+    sudo -u participant git -C /Workshop commit -m 'chore: nitial commit'
   fi
   echo "Assets downloaded. Checking configuration: /Workshop"
   ls -la /Workshop
@@ -3911,7 +3927,7 @@ else
     chown -R participant:participant $targetFolder
     sudo -u participant git -C $targetFolder init
     sudo -u participant git -C $targetFolder add .
-    sudo -u participant git -C $targetFolder commit -m "Initial commit"
+    sudo -u participant git -C $targetFolder commit -m "chore: initial commit"
     echo "Folder downloaded. Checking configuration: $targetFolder"
     ls -la $targetFolder
   done
@@ -3950,7 +3966,7 @@ else
     sudo -u participant git -C /Workshop checkout -b $branch 2>&1
     cp -a $sourceFolder/. /Workshop
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m "Initial commit $branch"
+    sudo -u participant git -C /Workshop commit -m "chore: initial commit $branch"
     mv /Workshop/.git /tmp/git
     rm -rf /Workshop
     mkdir /Workshop && chown -R participant:participant /Workshop
@@ -4142,10 +4158,13 @@ fi",
                   "echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" > /etc/apt/sources.list.d/corretto.list",
                   "DEBIAN_FRONTEND=noninteractive apt-get update",
                   "DEBIAN_FRONTEND=noninteractive apt-get install -y -q java-21-amazon-corretto-jdk java-17-amazon-corretto-jdk java-1.8.0-amazon-corretto-jdk maven",
-                  "echo 'export JAVA_1_8_HOME=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_8_HOME=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
                   "echo 'export JAVA_8_PATH=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
                   "echo 'export JAVA_17_PATH=$(update-alternatives --list java | grep "java-17-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
-                  "echo 'export JAVA_HOME=$(update-alternatives --list java | grep "java-1.8.0-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_17_HOME=$(update-alternatives --list java | grep "java-17-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_21_PATH=$(update-alternatives --list java | grep "java-21-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_21_HOME=$(update-alternatives --list java | grep "java-21-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
+                  "echo 'export JAVA_HOME=$(update-alternatives --list java | grep "java-21-amazon-corretto" | head -1)' >> /home/participant/.bashrc",
                   "echo 'export PATH=$PATH:$JAVA_HOME/bin:/usr/share/maven/bin' >> /home/participant/.bashrc",
                   "sudo -u participant --login code-server --install-extension vscjava.vscode-java-pack --force",
                   "echo "Java and Maven installed. Checking configuration"",
@@ -4189,6 +4208,19 @@ fi",
                 ],
               },
               "name": "InstallDockerApt",
+            },
+            {
+              "action": "aws:runShellScript",
+              "inputs": {
+                "runCommand": [
+                  "#!/bin/bash",
+                  "apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q golang",
+                  "echo 'PATH=$PATH:/home/participant/go/bin' >> /home/participant/.bashrc",
+                  "echo "Golang installed. Checking configuration"",
+                  "go version",
+                ],
+              },
+              "name": "InstallGolangApt",
             },
           ],
           "parameters": {

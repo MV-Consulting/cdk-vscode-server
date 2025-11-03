@@ -437,11 +437,11 @@ else
   if  [[ -d ${homeFolder}/.git ]]
   then
     sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'Workshop commit'
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: workshop commit'
   else
     sudo -u ${vsCodeUser} git -C ${homeFolder} init
     sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'Initial commit'
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: nitial commit'
   fi
   echo "Assets downloaded. Checking configuration: ${homeFolder}"
   ls -la ${homeFolder}
@@ -488,7 +488,7 @@ else
     chown -R ${vsCodeUser}:${vsCodeUser} $targetFolder
     sudo -u ${vsCodeUser} git -C $targetFolder init
     sudo -u ${vsCodeUser} git -C $targetFolder add .
-    sudo -u ${vsCodeUser} git -C $targetFolder commit -m "Initial commit"
+    sudo -u ${vsCodeUser} git -C $targetFolder commit -m "chore: initial commit"
     echo "Folder downloaded. Checking configuration: $targetFolder"
     ls -la $targetFolder
   done
@@ -527,7 +527,7 @@ else
     sudo -u ${vsCodeUser} git -C ${homeFolder} checkout -b $branch 2>&1
     cp -a $sourceFolder/. ${homeFolder}
     sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m "Initial commit $branch"
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m "chore: initial commit $branch"
     mv ${homeFolder}/.git /tmp/git
     rm -rf ${homeFolder}
     mkdir ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
@@ -958,11 +958,11 @@ else
   if  [[ -d ${homeFolder}/.git ]]
   then
     sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'Workshop commit'
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: workshop commit'
   else
     sudo -u ${vsCodeUser} git -C ${homeFolder} init
     sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'Initial commit'
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: initial commit'
   fi
   echo "Assets downloaded. Checking configuration: ${homeFolder}"
   ls -la ${homeFolder}
@@ -1009,7 +1009,7 @@ else
     chown -R ${vsCodeUser}:${vsCodeUser} $targetFolder
     sudo -u ${vsCodeUser} git -C $targetFolder init
     sudo -u ${vsCodeUser} git -C $targetFolder add .
-    sudo -u ${vsCodeUser} git -C $targetFolder commit -m "Initial commit"
+    sudo -u ${vsCodeUser} git -C $targetFolder commit -m "chore: initial commit"
     echo "Folder downloaded. Checking configuration: $targetFolder"
     ls -la $targetFolder
   done
@@ -1048,7 +1048,7 @@ else
     sudo -u ${vsCodeUser} git -C ${homeFolder} checkout -b $branch 2>&1
     cp -a $sourceFolder/. ${homeFolder}
     sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m "Initial commit $branch"
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m "chore: initial commit $branch"
     mv ${homeFolder}/.git /tmp/git
     rm -rf ${homeFolder}
     mkdir ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}

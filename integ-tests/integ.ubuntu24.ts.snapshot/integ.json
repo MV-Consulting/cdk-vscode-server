@@ -3,10 +3,10 @@
   "testCases": {
     "IntegSetupVSCodeOnUbuntu/DefaultTest": {
       "stacks": [
-        "IntegTestStackUbuntu22"
+        "IntegTestStackUbuntu24"
       ],
       "regions": [
-        "${Token[AWS.Region.10]}"
+        "${Token[AWS.Region.9]}"
       ],
       "cdkCommandOptions": {
         "destroy": {

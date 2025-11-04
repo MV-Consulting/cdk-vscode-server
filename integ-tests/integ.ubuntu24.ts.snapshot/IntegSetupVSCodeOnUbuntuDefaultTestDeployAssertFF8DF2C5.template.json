@@ -19,7 +19,7 @@
        [
         "\"",
         {
-         "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+         "Fn::ImportValue": "IntegTestStackUbuntu24:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
         },
         "\""
        ]
@@ -33,11 +33,11 @@
        [
         "\"{\\\"domainName\\\":\\\"https://",
         {
-         "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
+         "Fn::ImportValue": "IntegTestStackUbuntu24:ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
         },
         "/?folder=/Workshop\\\",\\\"password\\\":\\\"",
         {
-         "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
+         "Fn::ImportValue": "IntegTestStackUbuntu24:ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
         },
         "\\\"}\""
        ]
@@ -45,7 +45,7 @@
      }
     },
     "flattenResponse": "false",
-    "salt": "1762204125552"
+    "salt": "1762249902135"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -55,7 +55,7 @@
    "Properties": {
     "Action": "lambda:InvokeFunction",
     "FunctionName": {
-     "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+     "Fn::ImportValue": "IntegTestStackUbuntu24:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
     },
     "Principal": {
      "Fn::GetAtt": [
@@ -124,7 +124,7 @@
              },
              ":function:",
              {
-              "Fn::ImportValue": "IntegTestStackUbuntu22:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+              "Fn::ImportValue": "IntegTestStackUbuntu24:ExportsOutputRefloginhandler99CCCCFD29CE21C0"
              }
             ]
            ]

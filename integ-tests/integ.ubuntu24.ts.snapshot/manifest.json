@@ -1,28 +1,28 @@
 {
   "version": "48.0.0",
   "artifacts": {
-    "IntegTestStackCustomDomain.assets": {
+    "IntegTestStackUbuntu24.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "IntegTestStackCustomDomain.assets.json",
+        "file": "IntegTestStackUbuntu24.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "IntegTestStackCustomDomain": {
+    "IntegTestStackUbuntu24": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "IntegTestStackCustomDomain.template.json",
+        "templateFile": "IntegTestStackUbuntu24.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/d36821215eca742caa0d007ad8088cdf2540a2e35837ebb455bb1760f5954bad.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/4bbc80ad11b5fea1fd33258ef17397f18c9503417f39b9ad460ab22a7f756814.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "IntegTestStackCustomDomain.assets"
+          "IntegTestStackUbuntu24.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -31,10 +31,10 @@
         }
       },
       "dependencies": [
-        "IntegTestStackCustomDomain.assets"
+        "IntegTestStackUbuntu24.assets"
       ],
       "metadata": {
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/password-secret": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/password-secret": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -48,13 +48,13 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/password-secret/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/password-secret/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerpasswordsecret202A5DB3"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverOnEventHandler": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverOnEventHandler": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -67,7 +67,7 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -107,19 +107,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/ImportServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -149,19 +149,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleDefaultPolicy2641E2C6"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverOnEventHandler/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverOnEventHandler/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -189,7 +189,7 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -237,19 +237,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -287,19 +287,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRoleDefaultPolicyEC4DCEA0"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventCF035CA3"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverCustomResource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverCustomResource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -321,183 +321,13 @@
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SecretRetrieverCustomResource/Default": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SecretRetrieverCustomResource/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate-validation-role": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "assumedBy": {
-                "principalAccount": "*",
-                "assumeRoleAction": "*"
-              },
-              "managedPolicies": [
-                {
-                  "managedPolicyArn": "*"
-                }
-              ],
-              "inlinePolicies": "*"
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachInlinePolicy": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachInlinePolicy": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate-validation-role/Importcertificate-validation-role": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": "*"
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate-validation-role/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServercertificatevalidationroleBD33BDA4"
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate-validation-role/DefaultPolicy": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": "*"
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachToRole": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachToRole": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate-validation-role/DefaultPolicy/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServercertificatevalidationroleDefaultPolicy7ED8ABBB"
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "domainName": "*",
-              "hostedZone": "*",
-              "region": "*",
-              "customResourceRole": "*"
-            }
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate/CertificateRequestorFunction": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "timeout": "*",
-              "role": "*",
-              "code": "*",
-              "handler": "*",
-              "runtime": "*"
-            }
-          },
-          {
-            "type": "aws:cdk:is-custom-resource-handler-runtime-family",
-            "data": 0
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate/CertificateRequestorFunction/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServercertificateCertificateRequestorFunction6491288C"
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate/CertificateRequestorResource": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": "*"
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": "*"
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/certificate/CertificateRequestorResource/Default": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServercertificateCertificateRequestorResourceFDC04752"
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -514,13 +344,13 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpc93DDE887"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet1": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet1": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -548,31 +378,31 @@
             "data": {}
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet1/Subnet": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet1/Subnet": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet1Subnet928029A1"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet1/RouteTable": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet1/RouteTable": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet1RouteTableFD418D0B"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet1/RouteTableAssociation": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet1/RouteTableAssociation": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet1RouteTableAssociation599AB80D"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet1/DefaultRoute": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet1/DefaultRoute": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet1DefaultRoute36845B30"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet2": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet2": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -600,55 +430,55 @@
             "data": {}
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet2/Subnet": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet2/Subnet": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet2SubnetE381654D"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet2/RouteTable": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet2/RouteTable": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet2RouteTableC264EFB4"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet2/RouteTableAssociation": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet2/RouteTableAssociation": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet2RouteTableAssociationC62A1999"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/publicSubnet2/DefaultRoute": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/publicSubnet2/DefaultRoute": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcpublicSubnet2DefaultRouteEAD8BC23"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/IGW": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/IGW": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcIGW960F6D83"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/VPCGW": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/VPCGW": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcVPCGWA7CDED90"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServervpcRestrictDefaultSecurityGroupCustomResourceF6EA8ED1"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-to-server-sg": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-to-server-sg": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -672,19 +502,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-to-server-sg/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-to-server-sg/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercftoserversgFFE586B0"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-to-server-sg/from {IndirectPeer}:80": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-to-server-sg/from {IndirectPeer}:80": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercftoserversgfromIndirectPeer80C4F51713"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -697,13 +527,13 @@
             "data": true
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdLogGroup171C2803"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -722,19 +552,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/ImportGetPrefixListIdRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/ImportGetPrefixListIdRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Provider": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Provider": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -771,7 +601,7 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -785,13 +615,13 @@
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource/Default": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdF0821FFC"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -823,13 +653,13 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance-role": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/server-instance-role": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -855,19 +685,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance-role/Importserver-instance-role": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/server-instance-role/Importserver-instance-role": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance-role/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/server-instance-role/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerserverinstancerole7745B5BB"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/server-instance": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -893,25 +723,25 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance/InstanceProfile": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/server-instance/InstanceProfile": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerserverinstanceInstanceProfile6130979E"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/server-instance/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerserverinstance0A3D62D7"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance/LaunchTemplate": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/server-instance/LaunchTemplate": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerserverinstanceLaunchTemplate43932ED3"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-cache-policy": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-cache-policy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -927,13 +757,13 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-cache-policy/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-cache-policy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfcachepolicy8F5F1F69"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-distribution": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-distribution": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -941,8 +771,6 @@
               "httpVersion": "http2and3",
               "comment": "*",
               "priceClass": "PriceClass_All",
-              "domainNames": "*",
-              "certificate": "*",
               "defaultBehavior": {
                 "allowedMethods": "*",
                 "cachePolicy": "*",
@@ -976,43 +804,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/cf-distribution/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/cf-distribution/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServercfdistributionFDBE873F"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/domain-record": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "zone": "*",
-              "recordName": "*",
-              "target": "*"
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "zone": "*",
-              "recordName": "*",
-              "target": "*"
-            }
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/domain-record/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServerdomainrecord67FD9400"
-          }
-        ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/ssm-document-ubuntu": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/ssm-document-ubuntu": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerssmdocumentubuntuED32BACB"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerOnEventHandler": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerOnEventHandler": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1025,7 +829,7 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1073,19 +877,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/ImportServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -1123,19 +927,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy1CAD86C2"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerOnEventHandler/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerOnEventHandler/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerOnEventHandler6FF91542"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider/framework-onEvent": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerProvider/framework-onEvent": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1163,7 +967,7 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1211,19 +1015,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -1261,19 +1065,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleDefaultPolicy3E54FC3A"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/InstallerProvider/framework-onEvent/Resource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/InstallerProvider/framework-onEvent/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerInstallerProviderframeworkonEvent7B6C1190"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SSMInstallerCustomResource": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SSMInstallerCustomResource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -1283,49 +1087,49 @@
             "data": "The following keys will be overwritten as they exist in the 'properties' prop. Keys found: ServiceTimeout [ack: @aws-cdk/core:customResourcePropConflict]"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/SSMInstallerCustomResource/Default": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/SSMInstallerCustomResource/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerSSMInstallerCustomResource9F9AFE68"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/domainName": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/domainName": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerdomainName6B9F2604"
           }
         ],
-        "/IntegTestStackCustomDomain/IntegVSCodeServer/password": [
+        "/IntegTestStackUbuntu24/IntegVSCodeServer/password": [
           {
             "type": "aws:cdk:logicalId",
             "data": "IntegVSCodeServerpasswordE38D3B2C"
           }
         ],
-        "/IntegTestStackCustomDomain/LatestNodeRuntimeMap": [
+        "/IntegTestStackUbuntu24/LatestNodeRuntimeMap": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LatestNodeRuntimeMap"
           }
         ],
-        "/IntegTestStackCustomDomain/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
+        "/IntegTestStackUbuntu24/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
           {
             "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
             "data": true
           }
         ],
-        "/IntegTestStackCustomDomain/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+        "/IntegTestStackUbuntu24/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
           }
         ],
-        "/IntegTestStackCustomDomain/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+        "/IntegTestStackUbuntu24/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
           }
         ],
-        "/IntegTestStackCustomDomain/AWS679f53fac002430cb0da5b7982bd2287": [
+        "/IntegTestStackUbuntu24/AWS679f53fac002430cb0da5b7982bd2287": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1350,25 +1154,19 @@
             "data": 0
           }
         ],
-        "/IntegTestStackCustomDomain/AWS679f53fac002430cb0da5b7982bd2287/Resource": [
+        "/IntegTestStackUbuntu24/AWS679f53fac002430cb0da5b7982bd2287/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AWS679f53fac002430cb0da5b7982bd22872D164C4C"
           }
         ],
-        "/IntegTestStackCustomDomain/SsmParameterValue:--aws--service--canonical--ubuntu--server--jammy--stable--current--arm64--hvm--ebs-gp2--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+        "/IntegTestStackUbuntu24/SsmParameterValue:--aws--service--canonical--ubuntu--server--noble--stable--current--arm64--hvm--ebs-gp3--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
+            "data": "SsmParameterValueawsservicecanonicalubuntuservernoblestablecurrentarm64hvmebsgp3amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
           }
         ],
-        "/IntegTestStackCustomDomain/AWSCloudFrontPartitionHostedZoneIdMap": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "AWSCloudFrontPartitionHostedZoneIdMap"
-          }
-        ],
-        "/IntegTestStackCustomDomain/login-handler": [
+        "/IntegTestStackUbuntu24/login-handler": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1398,7 +1196,7 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/login-handler/ServiceRole": [
+        "/IntegTestStackUbuntu24/login-handler/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1414,31 +1212,31 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/login-handler/ServiceRole/ImportServiceRole": [
+        "/IntegTestStackUbuntu24/login-handler/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/login-handler/ServiceRole/Resource": [
+        "/IntegTestStackUbuntu24/login-handler/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "loginhandlerServiceRole330B0B32"
           }
         ],
-        "/IntegTestStackCustomDomain/login-handler/Resource": [
+        "/IntegTestStackUbuntu24/login-handler/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "loginhandler99CCCCFD"
           }
         ],
-        "/IntegTestStackCustomDomain/login-handler/LogRetention/Resource": [
+        "/IntegTestStackUbuntu24/login-handler/LogRetention/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "loginhandlerLogRetentionFD323A9B"
           }
         ],
-        "/IntegTestStackCustomDomain/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole": [
+        "/IntegTestStackUbuntu24/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -1478,19 +1276,19 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/ImportServiceRole": [
+        "/IntegTestStackUbuntu24/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IntegTestStackCustomDomain/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+        "/IntegTestStackUbuntu24/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
           }
         ],
-        "/IntegTestStackCustomDomain/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy": [
+        "/IntegTestStackUbuntu24/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -1520,67 +1318,73 @@
             }
           }
         ],
-        "/IntegTestStackCustomDomain/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+        "/IntegTestStackUbuntu24/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
           }
         ],
-        "/IntegTestStackCustomDomain/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+        "/IntegTestStackUbuntu24/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
           }
         ],
-        "/IntegTestStackCustomDomain/Exports/Output{\"Ref\":\"loginhandler99CCCCFD\"}": [
+        "/IntegTestStackUbuntu24/Exports/Output{\"Ref\":\"loginhandler99CCCCFD\"}": [
           {
             "type": "aws:cdk:logicalId",
             "data": "ExportsOutputRefloginhandler99CCCCFD29CE21C0"
           }
         ],
-        "/IntegTestStackCustomDomain/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD\",\"secretPasswordValue\"]}": [
+        "/IntegTestStackUbuntu24/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServercfdistributionFDBE873F\",\"DomainName\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
+          }
+        ],
+        "/IntegTestStackUbuntu24/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD\",\"secretPasswordValue\"]}": [
           {
             "type": "aws:cdk:logicalId",
             "data": "ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
           }
         ],
-        "/IntegTestStackCustomDomain/BootstrapVersion": [
+        "/IntegTestStackUbuntu24/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/IntegTestStackCustomDomain/CheckBootstrapVersion": [
+        "/IntegTestStackUbuntu24/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "IntegTestStackCustomDomain"
+      "displayName": "IntegTestStackUbuntu24"
     },
-    "IntegSetupVSCodeOnCustomDomainDefaultTestDeployAssert6982D514.assets": {
+    "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "IntegSetupVSCodeOnCustomDomainDefaultTestDeployAssert6982D514.assets.json",
+        "file": "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "IntegSetupVSCodeOnCustomDomainDefaultTestDeployAssert6982D514": {
+    "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "IntegSetupVSCodeOnCustomDomainDefaultTestDeployAssert6982D514.template.json",
+        "templateFile": "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/bce1d575d2798ab8f69bfa3f9ddb8098787c309455364aa26add5d3faa040282.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/033aba2fdd93c81c16b325c448a20c47f7f3bb7d803e6d608c4613bf952401d4.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "IntegSetupVSCodeOnCustomDomainDefaultTestDeployAssert6982D514.assets"
+          "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -1589,11 +1393,11 @@
         }
       },
       "dependencies": [
-        "IntegTestStackCustomDomain",
-        "IntegSetupVSCodeOnCustomDomainDefaultTestDeployAssert6982D514.assets"
+        "IntegTestStackUbuntu24",
+        "IntegSetupVSCodeOnUbuntuDefaultTestDeployAssertFF8DF2C5.assets"
       ],
       "metadata": {
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4/Default": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -1607,56 +1411,56 @@
             "data": "*"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4/Default/Default": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4"
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4/Invoke": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Invoke": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4InvokeFB6908A6"
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4Invoke4806B64D"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/LambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4/AssertionResults": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/AssertionResults": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AssertionResultsLambdaInvoke8ec5b9bf9e6f21453cf51f55dba9cfe4"
+            "data": "AssertionResultsLambdaInvoke493987f824f978002013a8ed7c9980f4"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LatestNodeRuntimeMap"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/BootstrapVersion": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+        "/IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "IntegSetupVSCodeOnCustomDomain/DefaultTest/DeployAssert"
+      "displayName": "IntegSetupVSCodeOnUbuntu/DefaultTest/DeployAssert"
     },
     "Tree": {
       "type": "cdk:tree",

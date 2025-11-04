@@ -2,8 +2,8 @@ import { LinuxArchitectureType, LinuxFlavorType } from './vscode-server';
 /**
  * SSM Parameters for the Architecture and Flavor of the Linux system.
  *
- * aws ssm get-parameters-by-path --path "/aws/service/canonical/ubuntu/" --recursive --query "Parameters[*].Name"  > canonical-ami.txt
- * aws ssm get-parameters-by-path --path "/aws/service/ami-amazon-linux-latest/" --recursive --query "Parameters[*].Name"  > amazon-ami.txt
+ * aws ssm get-parameters-by-path --path "/aws/service/canonical/ubuntu/" --recursive --query "Parameters[*].Name" --region us-east-1 > canonical-ami.txt
+ * aws ssm get-parameters-by-path --path "/aws/service/ami-amazon-linux-latest/" --recursive --query "Parameters[*].Name" --region us-east-1 > amazon-ami.txt
  */
 const AmiSSMParameterForLinuxArchitectureAndFlavor = new Map<string, string>([
   // key, value
@@ -16,6 +16,10 @@ const AmiSSMParameterForLinuxArchitectureAndFlavor = new Map<string, string>([
     '/aws/service/canonical/ubuntu/server/noble/stable/current/arm64/hvm/ebs-gp3/ami-id',
   ],
   [
+    'arm-ubuntu25',
+    '/aws/service/canonical/ubuntu/server/plucky/stable/current/arm64/hvm/ebs-gp3/ami-id',
+  ],
+  [
     'arm-al2023',
     '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64',
   ],
@@ -26,6 +30,10 @@ const AmiSSMParameterForLinuxArchitectureAndFlavor = new Map<string, string>([
   [
     'amd64-ubuntu24',
     '/aws/service/canonical/ubuntu/server/noble/stable/current/amd64/hvm/ebs-gp3/ami-id',
+  ],
+  [
+    'amd64-ubuntu25',
+    '/aws/service/canonical/ubuntu/server/plucky/stable/current/amd64/hvm/ebs-gp3/ami-id',
   ],
   [
     'amd64-al2023',

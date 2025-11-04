@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/2c6e15196298c4d0dfb720c7ad7d370bbd740ded5eb7f12a285ce425fd503a01.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/b9f8165fd39b3f4d03349b7a7f79f03dd2a2e22007f2abfc1a640997909b6e8c.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -732,7 +732,10 @@
         "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServerserverinstance0A3D62D7"
+            "data": "IntegVSCodeServerserverinstance0A3D62D7",
+            "trace": [
+              "!!DESTRUCTIVE_CHANGES: WILL_REPLACE"
+            ]
           }
         ],
         "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance/LaunchTemplate": [
@@ -750,7 +753,10 @@
         "/IntegTestStackStopOnIdle/IntegVSCodeServer/eip-association": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServereipassociation2A6D7D5A"
+            "data": "IntegVSCodeServereipassociation2A6D7D5A",
+            "trace": [
+              "!!DESTRUCTIVE_CHANGES: WILL_REPLACE"
+            ]
           }
         ],
         "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-cache-policy": [
@@ -1648,10 +1654,10 @@
             "data": "AWS679f53fac002430cb0da5b7982bd22872D164C4C"
           }
         ],
-        "/IntegTestStackStopOnIdle/SsmParameterValue:--aws--service--canonical--ubuntu--server--jammy--stable--current--arm64--hvm--ebs-gp2--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+        "/IntegTestStackStopOnIdle/SsmParameterValue:--aws--service--canonical--ubuntu--server--noble--stable--current--arm64--hvm--ebs-gp3--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
+            "data": "SsmParameterValueawsservicecanonicalubuntuservernoblestablecurrentarm64hvmebsgp3amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
           }
         ],
         "/IntegTestStackStopOnIdle/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole": [
@@ -2034,7 +2040,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/4d530b00c197df6e3607f06d9c0ef621e462324cd85dd9b55b6698a528fc9809.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/2a4af9f0bb5f1c29f5d8879dc9c4556d47863ae1092c8821b65cfba1fd660620.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [

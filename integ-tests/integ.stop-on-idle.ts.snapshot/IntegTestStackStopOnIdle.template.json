@@ -1232,7 +1232,7 @@
      "Ref": "IntegVSCodeServerserverinstanceInstanceProfile6130979E"
     },
     "ImageId": {
-     "Ref": "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
+     "Ref": "SsmParameterValueawsservicecanonicalubuntuservernoblestablecurrentarm64hvmebsgp3amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
     },
     "InstanceType": "m7g.xlarge",
     "LaunchTemplate": {
@@ -3598,9 +3598,9 @@
   }
  },
  "Parameters": {
-  "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter": {
+  "SsmParameterValueawsservicecanonicalubuntuservernoblestablecurrentarm64hvmebsgp3amiidC96584B6F00A464EAD1953AFF4B05118Parameter": {
    "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
-   "Default": "/aws/service/canonical/ubuntu/server/jammy/stable/current/arm64/hvm/ebs-gp2/ami-id"
+   "Default": "/aws/service/canonical/ubuntu/server/noble/stable/current/arm64/hvm/ebs-gp3/ami-id"
   },
   "BootstrapVersion": {
    "Type": "AWS::SSM::Parameter::Value<String>",

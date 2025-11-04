@@ -88,9 +88,10 @@ Uses Lambda-backed custom resources via CDK Provider construct:
 
 1. **Installer** (`src/installer/`)
    - Runs SSM documents to install VS Code Server
-   - OS-specific installation for Ubuntu 22/24 and Amazon Linux 2023
+   - OS-specific installation for Ubuntu 22/24/25 and Amazon Linux 2023
    - Returns SUCCESS when installation completes
    - Custom resource name: `SSMInstallerCustomResource`
+   - **Critical**: Must pass `linuxFlavorType` parameter to ensure correct OS-specific SSM document is used
 
 2. **SecretRetriever** (`src/secret-retriever/`)
    - Extracts generated password from Secrets Manager
@@ -130,10 +131,27 @@ enabler.node.addDependency(installerCustomResource);
 ### AMI Selection (`src/mappings.ts`)
 
 Contains SSM parameter paths for:
-- Ubuntu 22/24 (ARM + x86_64)
+- Ubuntu 22/24/25 (ARM + x86_64)
 - Amazon Linux 2023 (ARM + x86_64)
 
+**Ubuntu Codenames**:
+- Ubuntu 22 = "jammy" (uses ebs-gp2)
+- Ubuntu 24 = "noble" (uses ebs-gp3)
+- Ubuntu 25 = "plucky" (uses ebs-gp3)
+
 Function `getAmiSSMParameterForLinuxArchitectureAndFlavor()` returns region-specific SSM parameter for latest AMI.
+
+**Verify SSM Parameters** (when adding new OS versions):
+```bash
+# List available Ubuntu versions
+aws ssm get-parameters-by-path --path "/aws/service/canonical/ubuntu/server/" --recursive --query "Parameters[*].Name" --region us-east-1
+
+# Verify specific AMI paths exist
+aws ssm get-parameters --names \
+  "/aws/service/canonical/ubuntu/server/plucky/stable/current/amd64/hvm/ebs-gp3/ami-id" \
+  "/aws/service/canonical/ubuntu/server/plucky/stable/current/arm64/hvm/ebs-gp3/ami-id" \
+  --region us-east-1
+```
 
 ### Key Props (`src/vscode-server.ts:27-200`)
 
@@ -183,6 +201,8 @@ Located in `integ-tests/`, using `@aws-cdk/integ-tests-alpha` framework.
 
 **Test Files**:
 - `integ.ubuntu.ts` - Basic Ubuntu 22 deployment + login test
+- `integ.ubuntu24.ts` - Ubuntu 24 deployment + login test
+- `integ.ubuntu25.ts` - Ubuntu 25 deployment + login test
 - `integ.al2023.ts` - Amazon Linux 2023 deployment
 - `integ.custom-domain.ts` - Custom domain + ACM certificate
 - `integ.stop-on-idle.ts` - **4-phase auto-stop workflow test**
@@ -230,6 +250,59 @@ Projen automatically discovers Lambda functions matching `src/**/*.lambda.ts` pa
 1. Unit tests: `npx jest test/vscode-server.test.ts`
 2. Build validation: `npx projen build` (includes awslint checks)
 3. Integration test: `npm run integ-test` (full deployment test)
+
+### Adding Support for a New Ubuntu Version
+
+When Ubuntu releases a new version (e.g., Ubuntu 26):
+
+1. **Add AMI mappings** in `src/mappings.ts`:
+   ```typescript
+   [
+     'arm-ubuntu26',
+     '/aws/service/canonical/ubuntu/server/CODENAME/stable/current/arm64/hvm/ebs-gp3/ami-id',
+   ],
+   [
+     'amd64-ubuntu26',
+     '/aws/service/canonical/ubuntu/server/CODENAME/stable/current/amd64/hvm/ebs-gp3/ami-id',
+   ],
+   ```
+   Replace `CODENAME` with Ubuntu's codename (verify via AWS SSM Parameter Store)
+
+2. **Add enum value** in `src/vscode-server.ts`:
+   ```typescript
+   export enum LinuxFlavorType {
+     // ...
+     UBUNTU_26 = 'ubuntu26',
+   }
+   ```
+
+3. **Update Installer** in `src/installer/installer.ts`:
+   - Add `LinuxFlavorType.UBUNTU_26` to the Ubuntu switch case in `createSSMDocument()` (line ~657)
+   - Update installer calls in `src/vscode-server.ts` to include new case (line ~930)
+
+4. **Pass linuxFlavorType** in `src/vscode-server.ts`:
+   ```typescript
+   installer = Installer.ubuntu({
+     // ... other options
+     linuxFlavorType: instanceOperatingSystem, // Critical!
+   })._bind(this);
+   ```
+
+5. **Create integration test**: Copy `integ-tests/integ.ubuntu25.ts` to `integ.ubuntu26.ts` and update OS version
+
+6. **Update documentation**:
+   - Update README.md examples with inline comments showing all supported versions
+   - Examples in `examples/` directory (optional - can keep as Ubuntu 24)
+
+7. **Verify and build**:
+   ```bash
+   # Verify SSM parameters exist
+   aws ssm get-parameters-by-path --path "/aws/service/canonical/ubuntu/server/CODENAME/" --recursive --region us-east-1
+
+   # Build and test
+   npx projen build
+   npm run integ-test
+   ```
 
 ## Race Condition Prevention (Auto-Stop)
 

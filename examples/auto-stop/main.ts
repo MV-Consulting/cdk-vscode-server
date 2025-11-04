@@ -37,7 +37,7 @@ export class AutoStopExampleStack extends Stack {
       instanceClass: ec2.InstanceClass.M7G,
       instanceSize: ec2.InstanceSize.XLARGE,
       instanceVolumeSize: 40,
-      instanceOperatingSystem: LinuxFlavorType.UBUNTU_22,
+      instanceOperatingSystem: LinuxFlavorType.UBUNTU_24,
       instanceCpuArchitecture: LinuxArchitectureType.ARM,
 
       // 🔥 Auto-Stop Configuration

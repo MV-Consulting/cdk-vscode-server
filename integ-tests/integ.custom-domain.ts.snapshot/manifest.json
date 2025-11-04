@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/0d21ebe148c0168a894b38d8db4c34b6ac5b9a016612b7493c323c5d1dc23b7d.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/7d89a55db29091c7bd6a0da54d0e29cfc725f77b6fcdde3eb3e136b774b01d04.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -902,7 +902,10 @@
         "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IntegVSCodeServerserverinstance0A3D62D7"
+            "data": "IntegVSCodeServerserverinstance0A3D62D7",
+            "trace": [
+              "!!DESTRUCTIVE_CHANGES: WILL_REPLACE"
+            ]
           }
         ],
         "/IntegTestStackCustomDomain/IntegVSCodeServer/server-instance/LaunchTemplate": [
@@ -1356,10 +1359,10 @@
             "data": "AWS679f53fac002430cb0da5b7982bd22872D164C4C"
           }
         ],
-        "/IntegTestStackCustomDomain/SsmParameterValue:--aws--service--canonical--ubuntu--server--jammy--stable--current--arm64--hvm--ebs-gp2--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+        "/IntegTestStackCustomDomain/SsmParameterValue:--aws--service--canonical--ubuntu--server--noble--stable--current--arm64--hvm--ebs-gp3--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
+            "data": "SsmParameterValueawsservicecanonicalubuntuservernoblestablecurrentarm64hvmebsgp3amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
           }
         ],
         "/IntegTestStackCustomDomain/AWSCloudFrontPartitionHostedZoneIdMap": [
@@ -1576,7 +1579,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/c0c8c31a0be065be2df21bb20ec386bf72819c1e19f79e9fc09c29712e67a4a0.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/4191278decec94a8cb032ef5af5b2424a3d6f3a20772116b870ecb754d98bb76.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [

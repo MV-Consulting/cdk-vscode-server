@@ -73,7 +73,7 @@ export interface VSCodeServerProps {
   /**
    * VSCode Server EC2 operating system
    *
-   * @default - Ubuntu-22
+   * @default - Ubuntu-24
    */
   readonly instanceOperatingSystem?: LinuxFlavorType;
 
@@ -253,6 +253,11 @@ export enum LinuxFlavorType {
   UBUNTU_24 = 'ubuntu24',
 
   /**
+   * Ubuntu 25
+   */
+  UBUNTU_25 = 'ubuntu25',
+
+  /**
    * Amazon Linux 2023
    */
   AMAZON_LINUX_2023 = 'al2023',
@@ -309,7 +314,7 @@ export class VSCodeServer extends Construct {
     const instanceSize = props?.instanceSize ?? ec2.InstanceSize.XLARGE;
     const instanceType = ec2.InstanceType.of(instanceClass, instanceSize);
     const instanceOperatingSystem =
-      props?.instanceOperatingSystem ?? LinuxFlavorType.UBUNTU_22;
+      props?.instanceOperatingSystem ?? LinuxFlavorType.UBUNTU_24;
     const instanceCpuArchitecture =
       props?.instanceCpuArchitecture ?? LinuxArchitectureType.ARM;
     const machineImageFromSsmParameter =
@@ -922,6 +927,7 @@ export class VSCodeServer extends Construct {
     switch (instanceOperatingSystem) {
       case LinuxFlavorType.UBUNTU_22:
       case LinuxFlavorType.UBUNTU_24:
+      case LinuxFlavorType.UBUNTU_25:
         installer = Installer.ubuntu({
           instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
@@ -929,6 +935,7 @@ export class VSCodeServer extends Construct {
           devServerBasePath: props?.devServerBasePath,
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
+          linuxFlavorType: instanceOperatingSystem,
           customDomainName: domainName,
           repoUrl: props?.repoUrl,
           assetZipS3Path: props?.assetZipS3Path,
@@ -944,6 +951,7 @@ export class VSCodeServer extends Construct {
           devServerBasePath: props?.devServerBasePath,
           devServerPort: props?.devServerPort,
           homeFolder: homeFolder,
+          linuxFlavorType: instanceOperatingSystem,
           customDomainName: domainName,
           repoUrl: props?.repoUrl,
           assetZipS3Path: props?.assetZipS3Path,

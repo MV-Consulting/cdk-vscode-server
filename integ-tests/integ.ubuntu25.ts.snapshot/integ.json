@@ -1,0 +1,23 @@
+{
+  "version": "41.0.0",
+  "testCases": {
+    "IntegSetupVSCodeOnUbuntu25/DefaultTest": {
+      "stacks": [
+        "IntegTestStackUbuntu25"
+      ],
+      "regions": [
+        "${Token[AWS.Region.4]}"
+      ],
+      "cdkCommandOptions": {
+        "destroy": {
+          "args": {
+            "force": true
+          }
+        }
+      },
+      "assertionStack": "IntegSetupVSCodeOnUbuntu25/DefaultTest/DeployAssert",
+      "assertionStackName": "IntegSetupVSCodeOnUbuntu25DefaultTestDeployAssert48DBCF35"
+    }
+  },
+  "minimumCliVersion": "2.1005.0"
+}

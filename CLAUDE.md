@@ -173,6 +173,10 @@ aws ssm get-parameters --names \
 - `idleCheckIntervalMinutes` - How often to check (default: 5)
 - `skipStatusChecks` - Skip EC2 status checks before stopping (for testing only)
 
+**Custom Installation**:
+- `customInstallSteps` - Array of custom shell commands that run after standard installation
+- `repoUrl` - Git repository to clone into home folder during setup
+
 **Extensions**:
 - `additionalInstanceRolePolicies`, `additionalTags`
 
@@ -182,6 +186,7 @@ aws ssm get-parameters --names \
 - All public APIs must be JSII-compatible (no TS-specific types)
 - Bundled dependencies (like `node-html-parser`) must be in `.projenrc.ts` `bundledDeps`
 - Lambda functions use esbuild bundling configured via Projen (auto-discovered in `src/**/*.lambda.ts`)
+- **@example JSDoc blocks must NOT use code fences** (```) - JSII will fail with "must be code only, no code block fences allowed"
 
 ## CDK-nag Integration
 
@@ -239,11 +244,50 @@ Projen automatically discovers Lambda functions matching `src/**/*.lambda.ts` pa
 3. Run `npx projen` - auto-discovers and creates bundle task
 4. Import in construct: `import { MyFeatureFunction } from './my-feature/my-feature-function'`
 
+### Adding Custom Installation Steps
+
+Custom steps are appended to SSM document `mainSteps` array in `createSSMDocument()`:
+
+1. **Define interface** (if needed) in `src/vscode-server.ts`:
+   ```typescript
+   export interface CustomInstallStep {
+     readonly name: string;
+     readonly commands: string[];
+   }
+   ```
+
+2. **Add prop** to `VSCodeServerProps` with JSDoc documentation (no code fences!)
+
+3. **Pass to Installer** in both Ubuntu and Amazon Linux paths:
+   ```typescript
+   installer = Installer.ubuntu({
+     // ... other options
+     customInstallSteps: customInstallSteps,
+   })._bind(this);
+   ```
+
+4. **Update `createSSMDocument()`** in `src/installer/installer.ts` to accept and use custom steps:
+   ```typescript
+   ...(customInstallSteps?.map((step) => ({
+     action: 'aws:runShellScript' as const,
+     name: step.name,
+     inputs: {
+       runCommand: step.commands,
+     },
+   })) ?? []),
+   ```
+
+5. **Write unit tests** in `test/vscode-server.test.ts` covering normal usage, without steps, and empty array
+
+6. **Update documentation** in README.md with practical examples and add to `examples/` directory
+
 ### Modifying VSCodeServer Props
 
 1. Edit `src/vscode-server.ts` - update `VSCodeServerProps` interface
-2. Run `npx projen build` - regenerates JSII artifacts + API docs
-3. Update README.md with usage examples
+2. If adding new types/interfaces, export them from `src/vscode-server.ts`
+3. Run `npx projen build` - regenerates JSII artifacts + API docs
+4. Update README.md with usage examples and feature section
+5. Add example usage in `examples/` directory
 
 ### Testing Changes
 

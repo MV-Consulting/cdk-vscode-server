@@ -24,6 +24,7 @@ we implement new features. Therefore make sure you use an exact version in your 
   - [Pre-populate with Git Repository](#pre-populate-with-git-repository)
   - [Custom Domain Configuration](#custom-domain-configuration)
   - [Auto-Stop Configuration](#auto-stop-configuration)
+  - [Custom Installation Steps](#custom-installation-steps)
 - [Solution Design](#solution-design)
 - [Inspiration](#inspiration)
 
@@ -34,6 +35,7 @@ we implement new features. Therefore make sure you use an exact version in your 
 - 🤹‍♂️ **Pre-installed packages**: Besides the [vscode](https://code.visualstudio.com/) server, other tools and software packages such as `git`, `docker`, `awscli` `nodejs` and `python` are pre-installed on the EC2 instance.
 - 🌐 **Custom Domain Support**: Use your own domain name with automatic ACM certificate creation and Route53 DNS configuration, or bring your existing certificate.
 - 💰 **Auto-Stop**: Automatically stop EC2 instances after inactivity with Elastic IP retention - save up to 75% on costs for development environments.
+- 🔧 **Custom Install Steps**: Extend the standard installation with your own shell commands to install workshop-specific tools, configure environments, or run setup scripts.
 - 🏗️ **Extensibility**: Pass in properties to the construct, which start with `additional*`. They allow you to extend the configuration to your needs. There are more to come...
 
 ## Usage
@@ -260,6 +262,67 @@ Run integration tests with:
 ```bash
 npm run integ-test
 ```
+
+### Custom Installation Steps
+
+Extend the standard VS Code Server installation with your own custom shell commands - perfect for installing workshop-specific tools, configuring development environments, or running setup scripts:
+
+```ts
+new VSCodeServer(this, 'vscode', {
+  // Add custom installation steps that run after standard setup
+  customInstallSteps: [
+    {
+      name: 'InstallWorkshopTools',
+      commands: [
+        '#!/bin/bash',
+        'echo "Installing workshop-specific tools"',
+
+        // Install additional software
+        'curl -fsSL https://get.docker.com | sh',
+        'usermod -aG docker ubuntu',
+
+        // Configure environment
+        'echo "export WORKSHOP_ENV=production" >> /home/ubuntu/.bashrc',
+      ],
+    },
+    {
+      name: 'CloneStarterCode',
+      commands: [
+        '#!/bin/bash',
+        'cd /home/ubuntu',
+        'git clone https://github.com/my-org/workshop-starter.git',
+        'chown -R ubuntu:ubuntu workshop-starter',
+      ],
+    },
+  ],
+});
+```
+
+**Key Features:**
+- **Execute After Standard Setup**: Custom steps run after VS Code Server installation completes
+- **Multiple Steps**: Add as many installation steps as needed, executed in order
+- **Full Shell Access**: Run any shell commands with root privileges
+- **Workshop-Friendly**: Pre-install tools, configure environments, or download starter code
+
+**Common Use Cases:**
+- Install additional development tools (Docker, kubectl, terraform)
+- Configure workshop-specific environments and credentials
+- Clone starter code repositories with specific permissions
+- Set up databases or services required for training
+- Download and prepare datasets or assets
+- Configure IDE extensions or settings
+
+**Supported Operating Systems:**
+- Ubuntu 22/24/25
+- Amazon Linux 2023
+
+**Requirements:**
+- Commands execute with root privileges during instance initialization
+- Use absolute paths or ensure proper working directory context
+- Consider idempotency if instance might be restarted
+- Commands run synchronously in the order specified
+
+For complete examples, see [examples/custom-install-steps/main.ts](./examples/custom-install-steps/main.ts).
 
 ## Solution Design
 

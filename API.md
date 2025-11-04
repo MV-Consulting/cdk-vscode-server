@@ -716,7 +716,7 @@ public readonly instanceOperatingSystem: LinuxFlavorType;
 ```
 
 - *Type:* <a href="#@mavogel/cdk-vscode-server.LinuxFlavorType">LinuxFlavorType</a>
-- *Default:* Ubuntu-22
+- *Default:* Ubuntu-24
 
 VSCode Server EC2 operating system.
 

@@ -6,7 +6,7 @@ import { Provider } from 'aws-cdk-lib/custom-resources';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 import { InstallerFunction } from './installer-function';
-import { LinuxFlavorType } from '../vscode-server';
+import { LinuxFlavorType, CustomInstallStep } from '../vscode-server';
 
 interface InstallerOptionsBase {
   /**
@@ -113,6 +113,13 @@ interface InstallerOptionsBase {
    * @default - no folders created
    */
   readonly folderZipS3Path?: string;
+
+  /**
+   * Custom installation steps to extend the SSM document
+   *
+   * @default - no custom installation steps
+   */
+  readonly customInstallSteps?: CustomInstallStep[];
 }
 
 export interface InstallerOptions extends InstallerOptionsBase {}
@@ -139,6 +146,7 @@ export abstract class Installer {
             options.assetZipS3Path,
             options.branchZipS3Path,
             options.folderZipS3Path,
+            options.customInstallSteps,
           );
           documentName = document.name!;
         }
@@ -181,6 +189,7 @@ export abstract class Installer {
             options.assetZipS3Path,
             options.branchZipS3Path,
             options.folderZipS3Path,
+            options.customInstallSteps,
           );
           documentName = document.name!;
         }
@@ -644,6 +653,7 @@ fi`,
     assetZipS3Path?: string,
     branchZipS3Path?: string,
     folderZipS3Path?: string,
+    customInstallSteps?: CustomInstallStep[],
   ): ssm.CfnDocument {
     // Generate nginx server_name directive based on custom domain
     const serverNameDirective = customDomainName
@@ -893,6 +903,14 @@ fi`,
                   ],
                 },
               },
+              // Add custom installation steps if provided
+              ...(customInstallSteps?.map((step) => ({
+                action: 'aws:runShellScript' as const,
+                name: step.name,
+                inputs: {
+                  runCommand: step.commands,
+                },
+              })) ?? []),
             ],
           },
         });
@@ -1151,6 +1169,14 @@ fi`,
                   ],
                 },
               },
+              // Add custom installation steps if provided
+              ...(customInstallSteps?.map((step) => ({
+                action: 'aws:runShellScript' as const,
+                name: step.name,
+                inputs: {
+                  runCommand: step.commands,
+                },
+              })) ?? []),
             ],
           },
         });

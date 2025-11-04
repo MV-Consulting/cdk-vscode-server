@@ -524,3 +524,107 @@ describe('vscode-server-auto-stop', () => {
 
   // Auto-resume functionality has been removed - instances must be resumed manually via AWS Console
 });
+
+describe('vscode-server-custom-install-steps', () => {
+  test('should create SSM document with custom install steps', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      customInstallSteps: [
+        {
+          name: 'InstallCustomTool',
+          commands: [
+            '#!/bin/bash',
+            'echo "Installing custom tool"',
+            'curl -O https://example.com/tool.sh',
+            'bash tool.sh',
+          ],
+        },
+        {
+          name: 'ConfigureWorkshopEnv',
+          commands: [
+            '#!/bin/bash',
+            'echo "export MY_VAR=value" >> /home/participant/.bashrc',
+          ],
+        },
+      ],
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should create SSM document
+    template.resourceCountIs('AWS::SSM::Document', 1);
+
+    // Verify the custom steps are in the SSM document content
+    const ssmDocs = template.findResources('AWS::SSM::Document');
+    const ssmDocKeys = Object.keys(ssmDocs);
+    expect(ssmDocKeys.length).toBe(1);
+
+    const ssmDoc = ssmDocs[ssmDocKeys[0]];
+    const mainSteps = ssmDoc.Properties.Content.mainSteps;
+
+    // Find our custom steps in mainSteps
+    const customStep1 = mainSteps.find((step: any) => step.name === 'InstallCustomTool');
+    const customStep2 = mainSteps.find((step: any) => step.name === 'ConfigureWorkshopEnv');
+
+    expect(customStep1).toBeDefined();
+    expect(customStep1.action).toBe('aws:runShellScript');
+    expect(customStep1.inputs.runCommand).toContain('#!/bin/bash');
+    expect(customStep1.inputs.runCommand).toContain('echo "Installing custom tool"');
+    expect(customStep1.inputs.runCommand).toContain('curl -O https://example.com/tool.sh');
+    expect(customStep1.inputs.runCommand).toContain('bash tool.sh');
+
+    expect(customStep2).toBeDefined();
+    expect(customStep2.action).toBe('aws:runShellScript');
+    expect(customStep2.inputs.runCommand).toContain('#!/bin/bash');
+    expect(customStep2.inputs.runCommand).toContain('echo "export MY_VAR=value" >> /home/participant/.bashrc');
+  });
+
+  test('should work without custom install steps', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {};
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should still create SSM document without custom steps
+    template.resourceCountIs('AWS::SSM::Document', 1);
+  });
+
+  test('should handle empty custom install steps array', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    const testProps: VSCodeServerProps = {
+      customInstallSteps: [],
+    };
+
+    new VSCodeServer(stack, 'testVSCodeServer', testProps);
+
+    const template = Template.fromStack(stack);
+
+    // Should create SSM document
+    template.resourceCountIs('AWS::SSM::Document', 1);
+  });
+});

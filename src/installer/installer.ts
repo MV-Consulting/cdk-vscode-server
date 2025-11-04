@@ -66,6 +66,11 @@ interface InstallerOptionsBase {
   readonly customDomainName?: string;
 
   /**
+   * The Linux flavor type for the instance
+   */
+  readonly linuxFlavorType: LinuxFlavorType;
+
+  /**
    * Remote git repository URL to clone into the home folder.
    *
    * If provided, the repository will be cloned into the user's home folder during instance setup.
@@ -128,7 +133,7 @@ export abstract class Installer {
             devServerPort,
             options.vsCodeUser,
             options.homeFolder,
-            LinuxFlavorType.UBUNTU_22,
+            options.linuxFlavorType,
             options.customDomainName,
             options.repoUrl,
             options.assetZipS3Path,
@@ -649,6 +654,7 @@ fi`,
     switch (linuxFlavor) {
       case LinuxFlavorType.UBUNTU_22:
       case LinuxFlavorType.UBUNTU_24:
+      case LinuxFlavorType.UBUNTU_25:
         // Create an SSM document with multiple actions to install the software
         ssmDocument = new ssm.CfnDocument(scope, 'ssm-document-ubuntu', {
           name: `vscode-server-ubuntu-${Stack.of(scope).stackName}`,
@@ -1157,7 +1163,37 @@ fi`,
   }
 }
 
-interface CustomResourceInstallerOptions extends InstallerOptions {}
+interface CustomResourceInstallerOptions {
+  /**
+   * The ec2 instance id to install the ssm document on
+   */
+  readonly instanceId: string;
+
+  /**
+   * The name of the custom ssm document to install.
+   */
+  readonly documentName: string;
+
+  /**
+   * The name of the cloudwatch log group for the install logs
+   */
+  readonly cloudWatchLogGroupName: string;
+
+  /**
+   * The name of the user under which the vscode server runs
+   */
+  readonly vsCodeUser: string;
+
+  /**
+   * The password of the user under which the vscode server runs
+   */
+  readonly vsCodePassword: string;
+
+  /**
+   * The home folder of the user under which the vscode server runs
+   */
+  readonly homeFolder: string;
+}
 
 class CustomResourceInstaller extends Installer {
   constructor(scope: Construct, options: CustomResourceInstallerOptions) {

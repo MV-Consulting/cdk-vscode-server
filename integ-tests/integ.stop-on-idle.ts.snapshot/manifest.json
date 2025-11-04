@@ -1,0 +1,2223 @@
+{
+  "version": "48.0.0",
+  "artifacts": {
+    "IntegTestStackStopOnIdle.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "IntegTestStackStopOnIdle.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "IntegTestStackStopOnIdle": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "IntegTestStackStopOnIdle.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/2c6e15196298c4d0dfb720c7ad7d370bbd740ded5eb7f12a285ce425fd503a01.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "IntegTestStackStopOnIdle.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "IntegTestStackStopOnIdle.assets"
+      ],
+      "metadata": {
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/password-secret": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "generateSecretString": {
+                "passwordLength": "*",
+                "secretStringTemplate": "*",
+                "excludePunctuation": true,
+                "includeSpace": false,
+                "generateStringKey": "*"
+              }
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/password-secret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerpasswordsecret202A5DB3"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverOnEventHandler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "runtime": "*",
+              "handler": "*",
+              "code": "*"
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleBEF8D4D2"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerServiceRoleDefaultPolicy2641E2C6"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverOnEventHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverOnEventHandlerDD084AE3"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "code": "*",
+              "description": "*",
+              "runtime": "*",
+              "handler": "*",
+              "timeout": "*",
+              "logGroup": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "securityGroups": "*",
+              "role": "*",
+              "functionName": "*",
+              "environmentEncryption": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRole0F156B64"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventServiceRoleDefaultPolicyEC4DCEA0"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieveProvider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieveProviderframeworkonEventCF035CA3"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:warning",
+            "data": "The following keys will be overwritten as they exist in the 'properties' prop. Keys found: ServiceTimeout [ack: @aws-cdk/core:customResourcePropConflict]"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SecretRetrieverCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "maxAzs": "*",
+              "createInternetGateway": true,
+              "subnetConfiguration": [
+                {
+                  "name": "*",
+                  "subnetType": "Public"
+                }
+              ],
+              "enableDnsHostnames": true,
+              "enableDnsSupport": true
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpc93DDE887"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1Subnet928029A1"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1RouteTableFD418D0B"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1RouteTableAssociation599AB80D"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet1DefaultRoute36845B30"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet2": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "availabilityZone": "*",
+              "vpcId": "*",
+              "cidrBlock": "*",
+              "mapPublicIpOnLaunch": true,
+              "ipv6CidrBlock": "*",
+              "assignIpv6AddressOnCreation": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2SubnetE381654D"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2RouteTableC264EFB4"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2RouteTableAssociationC62A1999"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/publicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcpublicSubnet2DefaultRouteEAD8BC23"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcIGW960F6D83"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcVPCGWA7CDED90"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/vpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServervpcRestrictDefaultSecurityGroupCustomResourceF6EA8ED1"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-to-server-sg": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "description": "*",
+              "securityGroupName": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addIngressRule": [
+                {
+                  "canInlineRule": false,
+                  "connections": "*",
+                  "uniqueId": "*"
+                },
+                {},
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-to-server-sg/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercftoserversgFFE586B0"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-to-server-sg/from {IndirectPeer}:80": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercftoserversgfromIndirectPeer80C4F51713"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "removalPolicy": "destroy",
+              "retention": 1
+            }
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-logGroup",
+            "data": true
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdLogGroup171C2803"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/ImportGetPrefixListIdRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListIdRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdRole1302B3E1"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Provider": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "uuid": "*",
+              "lambdaPurpose": "*",
+              "memorySize": "*",
+              "timeout": "*",
+              "role": "*",
+              "logGroup": "*",
+              "functionName": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "code": "*",
+              "handler": "*",
+              "runtime": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMetadata": [
+                "*",
+                true
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMetadata": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/Resource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdF0821FFC"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "statements": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-prefixlistId/GetPrefixListId/CustomResourcePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfprefixlistIdGetPrefixListIdCustomResourcePolicyAB3F4958"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance-role": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "inlinePolicies": "*",
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                },
+                {
+                  "managedPolicyArn": "*"
+                },
+                {
+                  "managedPolicyArn": "*"
+                },
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance-role/Importserver-instance-role": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance-role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstancerole7745B5BB"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "vpc": "*",
+              "instanceName": "*",
+              "instanceType": "*",
+              "machineImage": "*",
+              "requireImdsv2": true,
+              "vpcSubnets": {
+                "subnetType": "Public"
+              },
+              "associatePublicIpAddress": true,
+              "detailedMonitoring": true,
+              "blockDevices": [
+                {
+                  "deviceName": "*",
+                  "volume": "*"
+                }
+              ],
+              "role": "*",
+              "securityGroup": "*",
+              "userData": "*"
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance/InstanceProfile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstanceInstanceProfile6130979E"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstance0A3D62D7"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/server-instance/LaunchTemplate": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerserverinstanceLaunchTemplate43932ED3"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/elastic-ip": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerelasticip31D48F71"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/eip-association": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServereipassociation2A6D7D5A"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-cache-policy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "cachePolicyName": "*",
+              "comment": "*",
+              "minTtl": "*",
+              "maxTtl": "*",
+              "defaultTtl": "*",
+              "cookieBehavior": "*",
+              "enableAcceptEncodingGzip": false,
+              "headerBehavior": "*",
+              "queryStringBehavior": "*"
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-cache-policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfcachepolicy8F5F1F69"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-distribution": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "enabled": true,
+              "httpVersion": "http2and3",
+              "comment": "*",
+              "priceClass": "PriceClass_All",
+              "defaultBehavior": {
+                "allowedMethods": "*",
+                "cachePolicy": "*",
+                "originRequestPolicy": {
+                  "originRequestPolicyId": "*"
+                },
+                "viewerProtocolPolicy": "allow-all",
+                "origin": "*"
+              },
+              "additionalBehaviors": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addBehavior": [
+                "*",
+                {},
+                {
+                  "allowedMethods": "*",
+                  "compress": false,
+                  "cachePolicy": {
+                    "cachePolicyId": "*"
+                  },
+                  "originRequestPolicy": {
+                    "originRequestPolicyId": "*"
+                  },
+                  "viewerProtocolPolicy": "allow-all"
+                }
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/cf-distribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServercfdistributionFDBE873F"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/ssm-document-ubuntu": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerssmdocumentubuntuED32BACB"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerOnEventHandler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "runtime": "*",
+              "handler": "*",
+              "code": "*"
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerOnEventHandlerServiceRole59651FEF"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerOnEventHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerOnEventHandlerServiceRoleDefaultPolicy1CAD86C2"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerOnEventHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerOnEventHandler6FF91542"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider/framework-onEvent": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "code": "*",
+              "description": "*",
+              "runtime": "*",
+              "handler": "*",
+              "timeout": "*",
+              "logGroup": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "securityGroups": "*",
+              "role": "*",
+              "functionName": "*",
+              "environmentEncryption": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleA509851F"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerProviderframeworkonEventServiceRoleDefaultPolicy3E54FC3A"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/InstallerProvider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerInstallerProviderframeworkonEvent7B6C1190"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SSMInstallerCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:warning",
+            "data": "The following keys will be overwritten as they exist in the 'properties' prop. Keys found: ServiceTimeout [ack: @aws-cdk/core:customResourcePropConflict]"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/SSMInstallerCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerSSMInstallerCustomResource9F9AFE68"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/Function": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "runtime": "*",
+              "handler": "*",
+              "code": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "environment": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/Function/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/Function/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/Function/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorFunctionServiceRoleC1088A0D"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/Function/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/Function/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorFunctionServiceRoleDefaultPolicyE13A3890"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/Function/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorFunctionCACBFA32"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/ScheduleRule": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "schedule": "*",
+              "enabled": false
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEventPattern": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addTarget": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/ScheduleRule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorScheduleRuleCF2E60F5"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitor/ScheduleRule/AllowEventRuleIntegTestStackStopOnIdleIntegVSCodeServerIdleMonitorFunction8C52CC5D": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorScheduleRuleAllowEventRuleIntegTestStackStopOnIdleIntegVSCodeServerIdleMonitorFunction8C52CC5D407CFD6D"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Function": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "timeout": "*",
+              "memorySize": "*",
+              "runtime": "*",
+              "handler": "*",
+              "code": "*"
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Function/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Function/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Function/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerFunctionServiceRole71DD1E5D"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Function/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Function/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerFunctionServiceRoleDefaultPolicyCDD8B46F"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Function/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerFunction32DA729B"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "code": "*",
+              "description": "*",
+              "runtime": "*",
+              "handler": "*",
+              "timeout": "*",
+              "logRetention": 1,
+              "logGroup": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "securityGroups": "*",
+              "role": "*",
+              "functionName": "*",
+              "environmentEncryption": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerProviderframeworkonEventServiceRole941AC96C"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerProviderframeworkonEventServiceRoleDefaultPolicy995CAD91"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerProviderframeworkonEvent3B68F506"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Provider/framework-onEvent/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerProviderframeworkonEventLogRetentionE879C0C0"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Resource/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/IdleMonitorEnabler/Resource/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerIdleMonitorEnablerF25B6C6F"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/domainName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerdomainName6B9F2604"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/IntegVSCodeServer/password": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IntegVSCodeServerpasswordE38D3B2C"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/AWS679f53fac002430cb0da5b7982bd2287": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "memorySize": "*",
+              "timeout": "*",
+              "role": "*",
+              "logGroup": "*",
+              "functionName": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "code": "*",
+              "handler": "*",
+              "runtime": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-singleton",
+            "data": true
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-runtime-family",
+            "data": 0
+          }
+        ],
+        "/IntegTestStackStopOnIdle/AWS679f53fac002430cb0da5b7982bd2287/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWS679f53fac002430cb0da5b7982bd22872D164C4C"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/SsmParameterValue:--aws--service--canonical--ubuntu--server--jammy--stable--current--arm64--hvm--ebs-gp2--ami-id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SsmParameterValueawsservicecanonicalubuntuserverjammystablecurrentarm64hvmebsgp2amiidC96584B6F00A464EAD1953AFF4B05118Parameter"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              },
+              "environment": "*",
+              "code": "*",
+              "handler": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              },
+              "environment": "*"
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "idletesthandlerServiceRoleBB9B4624"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "idletesthandlerServiceRoleDefaultPolicyB0C00EC7"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "idletesthandler1A304024"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/idle-test-handler/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "idletesthandlerLogRetentionEE227743"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              },
+              "code": "*",
+              "handler": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "functionName": "*",
+              "entry": "*",
+              "runtime": "*",
+              "logRetention": 1,
+              "timeout": "*",
+              "bundling": {
+                "esbuildArgs": "*"
+              }
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandlerServiceRole330B0B32"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandler99CCCCFD"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/login-handler/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "loginhandlerLogRetentionFD323A9B"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Ref\":\"idletesthandler1A304024\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefidletesthandler1A304024FDE25B36"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServercfdistributionFDBE873F\",\"DomainName\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttIntegVSCodeServercfdistributionFDBE873FDomainName3CB40F9D"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Ref\":\"IntegVSCodeServerserverinstance0A3D62D7\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefIntegVSCodeServerserverinstance0A3D62D7BC0861E5"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Ref\":\"loginhandler99CCCCFD\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefloginhandler99CCCCFD29CE21C0"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Ref\":\"IntegVSCodeServerIdleMonitorScheduleRuleCF2E60F5\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefIntegVSCodeServerIdleMonitorScheduleRuleCF2E60F550AA072C"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/Exports/Output{\"Fn::GetAtt\":[\"IntegVSCodeServerSecretRetrieverCustomResource2F3DB8BD\",\"secretPasswordValue\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttIntegVSCodeServerSecretRetrieverCustomResource2F3DB8BDsecretPasswordValue1223507B"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/IntegTestStackStopOnIdle/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "IntegTestStackStopOnIdle"
+    },
+    "IntegStopOnIdleFunctionalityDefaultTestDeployAssertEECF3FC0.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "IntegStopOnIdleFunctionalityDefaultTestDeployAssertEECF3FC0.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "IntegStopOnIdleFunctionalityDefaultTestDeployAssertEECF3FC0": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "IntegStopOnIdleFunctionalityDefaultTestDeployAssertEECF3FC0.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/4d530b00c197df6e3607f06d9c0ef621e462324cd85dd9b55b6698a528fc9809.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "IntegStopOnIdleFunctionalityDefaultTestDeployAssertEECF3FC0.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "IntegTestStackStopOnIdle",
+        "IntegStopOnIdleFunctionalityDefaultTestDeployAssertEECF3FC0.assets"
+      ],
+      "metadata": {
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke2b0ac1bc65c03d14e22d254e216f0637/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke2b0ac1bc65c03d14e22d254e216f0637/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke2b0ac1bc65c03d14e22d254e216f0637"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke2b0ac1bc65c03d14e22d254e216f0637/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke2b0ac1bc65c03d14e22d254e216f0637Invoke529602B8"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke2b0ac1bc65c03d14e22d254e216f0637/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvoke2b0ac1bc65c03d14e22d254e216f0637"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921bInvokeE3C593A0"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvoke7ec14df5ab88e3e4c0d00edb2d94921b"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvokedc3da1442e925b8c33569d5fea03b0f7"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvokedc3da1442e925b8c33569d5fea03b0f7Invoke9C84C933"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvokedc3da1442e925b8c33569d5fea03b0f7/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvokedc3da1442e925b8c33569d5fea03b0f7"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaInvoke493987f824f978002013a8ed7c9980f4Invoke4806B64D"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/LambdaInvoke493987f824f978002013a8ed7c9980f4/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsLambdaInvoke493987f824f978002013a8ed7c9980f4"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/IntegStopOnIdleFunctionality/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "IntegStopOnIdleFunctionality/DefaultTest/DeployAssert"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  },
+  "minimumCliVersion": "2.1031.0"
+}

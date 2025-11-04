@@ -6,7 +6,7 @@
         "IntegTestStackCustomDomain"
       ],
       "regions": [
-        "${Token[AWS.Region.8]}"
+        "${Token[AWS.Region.6]}"
       ],
       "cdkCommandOptions": {
         "destroy": {

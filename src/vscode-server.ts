@@ -18,6 +18,7 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct, IConstruct } from 'constructs';
 import { IdleMonitor } from './idle-monitor/idle-monitor';
+import { IdleMonitorEnabler } from './idle-monitor-enabler/idle-monitor-enabler';
 import { Installer } from './installer/installer';
 import { getAmiSSMParameterForLinuxArchitectureAndFlavor } from './mappings';
 import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retriever';
@@ -916,10 +917,12 @@ export class VSCodeServer extends Construct {
     }
 
     // Use a custom resource lambda to run the SSM document on the instance
+    // Store the installer reference for dependency management
+    let installer: Installer | undefined;
     switch (instanceOperatingSystem) {
       case LinuxFlavorType.UBUNTU_22:
       case LinuxFlavorType.UBUNTU_24:
-        Installer.ubuntu({
+        installer = Installer.ubuntu({
           instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
@@ -934,7 +937,7 @@ export class VSCodeServer extends Construct {
         })._bind(this);
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
-        Installer.amazonLinux2023({
+        installer = Installer.amazonLinux2023({
           instanceId: this.instance.instanceId,
           vsCodeUser: vsCodeUser,
           vsCodePassword: vscodePassword,
@@ -951,6 +954,10 @@ export class VSCodeServer extends Construct {
       default:
         throw new Error(`Unsupported Linux flavor: ${instanceOperatingSystem}`);
     }
+
+    if (!installer) {
+      throw new Error('Installer was not created - this should never happen');
+    }
     // so we pass the outer scope of this construct through the installer
 
     // NOTE: maybe have a healhcheck CFN custom resource to see if the vscode server is healthy
@@ -965,6 +972,17 @@ export class VSCodeServer extends Construct {
         checkIntervalMinutes: props?.idleCheckIntervalMinutes ?? 5,
         skipStatusChecks: props?.skipStatusChecks ?? false,
       });
+
+      // Enable the IdleMonitor schedule only after installation completes
+      // This prevents the monitor from stopping the instance during VS Code Server installation
+      const enabler = new IdleMonitorEnabler(this, 'IdleMonitorEnabler', {
+        scheduleRule: this.idleMonitor.scheduleRule,
+      });
+
+      // Create explicit dependency: enabler depends on installer completion
+      // The installer creates a custom resource named 'SSMInstallerCustomResource'
+      const installerCustomResource = this.node.findChild('SSMInstallerCustomResource');
+      enabler.node.addDependency(installerCustomResource);
     }
 
     // Outputs

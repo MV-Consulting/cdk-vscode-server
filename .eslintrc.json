@@ -151,6 +151,7 @@
           "**/test/**",
           "**/build-tools/**",
           "src/idle-monitor/idle-monitor.lambda.ts",
+          "src/idle-monitor-enabler/idle-monitor-enabler.lambda.ts",
           "src/installer/installer.lambda.ts",
           "src/secret-retriever/secret-retriever.lambda.ts",
           ".projenrc.ts",

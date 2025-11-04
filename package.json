@@ -9,6 +9,8 @@
     "build": "npx projen build",
     "bump": "npx projen bump",
     "bundle": "npx projen bundle",
+    "bundle:idle-monitor-enabler/idle-monitor-enabler.lambda": "npx projen bundle:idle-monitor-enabler/idle-monitor-enabler.lambda",
+    "bundle:idle-monitor-enabler/idle-monitor-enabler.lambda:watch": "npx projen bundle:idle-monitor-enabler/idle-monitor-enabler.lambda:watch",
     "bundle:idle-monitor/idle-monitor.lambda": "npx projen bundle:idle-monitor/idle-monitor.lambda",
     "bundle:idle-monitor/idle-monitor.lambda:watch": "npx projen bundle:idle-monitor/idle-monitor.lambda:watch",
     "bundle:installer/installer.lambda": "npx projen bundle:installer/installer.lambda",

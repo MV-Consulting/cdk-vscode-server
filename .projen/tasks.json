@@ -52,10 +52,31 @@
           "spawn": "bundle:idle-monitor/idle-monitor.lambda"
         },
         {
+          "spawn": "bundle:idle-monitor-enabler/idle-monitor-enabler.lambda"
+        },
+        {
           "spawn": "bundle:installer/installer.lambda"
         },
         {
           "spawn": "bundle:secret-retriever/secret-retriever.lambda"
+        }
+      ]
+    },
+    "bundle:idle-monitor-enabler/idle-monitor-enabler.lambda": {
+      "name": "bundle:idle-monitor-enabler/idle-monitor-enabler.lambda",
+      "description": "Create a JavaScript bundle from src/idle-monitor-enabler/idle-monitor-enabler.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/idle-monitor-enabler/idle-monitor-enabler.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/idle-monitor-enabler/idle-monitor-enabler.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+        }
+      ]
+    },
+    "bundle:idle-monitor-enabler/idle-monitor-enabler.lambda:watch": {
+      "name": "bundle:idle-monitor-enabler/idle-monitor-enabler.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/idle-monitor-enabler/idle-monitor-enabler.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/idle-monitor-enabler/idle-monitor-enabler.lambda.ts --target=\"node22\" --platform=\"node\" --outfile=\"assets/idle-monitor-enabler/idle-monitor-enabler.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
         }
       ]
     },

@@ -73,7 +73,7 @@ export interface VSCodeServerProps {
   /**
    * VSCode Server EC2 operating system
    *
-   * @default - Ubuntu-22
+   * @default - Ubuntu-24
    */
   readonly instanceOperatingSystem?: LinuxFlavorType;
 
@@ -314,7 +314,7 @@ export class VSCodeServer extends Construct {
     const instanceSize = props?.instanceSize ?? ec2.InstanceSize.XLARGE;
     const instanceType = ec2.InstanceType.of(instanceClass, instanceSize);
     const instanceOperatingSystem =
-      props?.instanceOperatingSystem ?? LinuxFlavorType.UBUNTU_22;
+      props?.instanceOperatingSystem ?? LinuxFlavorType.UBUNTU_24;
     const instanceCpuArchitecture =
       props?.instanceCpuArchitecture ?? LinuxArchitectureType.ARM;
     const machineImageFromSsmParameter =

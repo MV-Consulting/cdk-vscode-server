@@ -21,7 +21,9 @@ we implement new features. Therefore make sure you use an exact version in your 
 - [Features](#features)
 - [Usage](#usage)
   - [Standard](#Standard)
+  - [Pre-populate with Git Repository](#pre-populate-with-git-repository)
   - [Custom Domain Configuration](#custom-domain-configuration)
+  - [Auto-Stop Configuration](#auto-stop-configuration)
 - [Solution Design](#solution-design)
 - [Inspiration](#inspiration)
 
@@ -114,6 +116,41 @@ dev.vscodepassword64FBCA12 = foobarbaz
 ```
 
 See the [examples](./examples) folder for more inspiration.
+
+### Pre-populate with Git Repository
+
+Clone a git repository into the VS Code Server's home folder during instance setup - perfect for workshops or development environments with starter code:
+
+```ts
+new VSCodeServer(this, 'vscode', {
+  // Clone a git repository into the home folder
+  repoUrl: 'https://github.com/aws-samples/my-workshop-repo.git',
+
+  // Optional: customize the home folder path (default: /Workshop)
+  homeFolder: '/MyWorkshop',
+
+  // Optional: specify VS Code user (default: vscode-user)
+  vscodeUser: 'workshop-user',
+});
+```
+
+**What happens:**
+1. During instance setup, the specified git repository is cloned into the user's home folder
+2. VS Code Server opens with the repository already loaded and ready to use
+3. Participants can start coding immediately without manual git clone steps
+
+**Use cases:**
+- Workshop environments with pre-configured starter code
+- Development environments with boilerplate projects
+- Training sessions with example applications
+- Code review sessions with pre-loaded repositories
+
+**Repository requirements:**
+- Must be publicly accessible (no authentication required)
+- HTTPS URLs only (SSH git URLs are not supported)
+- Repository will be cloned using `git clone` during instance initialization
+
+For complete examples, see [examples/](./examples).
 
 ### Custom Domain Configuration
 

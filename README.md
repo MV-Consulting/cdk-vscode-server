@@ -31,7 +31,7 @@ we implement new features. Therefore make sure you use an exact version in your 
 - 📏 **Best Practice Setup**: Set up with [projen](https://projen.io/) and a [single configuration file](./.projenrc.ts) to keep your changes centralized.
 - 🤹‍♂️ **Pre-installed packages**: Besides the [vscode](https://code.visualstudio.com/) server, other tools and software packages such as `git`, `docker`, `awscli` `nodejs` and `python` are pre-installed on the EC2 instance.
 - 🌐 **Custom Domain Support**: Use your own domain name with automatic ACM certificate creation and Route53 DNS configuration, or bring your existing certificate.
-- 💰 **Auto-Stop**: Automatically stop EC2 instances after inactivity with Elastic IP retention - save up to 75% on costs for development environments
+- 💰 **Auto-Stop**: Automatically stop EC2 instances after inactivity with Elastic IP retention - save up to 75% on costs for development environments.
 - 🏗️ **Extensibility**: Pass in properties to the construct, which start with `additional*`. They allow you to extend the configuration to your needs. There are more to come...
 
 ## Usage
@@ -200,6 +200,7 @@ new VSCodeServer(this, 'vscode', {
 - Elastic IP for consistent public addressing
 - EventBridge rule triggering idle monitoring at configured intervals
 - IdleMonitor Lambda function checking CloudWatch metrics for request activity
+- IdleMonitorEnabler custom resource ensuring monitoring only starts after installation completes
 - CloudWatch metrics from CloudFront distribution
 
 **Integration Testing:**

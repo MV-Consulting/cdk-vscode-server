@@ -1575,7 +1575,7 @@ else
   else
     sudo -u participant git -C /Workshop init
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m 'chore: nitial commit'
+    sudo -u participant git -C /Workshop commit -m 'chore: initial commit'
   fi
   echo "Assets downloaded. Checking configuration: /Workshop"
   ls -la /Workshop
@@ -3880,7 +3880,7 @@ else
   else
     sudo -u participant git -C /Workshop init
     sudo -u participant git -C /Workshop add .
-    sudo -u participant git -C /Workshop commit -m 'chore: nitial commit'
+    sudo -u participant git -C /Workshop commit -m 'chore: initial commit'
   fi
   echo "Assets downloaded. Checking configuration: /Workshop"
   ls -la /Workshop

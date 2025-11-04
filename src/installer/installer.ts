@@ -213,6 +213,420 @@ export abstract class Installer {
    */
   public abstract _bind(scope: Construct): any;
 
+  /**
+   * Creates the InstallCloudWatchAgent step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createInstallCloudWatchAgentStep(): any {
+    return {
+      action: 'aws:configurePackage',
+      name: 'InstallCloudWatchAgent',
+      inputs: {
+        name: 'AmazonCloudWatchAgent',
+        action: 'Install',
+      },
+    };
+  }
+
+  /**
+   * Creates the ConfigureCloudWatchAgent step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createConfigureCloudWatchAgentStep(): any {
+    return {
+      action: 'aws:runDocument',
+      name: 'ConfigureCloudWatchAgent',
+      inputs: {
+        documentType: 'SSMDocument',
+        documentPath: 'AmazonCloudWatch-ManageAgent',
+        documentParameters: {
+          action: 'configure',
+          mode: 'ec2',
+          optionalConfigurationSource: 'default',
+          optionalRestart: 'yes',
+        },
+      },
+    };
+  }
+
+  /**
+   * Creates the UpdateProfile step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createUpdateProfileStep(vsCodeUser: string, region: string, account: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'UpdateProfile',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          'echo LANG=en_US.utf-8 >> /etc/environment',
+          'echo LC_ALL=en_US.UTF-8 >> /etc/environment',
+          `echo 'PATH=$PATH:/home/${vsCodeUser}/.local/bin' >> /home/${vsCodeUser}/.bashrc`,
+          `echo 'export PATH' >> /home/${vsCodeUser}/.bashrc`,
+          `echo 'export AWS_REGION=${region}' >> /home/${vsCodeUser}/.bashrc`,
+          `echo 'export AWS_ACCOUNTID=${account}' >> /home/${vsCodeUser}/.bashrc`,
+          `echo 'export NEXT_TELEMETRY_DISABLED=1' >> /home/${vsCodeUser}/.bashrc`,
+          `echo "export PS1='\\[\\033[01;32m\\]\\u:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '" >> /home/${vsCodeUser}/.bashrc`,
+          `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the InstallAWSCLI step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createInstallAWSCLIStep(vsCodeUser: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'InstallAWSCLI',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          'mkdir -p /tmp',
+          'curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip -o /tmp/aws-cli.zip',
+          `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/aws-cli.zip`,
+          'unzip -q -d /tmp /tmp/aws-cli.zip',
+          'sudo /tmp/aws/install',
+          'rm -rf /tmp/aws',
+          'echo "AWS CLI installed. Checking configuration"',
+          'aws --version',
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the CloneRepo step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createCloneRepoStep(vsCodeUser: string, homeFolder: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'CloneRepo',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          `if [[ -z "{{ RepoUrl }}" ]]
+then
+  echo "No Repo"
+else
+  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
+  sudo -u ${vsCodeUser} git clone {{ RepoUrl }} ${homeFolder}
+  echo "Repo {{ RepoUrl }} cloned. Checking configuration"
+  ls -la ${homeFolder}
+  sudo -u ${vsCodeUser} git -C ${homeFolder} remote -v
+fi`,
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the DownloadAssets step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createDownloadAssetsStep(vsCodeUser: string, homeFolder: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'DownloadAssets',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          `if [[ -z "{{ AssetZipS3Path }}" ]]
+then
+  echo "No assets"
+else
+  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
+  mkdir -p /tmp
+  aws s3 cp s3://{{ AssetZipS3Path }} /tmp/asset.zip
+  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset.zip
+  unzip -o /tmp/asset.zip -d ${homeFolder}
+  chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
+  if  [[ -d ${homeFolder}/.git ]]
+  then
+    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: workshop commit'
+  else
+    sudo -u ${vsCodeUser} git -C ${homeFolder} init
+    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: initial commit'
+  fi
+  echo "Assets downloaded. Checking configuration: ${homeFolder}"
+  ls -la ${homeFolder}
+  sudo -u ${vsCodeUser} git -C ${homeFolder} branch
+fi`,
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the DownloadFolders step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createDownloadFoldersStep(vsCodeUser: string, homeFolder: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'DownloadFolders',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          `if [[ -z "{{ FolderZipS3Path }}" ]]
+then
+  echo "No folders"
+else
+  rm -rf /tmp/folder
+  mkdir -p /tmp/folder && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/folder
+  aws s3 cp s3://{{ FolderZipS3Path }} /tmp/asset-folder.zip
+  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset-folder.zip
+  unzip -o /tmp/asset-folder.zip -d /tmp/folder
+  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/folder
+  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
+  cd "${homeFolder}" && cd ..
+  if [[ $(pwd) ==  "/" ]]
+  then
+    targetRootFolder=""
+  else
+    targetRootFolder=$(pwd)
+    chown -R ${vsCodeUser}:${vsCodeUser} .
+  fi
+  find "/tmp/folder" -maxdepth 1 -mindepth 1 -type d | while read sourceFolder; do
+    folder="$(basename $sourceFolder)"
+    echo "Processing folder: $folder"
+    targetFolder=$targetRootFolder/$folder
+    if [[ $targetRootFolder == "" ]]
+    then
+      mv $sourceFolder /
+    else
+      mv $sourceFolder $targetRootFolder
+    fi
+    chown -R ${vsCodeUser}:${vsCodeUser} $targetFolder
+    sudo -u ${vsCodeUser} git -C $targetFolder init
+    sudo -u ${vsCodeUser} git -C $targetFolder add .
+    sudo -u ${vsCodeUser} git -C $targetFolder commit -m "chore: initial commit"
+    echo "Folder downloaded. Checking configuration: $targetFolder"
+    ls -la $targetFolder
+  done
+  rm -rf /tmp/folder
+fi`,
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the InstallCDK step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createInstallCDKStep(): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'InstallCDK',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          'npm install -g aws-cdk',
+          'echo "AWS CDK installed. Checking configuration"',
+          'cdk --version',
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the InstallQCLI step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createInstallQCLIStep(vsCodeUser: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'InstallQCLI',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          'curl --proto \'=https\' --tlsv1.2 -sSf "https://desktop-release.q.us-east-1.amazonaws.com/latest/q-$(uname -m)-linux.zip" -o /tmp/q.zip',
+          `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q.zip`,
+          'unzip -q -d /tmp /tmp/q.zip',
+          `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q`,
+          'chmod +x /tmp/q/install.sh',
+          `sudo -u ${vsCodeUser} /tmp/q/install.sh --no-confirm`,
+          'rm -rf /tmp/q',
+          'q --version',
+          'echo "Amazon Q CLI installed"',
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the Installuv step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createInstalluvStep(vsCodeUser: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'Installuv',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          `sudo -u ${vsCodeUser} --login curl -fsSL https://astral.sh/uv/install.sh -o /tmp/uv_install.sh`,
+          `sudo -u ${vsCodeUser} --login bash /tmp/uv_install.sh`,
+          `if uv generate-shell-completion bash &>/dev/null; then
+  echo 'eval "$(uv generate-shell-completion bash)"' >> /home/${vsCodeUser}/.bashrc
+fi`,
+          `if uvx generate-shell-completion bash &>/dev/null; then
+  echo 'eval "$(uvx generate-shell-completion bash)"' >> /home/${vsCodeUser}/.bashrc
+fi`,
+          'echo "uv installed. Checking configuration"',
+          `sudo -u ${vsCodeUser} --login uv --version`,
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the ConfigureCodeServer step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createConfigureCodeServerStep(
+    vsCodeUser: string,
+    homeFolder: string,
+    devServerBasePath: string,
+    devServerPort: number,
+    serverNameDirective: string,
+  ): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'ConfigureCodeServer',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          `export HOME=/home/${vsCodeUser}`,
+          'curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 4.100.3',
+          `systemctl enable --now code-server@${vsCodeUser} 2>&1`,
+          `tee /etc/nginx/conf.d/code-server.conf <<EOF
+server {
+    listen 80;
+    listen [::]:80;
+    # server_name \\$\\{CloudFrontDistribution.DomainName\\};
+    ${serverNameDirective}
+    location / {
+      proxy_pass http://localhost:8080/;
+      proxy_set_header Host \\$host;
+      proxy_set_header Upgrade \\$http_upgrade;
+      proxy_set_header Connection upgrade;
+      proxy_set_header Accept-Encoding gzip;
+    }
+    location /${devServerBasePath} {
+      proxy_pass http://localhost:${devServerPort}/${devServerBasePath};
+      proxy_set_header Host \\$host;
+      proxy_set_header Upgrade \\$http_upgrade;
+      proxy_set_header Connection upgrade;
+      proxy_set_header Accept-Encoding gzip;
+    }
+}
+EOF`,
+          `mkdir -p /home/${vsCodeUser}/.config/code-server`,
+          `tee /home/${vsCodeUser}/.config/code-server/config.yaml <<EOF
+cert: false
+auth: password
+hashed-password: "$(echo -n {{ VSCodePassword }} | argon2 $(openssl rand -base64 12) -e)"
+EOF`,
+          `mkdir -p /home/${vsCodeUser}/.local/share/code-server/User/`,
+          `touch /home/${vsCodeUser}/.hushlogin`,
+          `mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}`,
+          `tee /home/${vsCodeUser}/.local/share/code-server/User/settings.json <<EOF
+{
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "telemetry.telemetryLevel": "off",
+  "security.workspace.trust.startupPrompt": "never",
+  "security.workspace.trust.enabled": false,
+  "security.workspace.trust.banner": "never",
+  "security.workspace.trust.emptyWindow": false,
+  "auto-run-command.rules": [
+    {
+      "command": "workbench.action.terminal.new"
+    }
+  ]
+}
+EOF`,
+          `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
+          `systemctl restart code-server@${vsCodeUser}`,
+          'systemctl restart nginx',
+          `sudo -u ${vsCodeUser} --login code-server --install-extension AmazonWebServices.aws-toolkit-vscode --force`,
+          `sudo -u ${vsCodeUser} --login code-server --install-extension AmazonWebServices.amazon-q-vscode --force`,
+          `sudo -u ${vsCodeUser} --login code-server --install-extension ms-vscode.live-server --force`,
+          `sudo -u ${vsCodeUser} --login code-server --install-extension synedra.auto-run-command --force`,
+          `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
+          'echo "Nginx installed. Checking configuration"',
+          'nginx -t 2>&1',
+          'systemctl status nginx',
+          'echo "CodeServer installed. Checking configuration"',
+          'code-server -v',
+          `systemctl status code-server@${vsCodeUser}`,
+        ],
+      },
+    };
+  }
+
+  /**
+   * Creates the DownloadBranches step for SSM document
+   * This step is identical for both Ubuntu and Amazon Linux
+   */
+  private createDownloadBranchesStep(vsCodeUser: string, homeFolder: string): any {
+    return {
+      action: 'aws:runShellScript',
+      name: 'DownloadBranches',
+      inputs: {
+        runCommand: [
+          '#!/bin/bash',
+          `if [[ -z "{{ BranchZipS3Path }}" ]]
+then
+  echo "No branches"
+else
+  rm -rf /tmp/branch
+  rm -rf /tmp/git
+  mkdir -p /tmp/branch && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/branch
+  mkdir -p /tmp/git && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/git
+  aws s3 cp s3://{{ BranchZipS3Path }} /tmp/asset-branch.zip
+  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset-branch.zip
+  unzip -o /tmp/asset-branch.zip -d /tmp/branch
+  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/branch
+  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
+  sudo -u ${vsCodeUser} git -C ${homeFolder} init
+  mv ${homeFolder}/.git /tmp/git
+  rm -rf ${homeFolder}
+  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
+  mv /tmp/git/.git ${homeFolder}
+  find /tmp/branch -maxdepth 1 -mindepth 1 -type d | while read sourceFolder; do
+    branch="$(basename $sourceFolder)"
+    echo "Processing branch: $branch"
+    sudo -u ${vsCodeUser} git -C ${homeFolder} checkout -b $branch 2>&1
+    cp -a $sourceFolder/. ${homeFolder}
+    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
+    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m "chore: initial commit $branch"
+    mv ${homeFolder}/.git /tmp/git
+    rm -rf ${homeFolder}
+    mkdir ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
+    mv /tmp/git/.git ${homeFolder}
+  done
+  sudo -u ${vsCodeUser} git -C ${homeFolder} checkout main 2>&1
+  sudo -u ${vsCodeUser} git -C ${homeFolder} restore .
+  rm -rf /tmp/branch
+  rm -rf /tmp/git
+  echo "Branches downloaded. Checking configuration: ${homeFolder}"
+  sudo -u ${vsCodeUser} git -C ${homeFolder} branch
+  ls -la ${homeFolder}
+fi`,
+        ],
+      },
+    };
+  }
+
   private createSSMDocument(
     scope: Construct,
     devServerBasePath: string,
@@ -271,28 +685,8 @@ export abstract class Installer {
             },
             // all mainSteps scripts are in in /var/lib/amazon/ssm/<instanceid>/document/orchestration/<uuid>/<StepName>/_script.sh
             mainSteps: [
-              {
-                action: 'aws:configurePackage',
-                name: 'InstallCloudWatchAgent',
-                inputs: {
-                  name: 'AmazonCloudWatchAgent',
-                  action: 'Install',
-                },
-              },
-              {
-                action: 'aws:runDocument',
-                name: 'ConfigureCloudWatchAgent',
-                inputs: {
-                  documentType: 'SSMDocument',
-                  documentPath: 'AmazonCloudWatch-ManageAgent',
-                  documentParameters: {
-                    action: 'configure',
-                    mode: 'ec2',
-                    optionalConfigurationSource: 'default',
-                    optionalRestart: 'yes',
-                  },
-                },
-              },
+              this.createInstallCloudWatchAgentStep(),
+              this.createConfigureCloudWatchAgentStep(),
               {
                 action: 'aws:runShellScript',
                 name: 'InstallAptPackagesApt',
@@ -347,41 +741,8 @@ EOF`,
                   ],
                 },
               },
-              {
-                action: 'aws:runShellScript',
-                name: 'UpdateProfile',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    'echo LANG=en_US.utf-8 >> /etc/environment',
-                    'echo LC_ALL=en_US.UTF-8 >> /etc/environment',
-                    `echo 'PATH=$PATH:/home/${vsCodeUser}/.local/bin' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export PATH' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export AWS_REGION=${Stack.of(scope).region}' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export AWS_ACCOUNTID=${Stack.of(scope).account}' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export NEXT_TELEMETRY_DISABLED=1' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo "export PS1='\\[\\033[01;32m\\]\\u:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '" >> /home/${vsCodeUser}/.bashrc`,
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'InstallAWSCLI',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    'mkdir -p /tmp',
-                    'curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip -o /tmp/aws-cli.zip',
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/aws-cli.zip`,
-                    'unzip -q -d /tmp /tmp/aws-cli.zip',
-                    'sudo /tmp/aws/install',
-                    'rm -rf /tmp/aws',
-                    'echo "AWS CLI installed. Checking configuration"',
-                    'aws --version',
-                  ],
-                },
-              },
+              this.createUpdateProfileStep(vsCodeUser, Stack.of(scope).region, Stack.of(scope).account),
+              this.createInstallAWSCLIStep(vsCodeUser),
               {
                 action: 'aws:runShellScript',
                 name: 'InstallGitApt',
@@ -399,224 +760,11 @@ EOF`,
                   ],
                 },
               },
-              {
-                action: 'aws:runShellScript',
-                name: 'CloneRepo',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ RepoUrl }}" ]]
-then
-  echo "No Repo"
-else
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  sudo -u ${vsCodeUser} git clone {{ RepoUrl }} ${homeFolder}
-  echo "Repo {{ RepoUrl }} cloned. Checking configuration"
-  ls -la ${homeFolder}
-  sudo -u ${vsCodeUser} git -C ${homeFolder} remote -v
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'DownloadAssets',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ AssetZipS3Path }}" ]]
-then
-  echo "No assets"
-else
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  mkdir -p /tmp
-  aws s3 cp s3://{{ AssetZipS3Path }} /tmp/asset.zip
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset.zip
-  unzip -o /tmp/asset.zip -d ${homeFolder}
-  chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  if  [[ -d ${homeFolder}/.git ]]
-  then
-    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: workshop commit'
-  else
-    sudo -u ${vsCodeUser} git -C ${homeFolder} init
-    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: nitial commit'
-  fi
-  echo "Assets downloaded. Checking configuration: ${homeFolder}"
-  ls -la ${homeFolder}
-  sudo -u ${vsCodeUser} git -C ${homeFolder} branch
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'DownloadFolders',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ FolderZipS3Path }}" ]]
-then
-  echo "No folders"
-else
-  rm -rf /tmp/folder
-  mkdir -p /tmp/folder && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/folder
-  aws s3 cp s3://{{ FolderZipS3Path }} /tmp/asset-folder.zip
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset-folder.zip
-  unzip -o /tmp/asset-folder.zip -d /tmp/folder
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/folder
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  cd "${homeFolder}" && cd ..
-  if [[ $(pwd) ==  "/" ]]
-  then
-    targetRootFolder=""
-  else
-    targetRootFolder=$(pwd)
-    chown -R ${vsCodeUser}:${vsCodeUser} .
-  fi
-  find "/tmp/folder" -maxdepth 1 -mindepth 1 -type d | while read sourceFolder; do
-    folder="$(basename $sourceFolder)"
-    echo "Processing folder: $folder"
-    targetFolder=$targetRootFolder/$folder
-    if [[ $targetRootFolder == "" ]]
-    then
-      mv $sourceFolder /
-    else
-      mv $sourceFolder $targetRootFolder
-    fi
-    chown -R ${vsCodeUser}:${vsCodeUser} $targetFolder
-    sudo -u ${vsCodeUser} git -C $targetFolder init
-    sudo -u ${vsCodeUser} git -C $targetFolder add .
-    sudo -u ${vsCodeUser} git -C $targetFolder commit -m "chore: initial commit"
-    echo "Folder downloaded. Checking configuration: $targetFolder"
-    ls -la $targetFolder
-  done
-  rm -rf /tmp/folder
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'DownloadBranches',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ BranchZipS3Path }}" ]]
-then
-  echo "No branches"
-else
-  rm -rf /tmp/branch
-  rm -rf /tmp/git
-  mkdir -p /tmp/branch && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/branch
-  mkdir -p /tmp/git && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/git
-  aws s3 cp s3://{{ BranchZipS3Path }} /tmp/asset-branch.zip
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset-branch.zip
-  unzip -o /tmp/asset-branch.zip -d /tmp/branch
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/branch
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  sudo -u ${vsCodeUser} git -C ${homeFolder} init
-  mv ${homeFolder}/.git /tmp/git
-  rm -rf ${homeFolder}
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  mv /tmp/git/.git ${homeFolder}
-  find /tmp/branch -maxdepth 1 -mindepth 1 -type d | while read sourceFolder; do
-    branch="$(basename $sourceFolder)"
-    echo "Processing branch: $branch"
-    sudo -u ${vsCodeUser} git -C ${homeFolder} checkout -b $branch 2>&1
-    cp -a $sourceFolder/. ${homeFolder}
-    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m "chore: initial commit $branch"
-    mv ${homeFolder}/.git /tmp/git
-    rm -rf ${homeFolder}
-    mkdir ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-    mv /tmp/git/.git ${homeFolder}
-  done
-  sudo -u ${vsCodeUser} git -C ${homeFolder} checkout main 2>&1
-  sudo -u ${vsCodeUser} git -C ${homeFolder} restore .
-  rm -rf /tmp/branch
-  rm -rf /tmp/git
-  echo "Branches downloaded. Checking configuration: ${homeFolder}"
-  sudo -u ${vsCodeUser} git -C ${homeFolder} branch
-  ls -la ${homeFolder}
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'ConfigureCodeServer',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `export HOME=/home/${vsCodeUser}`,
-                    'curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 4.100.3',
-                    `systemctl enable --now code-server@${vsCodeUser} 2>&1`,
-                    `tee /etc/nginx/conf.d/code-server.conf <<EOF
-server {
-    listen 80;
-    listen [::]:80;
-    # server_name \\$\\{CloudFrontDistribution.DomainName\\};
-    ${serverNameDirective}
-    location / {
-      proxy_pass http://localhost:8080/;
-      proxy_set_header Host \\$host;
-      proxy_set_header Upgrade \\$http_upgrade;
-      proxy_set_header Connection upgrade;
-      proxy_set_header Accept-Encoding gzip;
-    }
-    location /${devServerBasePath} {
-      proxy_pass http://localhost:${devServerPort}/${devServerBasePath};
-      proxy_set_header Host \\$host;
-      proxy_set_header Upgrade \\$http_upgrade;
-      proxy_set_header Connection upgrade;
-      proxy_set_header Accept-Encoding gzip;
-    }
-}
-EOF`,
-                    `mkdir -p /home/${vsCodeUser}/.config/code-server`,
-                    `tee /home/${vsCodeUser}/.config/code-server/config.yaml <<EOF
-cert: false
-auth: password
-hashed-password: "$(echo -n {{ VSCodePassword }} | argon2 $(openssl rand -base64 12) -e)"
-EOF`,
-                    `mkdir -p /home/${vsCodeUser}/.local/share/code-server/User/`,
-                    `touch /home/${vsCodeUser}/.hushlogin`,
-                    `mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}`,
-                    `tee /home/${vsCodeUser}/.local/share/code-server/User/settings.json <<EOF
-{
-  "extensions.autoUpdate": false,
-  "extensions.autoCheckUpdates": false,
-  "telemetry.telemetryLevel": "off",
-  "security.workspace.trust.startupPrompt": "never",
-  "security.workspace.trust.enabled": false,
-  "security.workspace.trust.banner": "never",
-  "security.workspace.trust.emptyWindow": false,
-  "auto-run-command.rules": [
-    {
-      "command": "workbench.action.terminal.new"
-    }
-  ]
-}
-EOF`,
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
-                    `systemctl restart code-server@${vsCodeUser}`,
-                    'systemctl restart nginx',
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension AmazonWebServices.aws-toolkit-vscode --force`,
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension AmazonWebServices.amazon-q-vscode --force`,
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension ms-vscode.live-server --force`,
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension synedra.auto-run-command --force`,
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
-                    'echo "Nginx installed. Checking configuration"',
-                    'nginx -t 2>&1',
-                    'systemctl status nginx',
-                    'echo "CodeServer installed. Checking configuration"',
-                    'code-server -v',
-                    `systemctl status code-server@${vsCodeUser}`,
-                  ],
-                },
-              },
+              this.createCloneRepoStep(vsCodeUser, homeFolder),
+              this.createDownloadAssetsStep(vsCodeUser, homeFolder),
+              this.createDownloadFoldersStep(vsCodeUser, homeFolder),
+              this.createDownloadBranchesStep(vsCodeUser, homeFolder),
+              this.createConfigureCodeServerStep(vsCodeUser, homeFolder, devServerBasePath, devServerPort, serverNameDirective),
               {
                 action: 'aws:runShellScript',
                 name: 'InstallNodeApt',
@@ -633,55 +781,9 @@ EOF`,
                   ],
                 },
               },
-              {
-                action: 'aws:runShellScript',
-                name: 'InstallCDK',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    'npm install -g aws-cdk',
-                    'echo "AWS CDK installed. Checking configuration"',
-                    'cdk --version',
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'InstallQCLI',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    'curl --proto \'=https\' --tlsv1.2 -sSf "https://desktop-release.q.us-east-1.amazonaws.com/latest/q-$(uname -m)-linux.zip" -o /tmp/q.zip',
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q.zip`,
-                    'unzip -q -d /tmp /tmp/q.zip',
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q`,
-                    'chmod +x /tmp/q/install.sh',
-                    `sudo -u ${vsCodeUser} /tmp/q/install.sh --no-confirm`,
-                    'rm -rf /tmp/q',
-                    'q --version',
-                    'echo "Amazon Q CLI installed"',
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'Installuv',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `sudo -u ${vsCodeUser} --login curl -fsSL https://astral.sh/uv/install.sh -o /tmp/uv_install.sh`,
-                    `sudo -u ${vsCodeUser} --login bash /tmp/uv_install.sh`,
-                    `if uv generate-shell-completion bash &>/dev/null; then
-  echo 'eval "$(uv generate-shell-completion bash)"' >> /home/${vsCodeUser}/.bashrc
-fi`,
-                    `if uvx generate-shell-completion bash &>/dev/null; then
-  echo 'eval "$(uvx generate-shell-completion bash)"' >> /home/${vsCodeUser}/.bashrc
-fi`,
-                    'echo "uv installed. Checking configuration"',
-                    `sudo -u ${vsCodeUser} --login uv --version`,
-                  ],
-                },
-              },
+              this.createInstallCDKStep(),
+              this.createInstallQCLIStep(vsCodeUser),
+              this.createInstalluvStep(vsCodeUser),
               {
                 action: 'aws:runShellScript',
                 name: 'InstallPythonApt',
@@ -825,28 +927,8 @@ fi`,
             },
             // all mainSteps scripts are in in /var/lib/amazon/ssm/<instanceid>/document/orchestration/<uuid>/<StepName>/_script.sh
             mainSteps: [
-              {
-                action: 'aws:configurePackage',
-                name: 'InstallCloudWatchAgent',
-                inputs: {
-                  name: 'AmazonCloudWatchAgent',
-                  action: 'Install',
-                },
-              },
-              {
-                action: 'aws:runDocument',
-                name: 'ConfigureCloudWatchAgent',
-                inputs: {
-                  documentType: 'SSMDocument',
-                  documentPath: 'AmazonCloudWatch-ManageAgent',
-                  documentParameters: {
-                    action: 'configure',
-                    mode: 'ec2',
-                    optionalConfigurationSource: 'default',
-                    optionalRestart: 'yes',
-                  },
-                },
-              },
+              this.createInstallCloudWatchAgentStep(),
+              this.createConfigureCloudWatchAgentStep(),
               {
                 action: 'aws:runShellScript',
                 name: 'InstallBasePackagesDnf',
@@ -883,41 +965,8 @@ EOF`,
                   ],
                 },
               },
-              {
-                action: 'aws:runShellScript',
-                name: 'UpdateProfile',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    'echo LANG=en_US.utf-8 >> /etc/environment',
-                    'echo LC_ALL=en_US.UTF-8 >> /etc/environment',
-                    `echo 'PATH=$PATH:/home/${vsCodeUser}/.local/bin' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export PATH' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export AWS_REGION=${Stack.of(scope).region}' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export AWS_ACCOUNTID=${Stack.of(scope).account}' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo 'export NEXT_TELEMETRY_DISABLED=1' >> /home/${vsCodeUser}/.bashrc`,
-                    `echo "export PS1='\\[\\033[01;32m\\]\\u:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '" >> /home/${vsCodeUser}/.bashrc`,
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'InstallAWSCLI',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    'mkdir -p /tmp',
-                    'curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip -o /tmp/aws-cli.zip',
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/aws-cli.zip`,
-                    'unzip -q -d /tmp /tmp/aws-cli.zip',
-                    'sudo /tmp/aws/install',
-                    'rm -rf /tmp/aws',
-                    'echo "AWS CLI installed. Checking configuration"',
-                    'aws --version',
-                  ],
-                },
-              },
+              this.createUpdateProfileStep(vsCodeUser, Stack.of(scope).region, Stack.of(scope).account),
+              this.createInstallAWSCLIStep(vsCodeUser),
               {
                 action: 'aws:runShellScript',
                 name: 'InstallGitDnf',
@@ -933,224 +982,11 @@ EOF`,
                   ],
                 },
               },
-              {
-                action: 'aws:runShellScript',
-                name: 'CloneRepo',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ RepoUrl }}" ]]
-then
-  echo "No Repo"
-else
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  sudo -u ${vsCodeUser} git clone {{ RepoUrl }} ${homeFolder}
-  echo "Repo {{ RepoUrl }} cloned. Checking configuration"
-  ls -la ${homeFolder}
-  sudo -u ${vsCodeUser} git -C ${homeFolder} remote -v
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'DownloadAssets',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ AssetZipS3Path }}" ]]
-then
-  echo "No assets"
-else
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  mkdir -p /tmp
-  aws s3 cp s3://{{ AssetZipS3Path }} /tmp/asset.zip
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset.zip
-  unzip -o /tmp/asset.zip -d ${homeFolder}
-  chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  if  [[ -d ${homeFolder}/.git ]]
-  then
-    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: workshop commit'
-  else
-    sudo -u ${vsCodeUser} git -C ${homeFolder} init
-    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m 'chore: initial commit'
-  fi
-  echo "Assets downloaded. Checking configuration: ${homeFolder}"
-  ls -la ${homeFolder}
-  sudo -u ${vsCodeUser} git -C ${homeFolder} branch
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'DownloadFolders',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ FolderZipS3Path }}" ]]
-then
-  echo "No folders"
-else
-  rm -rf /tmp/folder
-  mkdir -p /tmp/folder && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/folder
-  aws s3 cp s3://{{ FolderZipS3Path }} /tmp/asset-folder.zip
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset-folder.zip
-  unzip -o /tmp/asset-folder.zip -d /tmp/folder
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/folder
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  cd "${homeFolder}" && cd ..
-  if [[ $(pwd) ==  "/" ]]
-  then
-    targetRootFolder=""
-  else
-    targetRootFolder=$(pwd)
-    chown -R ${vsCodeUser}:${vsCodeUser} .
-  fi
-  find "/tmp/folder" -maxdepth 1 -mindepth 1 -type d | while read sourceFolder; do
-    folder="$(basename $sourceFolder)"
-    echo "Processing folder: $folder"
-    targetFolder=$targetRootFolder/$folder
-    if [[ $targetRootFolder == "" ]]
-    then
-      mv $sourceFolder /
-    else
-      mv $sourceFolder $targetRootFolder
-    fi
-    chown -R ${vsCodeUser}:${vsCodeUser} $targetFolder
-    sudo -u ${vsCodeUser} git -C $targetFolder init
-    sudo -u ${vsCodeUser} git -C $targetFolder add .
-    sudo -u ${vsCodeUser} git -C $targetFolder commit -m "chore: initial commit"
-    echo "Folder downloaded. Checking configuration: $targetFolder"
-    ls -la $targetFolder
-  done
-  rm -rf /tmp/folder
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'DownloadBranches',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `if [[ -z "{{ BranchZipS3Path }}" ]]
-then
-  echo "No branches"
-else
-  rm -rf /tmp/branch
-  rm -rf /tmp/git
-  mkdir -p /tmp/branch && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/branch
-  mkdir -p /tmp/git && chown -R ${vsCodeUser}:${vsCodeUser} /tmp/git
-  aws s3 cp s3://{{ BranchZipS3Path }} /tmp/asset-branch.zip
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/asset-branch.zip
-  unzip -o /tmp/asset-branch.zip -d /tmp/branch
-  chown -R ${vsCodeUser}:${vsCodeUser} /tmp/branch
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  sudo -u ${vsCodeUser} git -C ${homeFolder} init
-  mv ${homeFolder}/.git /tmp/git
-  rm -rf ${homeFolder}
-  mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-  mv /tmp/git/.git ${homeFolder}
-  find /tmp/branch -maxdepth 1 -mindepth 1 -type d | while read sourceFolder; do
-    branch="$(basename $sourceFolder)"
-    echo "Processing branch: $branch"
-    sudo -u ${vsCodeUser} git -C ${homeFolder} checkout -b $branch 2>&1
-    cp -a $sourceFolder/. ${homeFolder}
-    sudo -u ${vsCodeUser} git -C ${homeFolder} add .
-    sudo -u ${vsCodeUser} git -C ${homeFolder} commit -m "chore: initial commit $branch"
-    mv ${homeFolder}/.git /tmp/git
-    rm -rf ${homeFolder}
-    mkdir ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}
-    mv /tmp/git/.git ${homeFolder}
-  done
-  sudo -u ${vsCodeUser} git -C ${homeFolder} checkout main 2>&1
-  sudo -u ${vsCodeUser} git -C ${homeFolder} restore .
-  rm -rf /tmp/branch
-  rm -rf /tmp/git
-  echo "Branches downloaded. Checking configuration: ${homeFolder}"
-  sudo -u ${vsCodeUser} git -C ${homeFolder} branch
-  ls -la ${homeFolder}
-fi`,
-                  ],
-                },
-              },
-              {
-                action: 'aws:runShellScript',
-                name: 'ConfigureCodeServer',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    `export HOME=/home/${vsCodeUser}`,
-                    'curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 4.100.3',
-                    `systemctl enable --now code-server@${vsCodeUser} 2>&1`,
-                    `tee /etc/nginx/conf.d/code-server.conf <<EOF
-server {
-    listen 80;
-    listen [::]:80;
-    # server_name \\$\\{CloudFrontDistribution.DomainName\\};
-    ${serverNameDirective}
-    location / {
-      proxy_pass http://localhost:8080/;
-      proxy_set_header Host \\$host;
-      proxy_set_header Upgrade \\$http_upgrade;
-      proxy_set_header Connection upgrade;
-      proxy_set_header Accept-Encoding gzip;
-    }
-    location /${devServerBasePath} {
-      proxy_pass http://localhost:${devServerPort}/${devServerBasePath};
-      proxy_set_header Host \\$host;
-      proxy_set_header Upgrade \\$http_upgrade;
-      proxy_set_header Connection upgrade;
-      proxy_set_header Accept-Encoding gzip;
-    }
-}
-EOF`,
-                    `mkdir -p /home/${vsCodeUser}/.config/code-server`,
-                    `tee /home/${vsCodeUser}/.config/code-server/config.yaml <<EOF
-cert: false
-auth: password
-hashed-password: "$(echo -n {{ VSCodePassword }} | argon2 $(openssl rand -base64 12) -e)"
-EOF`,
-                    `mkdir -p /home/${vsCodeUser}/.local/share/code-server/User/`,
-                    `touch /home/${vsCodeUser}/.hushlogin`,
-                    `mkdir -p ${homeFolder} && chown -R ${vsCodeUser}:${vsCodeUser} ${homeFolder}`,
-                    `tee /home/${vsCodeUser}/.local/share/code-server/User/settings.json <<EOF
-{
-  "extensions.autoUpdate": false,
-  "extensions.autoCheckUpdates": false,
-  "telemetry.telemetryLevel": "off",
-  "security.workspace.trust.startupPrompt": "never",
-  "security.workspace.trust.enabled": false,
-  "security.workspace.trust.banner": "never",
-  "security.workspace.trust.emptyWindow": false,
-  "auto-run-command.rules": [
-    {
-      "command": "workbench.action.terminal.new"
-    }
-  ]
-}
-EOF`,
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
-                    `systemctl restart code-server@${vsCodeUser}`,
-                    'systemctl restart nginx',
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension AmazonWebServices.aws-toolkit-vscode --force`,
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension AmazonWebServices.amazon-q-vscode --force`,
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension ms-vscode.live-server --force`,
-                    `sudo -u ${vsCodeUser} --login code-server --install-extension synedra.auto-run-command --force`,
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /home/${vsCodeUser}`,
-                    'echo "Nginx installed. Checking configuration"',
-                    'nginx -t 2>&1',
-                    'systemctl status nginx',
-                    'echo "CodeServer installed. Checking configuration"',
-                    'code-server -v',
-                    `systemctl status code-server@${vsCodeUser}`,
-                  ],
-                },
-              },
+              this.createCloneRepoStep(vsCodeUser, homeFolder),
+              this.createDownloadAssetsStep(vsCodeUser, homeFolder),
+              this.createDownloadFoldersStep(vsCodeUser, homeFolder),
+              this.createDownloadBranchesStep(vsCodeUser, homeFolder),
+              this.createConfigureCodeServerStep(vsCodeUser, homeFolder, devServerBasePath, devServerPort, serverNameDirective),
               {
                 action: 'aws:runShellScript',
                 name: 'InstallNodeDnf',

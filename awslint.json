@@ -1,0 +1,5 @@
+{
+  "exclude": [
+    "props-no-arn-refs:@mavogel/cdk-vscode-server.VSCodeServerProps.certificateArn"
+  ]
+}

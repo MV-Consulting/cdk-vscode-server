@@ -6,7 +6,7 @@
         "IntegTestStackAl2023"
       ],
       "regions": [
-        "${Token[AWS.Region.8]}"
+        "${Token[AWS.Region.12]}"
       ],
       "cdkCommandOptions": {
         "destroy": {

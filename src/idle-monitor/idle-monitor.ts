@@ -110,9 +110,12 @@ export class IdleMonitor extends Construct {
     );
 
     // Create EventBridge rule to trigger at specified interval
+    // NOTE: Rule is created in DISABLED state and must be explicitly enabled
+    // after installation completes to prevent stopping the instance during setup
     const checkInterval = props.checkIntervalMinutes ?? 5;
     this.scheduleRule = new Rule(this, 'ScheduleRule', {
       schedule: Schedule.rate(Duration.minutes(checkInterval)),
+      enabled: false, // Start disabled, will be enabled after installation
     });
 
     this.scheduleRule.addTarget(new LambdaFunctionTarget(this.function));

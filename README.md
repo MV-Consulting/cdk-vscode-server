@@ -21,7 +21,9 @@ we implement new features. Therefore make sure you use an exact version in your 
 - [Features](#features)
 - [Usage](#usage)
   - [Standard](#Standard)
+  - [Pre-populate with Git Repository](#pre-populate-with-git-repository)
   - [Custom Domain Configuration](#custom-domain-configuration)
+  - [Auto-Stop Configuration](#auto-stop-configuration)
 - [Solution Design](#solution-design)
 - [Inspiration](#inspiration)
 
@@ -31,7 +33,7 @@ we implement new features. Therefore make sure you use an exact version in your 
 - 📏 **Best Practice Setup**: Set up with [projen](https://projen.io/) and a [single configuration file](./.projenrc.ts) to keep your changes centralized.
 - 🤹‍♂️ **Pre-installed packages**: Besides the [vscode](https://code.visualstudio.com/) server, other tools and software packages such as `git`, `docker`, `awscli` `nodejs` and `python` are pre-installed on the EC2 instance.
 - 🌐 **Custom Domain Support**: Use your own domain name with automatic ACM certificate creation and Route53 DNS configuration, or bring your existing certificate.
-- 💰 **Auto-Stop**: Automatically stop EC2 instances after inactivity with Elastic IP retention - save up to 75% on costs for development environments
+- 💰 **Auto-Stop**: Automatically stop EC2 instances after inactivity with Elastic IP retention - save up to 75% on costs for development environments.
 - 🏗️ **Extensibility**: Pass in properties to the construct, which start with `additional*`. They allow you to extend the configuration to your needs. There are more to come...
 
 ## Usage
@@ -114,6 +116,41 @@ dev.vscodepassword64FBCA12 = foobarbaz
 ```
 
 See the [examples](./examples) folder for more inspiration.
+
+### Pre-populate with Git Repository
+
+Clone a git repository into the VS Code Server's home folder during instance setup - perfect for workshops or development environments with starter code:
+
+```ts
+new VSCodeServer(this, 'vscode', {
+  // Clone a git repository into the home folder
+  repoUrl: 'https://github.com/aws-samples/my-workshop-repo.git',
+
+  // Optional: customize the home folder path (default: /Workshop)
+  homeFolder: '/MyWorkshop',
+
+  // Optional: specify VS Code user (default: vscode-user)
+  vscodeUser: 'workshop-user',
+});
+```
+
+**What happens:**
+1. During instance setup, the specified git repository is cloned into the user's home folder
+2. VS Code Server opens with the repository already loaded and ready to use
+3. Participants can start coding immediately without manual git clone steps
+
+**Use cases:**
+- Workshop environments with pre-configured starter code
+- Development environments with boilerplate projects
+- Training sessions with example applications
+- Code review sessions with pre-loaded repositories
+
+**Repository requirements:**
+- Must be publicly accessible (no authentication required)
+- HTTPS URLs only (SSH git URLs are not supported)
+- Repository will be cloned using `git clone` during instance initialization
+
+For complete examples, see [examples/](./examples).
 
 ### Custom Domain Configuration
 
@@ -200,6 +237,7 @@ new VSCodeServer(this, 'vscode', {
 - Elastic IP for consistent public addressing
 - EventBridge rule triggering idle monitoring at configured intervals
 - IdleMonitor Lambda function checking CloudWatch metrics for request activity
+- IdleMonitorEnabler custom resource ensuring monitoring only starts after installation completes
 - CloudWatch metrics from CloudFront distribution
 
 **Integration Testing:**

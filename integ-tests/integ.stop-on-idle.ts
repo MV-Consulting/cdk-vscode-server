@@ -8,7 +8,6 @@ import {
   Stack,
   aws_lambda as lambda,
 } from 'aws-cdk-lib';
-import { InstanceClass, InstanceSize } from 'aws-cdk-lib/aws-ec2';
 import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { VSCodeServer } from '../src/vscode-server';
@@ -23,9 +22,7 @@ const stackUnderTest = new Stack(app, 'IntegTestStackStopOnIdle', {
 
 // Create VSCodeServer with skipStatusChecks to work around 120s assertion timeout:
 const constructUnderTest = new VSCodeServer(stackUnderTest, 'IntegVSCodeServer', {
-  instanceClass: InstanceClass.T4G,
-  instanceSize: InstanceSize.LARGE,
-  instanceVolumeSize: 8,
+  instanceVolumeSize: 20,
   enableAutoStop: true, // Enable automatic instance stop when idle
   idleTimeoutMinutes: 2, // Very short timeout for fast testing (2 minutes)
   idleCheckIntervalMinutes: 1, // Check every 1 minute for fast testing

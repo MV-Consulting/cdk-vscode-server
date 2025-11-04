@@ -1,4 +1,9 @@
-import { Command, SSM } from '@aws-sdk/client-ssm';
+import {
+  Command,
+  GetCommandInvocationCommand,
+  SendCommandCommand,
+  SSM,
+} from '@aws-sdk/client-ssm';
 // @ts-ignore
 import type {
   OnEventRequest,
@@ -59,52 +64,112 @@ export const handler = async (
   }
   console.log('mapped parameters: %j', parameters);
 
-  let attemptNo: number = 0;
-  let timeRemaining: number = context.getRemainingTimeInMillis();
-
   console.log(
     `Running SSM Document '${documentName}' on EC2 instance '${instanceId}'. Logging to '${cloudWatchLogGroupName}' with parameters: '${JSON.stringify(parameters)}'`,
   );
 
+  // Step 1: Send the SSM command once and get the CommandId
+  let commandId: string;
+  let attemptNo = 0;
+
+  // Retry loop for sending the command (handles IAM propagation issues)
   while (true) {
     attemptNo += 1;
+    const timeRemaining = context.getRemainingTimeInMillis();
     console.log(
-      `Attempt: ${attemptNo}. Time Remaining: ${timeRemaining / 1000}s`,
+      `Send attempt: ${attemptNo}. Time Remaining: ${timeRemaining / 1000}s`,
     );
 
     try {
-      const response = await ssm.sendCommand({
-        DocumentName: documentName,
-        InstanceIds: [instanceId],
-        CloudWatchOutputConfig: {
-          CloudWatchLogGroupName: cloudWatchLogGroupName,
-          CloudWatchOutputEnabled: true,
-        },
-        Parameters: parameters,
-      });
+      const response = await ssm.send(
+        new SendCommandCommand({
+          DocumentName: documentName,
+          InstanceIds: [instanceId],
+          CloudWatchOutputConfig: {
+            CloudWatchLogGroupName: cloudWatchLogGroupName,
+            CloudWatchOutputEnabled: true,
+          },
+          Parameters: parameters,
+        }),
+      );
 
-      console.log(`response: ${JSON.stringify(response)}`);
+      console.log(`sendCommand response: ${JSON.stringify(response)}`);
       const command: Command = response.Command!;
-      const commandId: string = command.CommandId!;
-      const responseData: any = { CommandId: commandId };
+      commandId = command.CommandId!;
+      console.log(`Command sent successfully. CommandId: ${commandId}`);
+      break; // Successfully sent command, exit retry loop
+    } catch (error: any) {
+      console.log('Error sending command:', error);
 
-      switch (command.Status!) {
+      // Check if this is a retryable error (IAM propagation, throttling, etc.)
+      const isUnauthorized =
+        error.name === 'UnauthorizedException' ||
+        error.name === 'AccessDeniedException' ||
+        (error.message && error.message.includes('not authorized'));
+      const isThrottled =
+        error.name === 'ThrottlingException' ||
+        error.name === 'TooManyRequestsException';
+      const isRetryable = isUnauthorized || isThrottled;
+
+      const remainingTime = context.getRemainingTimeInMillis();
+
+      if (isRetryable && remainingTime > SLEEP_MS) {
+        console.log(
+          `Retryable error encountered (${error.name}). Attempt ${attemptNo}. Sleeping: ${SLEEP_MS / 1000}s before retry`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, SLEEP_MS));
+        // Continue to next iteration of while loop
+      } else {
+        // Non-retryable error or out of time
+        console.log('Non-retryable error or timeout. Failing...');
+        throw error;
+      }
+    }
+  }
+
+  // Step 2: Poll for command completion using getCommandInvocation
+  let pollAttemptNo = 0;
+  const responseData: any = { CommandId: commandId };
+
+  while (true) {
+    pollAttemptNo += 1;
+    const timeRemaining = context.getRemainingTimeInMillis();
+    console.log(
+      `Poll attempt: ${pollAttemptNo}. Time Remaining: ${timeRemaining / 1000}s`,
+    );
+
+    try {
+      const invocationResponse = await ssm.send(
+        new GetCommandInvocationCommand({
+          CommandId: commandId,
+          InstanceId: instanceId,
+        }),
+      );
+
+      console.log(
+        `getCommandInvocation response: ${JSON.stringify(invocationResponse)}`,
+      );
+      const status = invocationResponse.Status!;
+
+      switch (status) {
         case 'Pending':
         case 'InProgress':
-          timeRemaining = context.getRemainingTimeInMillis();
+        case 'Delayed':
           if (timeRemaining > SLEEP_MS) {
             console.log(
-              `Instance ${instanceId} not ready: 'InProgress'. Sleeping: ${SLEEP_MS / 1000}s`,
+              `Command ${commandId} status: '${status}'. Sleeping: ${SLEEP_MS / 1000}s`,
             );
             await new Promise((resolve) => setTimeout(resolve, SLEEP_MS));
-            break;
+            break; // Continue polling
           } else {
             throw new Error(
-              `SSM Document ${documentName} on EC2 instance ${instanceId} timed out while lambda in progress`,
+              `SSM Document ${documentName} on EC2 instance ${instanceId} timed out while lambda waiting (status: ${status})`,
             );
           }
         case 'Success':
-          console.log(`Instance ${instanceId} successfully bootstrapped`);
+          console.log(
+            `Instance ${instanceId} successfully bootstrapped. Command ${commandId} completed.`,
+          );
           return { Data: responseData };
         case 'TimedOut':
           throw new Error(
@@ -120,33 +185,25 @@ export const handler = async (
           );
         default:
           throw new Error(
-            `SSM Document ${documentName} on EC2 instance ${instanceId} status ${command.Status!}`,
+            `SSM Document ${documentName} on EC2 instance ${instanceId} unknown status: ${status}`,
           );
       }
-
-      return { Data: responseData };
     } catch (error: any) {
-      console.log('Error occurred:', error);
+      // Check if this is an invocation not available yet error
+      const remainingTime = context.getRemainingTimeInMillis();
 
-      // Check if this is a retryable error (IAM propagation, throttling, etc.)
-      const isUnauthorized = error.name === 'UnauthorizedException' ||
-                            error.name === 'AccessDeniedException' ||
-                            (error.message && error.message.includes('not authorized'));
-      const isThrottled = error.name === 'ThrottlingException' ||
-                         error.name === 'TooManyRequestsException';
-      const isRetryable = isUnauthorized || isThrottled;
-
-      timeRemaining = context.getRemainingTimeInMillis();
-
-      if (isRetryable && timeRemaining > SLEEP_MS) {
+      if (
+        error.name === 'InvocationDoesNotExist' &&
+        remainingTime > SLEEP_MS
+      ) {
         console.log(
-          `Retryable error encountered (${error.name}). Attempt ${attemptNo}. Sleeping: ${SLEEP_MS / 1000}s before retry`,
+          `Invocation not yet available. Sleeping: ${SLEEP_MS / 1000}s`,
         );
         await new Promise((resolve) => setTimeout(resolve, SLEEP_MS));
-        // Continue to next iteration of while loop
+        // Continue polling
       } else {
         // Non-retryable error or out of time
-        console.log('Non-retryable error or timeout. Failing...');
+        console.log('Error checking command status:', error);
         throw error;
       }
     }

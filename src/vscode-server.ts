@@ -25,6 +25,28 @@ import { AwsManagedPrefixList } from './prefixlist-retriever/prefixlist-retrieve
 import { SecretRetriever } from './secret-retriever/secret-retriever';
 
 /**
+ * Custom installation step for SSM document
+ * Allows users to extend the installer with additional shell commands
+ */
+export interface CustomInstallStep {
+  /**
+   * Name of the installation step
+   * Must be unique within the SSM document
+   *
+   * @example 'InstallCustomTool'
+   */
+  readonly name: string;
+
+  /**
+   * Shell commands to run for this step
+   * Each command will be executed in sequence
+   *
+   * @example ['#!/bin/bash', 'echo "Installing custom tool"', 'apt-get install -y my-tool']
+   */
+  readonly commands: string[];
+}
+
+/**
  * Properties for the VSCodeServer construct
  */
 export interface VSCodeServerProps {
@@ -236,6 +258,39 @@ export interface VSCodeServerProps {
    * @default - no folders created
    */
   readonly folderZipS3Path?: string;
+
+  /**
+   * Custom installation steps to extend the SSM document
+   *
+   * Allows you to add additional shell commands that run after the standard installation steps.
+   * Useful for installing workshop-specific tools, configuring custom environments, or running
+   * setup scripts.
+   *
+   * Each step will be executed in the order provided, after all standard installation steps complete.
+   *
+   * @example
+   * customInstallSteps: [
+   *   {
+   *     name: 'InstallCustomTool',
+   *     commands: [
+   *       '#!/bin/bash',
+   *       'echo "Installing my custom tool"',
+   *       'curl -O https://example.com/tool.sh',
+   *       'bash tool.sh',
+   *     ],
+   *   },
+   *   {
+   *     name: 'ConfigureWorkshopEnv',
+   *     commands: [
+   *       '#!/bin/bash',
+   *       'echo "export MY_VAR=value" >> /home/participant/.bashrc',
+   *     ],
+   *   },
+   * ]
+   *
+   * @default - no custom installation steps
+   */
+  readonly customInstallSteps?: CustomInstallStep[];
 }
 
 /**
@@ -941,6 +996,7 @@ export class VSCodeServer extends Construct {
           assetZipS3Path: props?.assetZipS3Path,
           branchZipS3Path: props?.branchZipS3Path,
           folderZipS3Path: props?.folderZipS3Path,
+          customInstallSteps: props?.customInstallSteps,
         })._bind(this);
         break;
       case LinuxFlavorType.AMAZON_LINUX_2023:
@@ -957,6 +1013,7 @@ export class VSCodeServer extends Construct {
           assetZipS3Path: props?.assetZipS3Path,
           branchZipS3Path: props?.branchZipS3Path,
           folderZipS3Path: props?.folderZipS3Path,
+          customInstallSteps: props?.customInstallSteps,
         })._bind(this);
         break;
       default:

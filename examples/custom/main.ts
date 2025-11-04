@@ -17,7 +17,7 @@ export class MyStack extends Stack {
             instanceVolumeSize: 8,
             instanceClass: ec2.InstanceClass.M7G,
             instanceSize: ec2.InstanceSize.LARGE,
-            instanceOperatingSystem: LinuxFlavorType.UBUNTU_24,
+            instanceOperatingSystem: LinuxFlavorType.UBUNTU_24, // Supports UBUNTU_22, UBUNTU_24, UBUNTU_25, AMAZON_LINUX_2023
             instanceCpuArchitecture: LinuxArchitectureType.ARM,
 
             // 👇🏽 or if you want to give the InstanceRole more permissions
@@ -31,7 +31,29 @@ export class MyStack extends Stack {
                         `arn:aws:codebuild:*:${Stack.of(this).account}:*/*`,
                     ],
                 }),
-            ]
+            ],
+
+            // 👇🏽 Add custom installation steps to extend the standard setup
+            customInstallSteps: [
+                {
+                    name: 'InstallCodeBuildTools',
+                    commands: [
+                        '#!/bin/bash',
+                        'echo "Installing CodeBuild-related tools..."',
+                        // Install AWS CodeBuild local agent for testing
+                        'docker pull public.ecr.aws/codebuild/local-builds:latest',
+                        // Create helper script
+                        'cat > /usr/local/bin/codebuild-local << EOF',
+                        '#!/bin/bash',
+                        'docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \\',
+                        '  -e "IMAGE_NAME=public.ecr.aws/codebuild/local-builds:latest" \\',
+                        '  public.ecr.aws/codebuild/local-builds:latest',
+                        'EOF',
+                        'chmod +x /usr/local/bin/codebuild-local',
+                        'echo "CodeBuild tools installed successfully"',
+                    ],
+                },
+            ],
 
             // and more... 💡
         });

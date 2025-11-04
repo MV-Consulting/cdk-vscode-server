@@ -312,6 +312,65 @@ The IdleMonitor construct (only present if enableAutoStop is true).
 
 ## Structs <a name="Structs" id="Structs"></a>
 
+### CustomInstallStep <a name="CustomInstallStep" id="@mavogel/cdk-vscode-server.CustomInstallStep"></a>
+
+Custom installation step for SSM document Allows users to extend the installer with additional shell commands.
+
+#### Initializer <a name="Initializer" id="@mavogel/cdk-vscode-server.CustomInstallStep.Initializer"></a>
+
+```typescript
+import { CustomInstallStep } from '@mavogel/cdk-vscode-server'
+
+const customInstallStep: CustomInstallStep = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@mavogel/cdk-vscode-server.CustomInstallStep.property.commands">commands</a></code> | <code>string[]</code> | Shell commands to run for this step Each command will be executed in sequence. |
+| <code><a href="#@mavogel/cdk-vscode-server.CustomInstallStep.property.name">name</a></code> | <code>string</code> | Name of the installation step Must be unique within the SSM document. |
+
+---
+
+##### `commands`<sup>Required</sup> <a name="commands" id="@mavogel/cdk-vscode-server.CustomInstallStep.property.commands"></a>
+
+```typescript
+public readonly commands: string[];
+```
+
+- *Type:* string[]
+
+Shell commands to run for this step Each command will be executed in sequence.
+
+---
+
+*Example*
+
+```typescript
+['#!/bin/bash', 'echo "Installing custom tool"', 'apt-get install -y my-tool']
+```
+
+
+##### `name`<sup>Required</sup> <a name="name" id="@mavogel/cdk-vscode-server.CustomInstallStep.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+Name of the installation step Must be unique within the SSM document.
+
+---
+
+*Example*
+
+```typescript
+'InstallCustomTool'
+```
+
+
 ### IdleMonitorProps <a name="IdleMonitorProps" id="@mavogel/cdk-vscode-server.IdleMonitorProps"></a>
 
 Props for IdleMonitor construct.
@@ -423,6 +482,7 @@ const vSCodeServerProps: VSCodeServerProps = { ... }
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.autoCreateCertificate">autoCreateCertificate</a></code> | <code>boolean</code> | Auto-create ACM certificate with DNS validation in us-east-1 region Requires hostedZoneId to be provided for DNS validation Cannot be used together with certificateArn Certificate will automatically be created in us-east-1 as required by CloudFront. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.branchZipS3Path">branchZipS3Path</a></code> | <code>string</code> | S3 path to a zip file containing git branches to create in the home folder repository. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.certificateArn">certificateArn</a></code> | <code>string</code> | ARN of existing ACM certificate for the domain Certificate must be in us-east-1 region for CloudFront Cannot be used together with autoCreateCertificate. |
+| <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.customInstallSteps">customInstallSteps</a></code> | <code><a href="#@mavogel/cdk-vscode-server.CustomInstallStep">CustomInstallStep</a>[]</code> | Custom installation steps to extend the SSM document. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath">devServerBasePath</a></code> | <code>string</code> | Base path for the application to be added to Nginx sites-available list. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerPort">devServerPort</a></code> | <code>number</code> | Port for the DevServer. |
 | <code><a href="#@mavogel/cdk-vscode-server.VSCodeServerProps.property.domainName">domainName</a></code> | <code>string</code> | Custom domain name for the VS Code server When provided, creates a CloudFront distribution with this domain name and sets up Route53 A record pointing to the distribution. |
@@ -542,6 +602,49 @@ public readonly certificateArn: string;
 ARN of existing ACM certificate for the domain Certificate must be in us-east-1 region for CloudFront Cannot be used together with autoCreateCertificate.
 
 ---
+
+##### `customInstallSteps`<sup>Optional</sup> <a name="customInstallSteps" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.customInstallSteps"></a>
+
+```typescript
+public readonly customInstallSteps: CustomInstallStep[];
+```
+
+- *Type:* <a href="#@mavogel/cdk-vscode-server.CustomInstallStep">CustomInstallStep</a>[]
+- *Default:* no custom installation steps
+
+Custom installation steps to extend the SSM document.
+
+Allows you to add additional shell commands that run after the standard installation steps.
+Useful for installing workshop-specific tools, configuring custom environments, or running
+setup scripts.
+
+Each step will be executed in the order provided, after all standard installation steps complete.
+
+---
+
+*Example*
+
+```typescript
+customInstallSteps: [
+  {
+    name: 'InstallCustomTool',
+    commands: [
+      '#!/bin/bash',
+      'echo "Installing my custom tool"',
+      'curl -O https://example.com/tool.sh',
+      'bash tool.sh',
+    ],
+  },
+  {
+    name: 'ConfigureWorkshopEnv',
+    commands: [
+      '#!/bin/bash',
+      'echo "export MY_VAR=value" >> /home/participant/.bashrc',
+    ],
+  },
+]
+```
+
 
 ##### `devServerBasePath`<sup>Optional</sup> <a name="devServerBasePath" id="@mavogel/cdk-vscode-server.VSCodeServerProps.property.devServerBasePath"></a>
 

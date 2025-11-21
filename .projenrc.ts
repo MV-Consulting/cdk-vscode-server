@@ -53,7 +53,7 @@ const project = new MvcCdkConstructLibrary({
   // Python
   publishToPypi: {
     distName: 'cdk-vscode-server',
-    module: 'cdk-vscode-server',
+    module: 'cdk_vscode_server',
   },
   gitignore: ['settings.local.json'],
 });

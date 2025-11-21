@@ -165,7 +165,7 @@
     "targets": {
       "python": {
         "distName": "cdk-vscode-server",
-        "module": "cdk-vscode-server"
+        "module": "cdk_vscode_server"
       }
     },
     "tsc": {

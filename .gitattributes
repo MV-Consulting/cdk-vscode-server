@@ -5,7 +5,6 @@
 /.commitlintrc.js linguist-generated
 /.eslintrc.json linguist-generated
 /.gitattributes linguist-generated
-/.github/dependabot.yml linguist-generated
 /.github/FUNDING.yaml linguist-generated
 /.github/ISSUE_TEMPLATE/bug_report.md linguist-generated
 /.github/ISSUE_TEMPLATE/feature_request.md linguist-generated
@@ -14,6 +13,7 @@
 /.github/workflows/build.yml linguist-generated
 /.github/workflows/pull-request-lint.yml linguist-generated
 /.github/workflows/release.yml linguist-generated
+/.github/workflows/upgrade-main.yml linguist-generated
 /.gitignore linguist-generated
 /.mergify.yml linguist-generated
 /.npmignore linguist-generated
@@ -27,6 +27,7 @@
 /LICENSE linguist-generated
 /package-lock.json linguist-generated
 /package.json linguist-generated
+/renovate.json5 linguist-generated
 /src/idle-monitor-enabler/idle-monitor-enabler-function.ts linguist-generated
 /src/idle-monitor/idle-monitor-function.ts linguist-generated
 /src/installer/installer-function.ts linguist-generated

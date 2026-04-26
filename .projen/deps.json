@@ -2,12 +2,12 @@
   "dependencies": [
     {
       "name": "@aws-cdk/integ-runner",
-      "version": "^2.190.0-alpha.0",
+      "version": "2.190.0",
       "type": "build"
     },
     {
       "name": "@aws-cdk/integ-tests-alpha",
-      "version": "^2.190.0-alpha.0",
+      "version": "2.190.0-alpha.0",
       "type": "build"
     },
     {
@@ -67,7 +67,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^22",
+      "version": "^24",
       "type": "build"
     },
     {
@@ -82,7 +82,7 @@
     },
     {
       "name": "awslint",
-      "version": "^2.190.0-alpha.0",
+      "version": "2.190.0-alpha.0",
       "type": "build"
     },
     {
@@ -171,12 +171,12 @@
     },
     {
       "name": "constructs",
-      "version": "^10.0.5",
+      "version": "^10.5.1",
       "type": "peer"
     },
     {
       "name": "@mavogel/mvc-projen",
-      "version": "^0.0.12",
+      "version": "^0.0.25",
       "type": "runtime"
     },
     {

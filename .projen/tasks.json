@@ -298,6 +298,10 @@
         }
       ]
     },
+    "post-upgrade": {
+      "name": "post-upgrade",
+      "description": "Runs after upgrading dependencies"
+    },
     "pre-compile": {
       "name": "pre-compile",
       "description": "Prepare the project for compilation",
@@ -369,6 +373,30 @@
       "steps": [
         {
           "builtin": "release/reset-version"
+        }
+      ]
+    },
+    "upgrade": {
+      "name": "upgrade",
+      "description": "upgrade dependencies",
+      "env": {
+        "CI": "0"
+      },
+      "steps": [
+        {
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@aws-sdk/client-cloudwatch,@aws-sdk/client-dynamodb,@aws-sdk/client-ec2,@aws-sdk/client-eventbridge,@aws-sdk/client-secrets-manager,@aws-sdk/client-ssm,@aws-sdk/lib-dynamodb,@types/aws-lambda,@types/jest,@types/jsdom,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,jsii-diff,jsii-pacmak,projen,ts-jest,ts-node,typescript,node-html-parser"
+        },
+        {
+          "exec": "npm install"
+        },
+        {
+          "exec": "npm update @aws-cdk/integ-runner @aws-cdk/integ-tests-alpha @aws-sdk/client-cloudwatch @aws-sdk/client-dynamodb @aws-sdk/client-ec2 @aws-sdk/client-eventbridge @aws-sdk/client-secrets-manager @aws-sdk/client-ssm @aws-sdk/lib-dynamodb @commitlint/cli @commitlint/config-conventional @stylistic/eslint-plugin @types/aws-lambda @types/jest @types/jsdom @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser awslint commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint husky jest jest-junit jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii projen ts-jest ts-node typescript node-html-parser aws-cdk-lib constructs @mavogel/mvc-projen cdk-nag"
+        },
+        {
+          "exec": "npx projen"
+        },
+        {
+          "spawn": "post-upgrade"
         }
       ]
     },

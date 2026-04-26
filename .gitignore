@@ -2,6 +2,7 @@
 !/.gitattributes
 !/.projen/tasks.json
 !/.projen/deps.json
+!/renovate.json5
 !/.projen/files.json
 !/.github/workflows/pull-request-lint.yml
 !/.github/workflows/auto-approve.yml
@@ -40,7 +41,7 @@ junit.xml
 /dist/version.txt
 !/.github/workflows/release.yml
 !/.mergify.yml
-!/.github/dependabot.yml
+!/.github/workflows/upgrade-main.yml
 !/.github/pull_request_template.md
 !/test/
 !/tsconfig.dev.json

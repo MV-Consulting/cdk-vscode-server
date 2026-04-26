@@ -30,6 +30,33 @@ const project = new MvcCdkConstructLibrary({
     '@types/jsdom',
   ],
   integTestRegions: ['eu-west-1', 'eu-west-2', 'eu-north-1', 'eu-west-3'],
+  // Switch from Dependabot to Renovate so the code-server version pinned in
+  // src/installer/installer.ts can be tracked via a `# renovate:` annotation.
+  dependabot: false,
+  renovatebot: true,
+  renovatebotOptions: {
+    labels: ['dependencies', 'auto-approve'],
+    ignore: ['aws-cdk-lib', 'aws-cdk', 'projen'],
+    overrideConfig: {
+      extends: ['config:recommended', ':preserveSemverRanges'],
+      packageRules: [
+        {
+          matchManagers: ['npm'],
+          groupName: 'default',
+          matchPackageNames: ['*', '!aws-cdk*', '!projen'],
+        },
+      ],
+      customManagers: [
+        {
+          customType: 'regex',
+          managerFilePatterns: ['/(^|/)src/.+\\.ts$/'],
+          matchStrings: [
+            '// renovate: datasource=(?<datasource>[\\w-]+) depName=(?<depName>[^\\s]+)(?: versioning=(?<versioning>[\\w-]+))?\\s+.*?(?<currentValue>v?\\d+\\.\\d+\\.\\d+[\\w.+-]*)',
+          ],
+        },
+      ],
+    },
+  },
   // see details for each: https://github.com/cdklabs/publib
   // Go
   // publishToGo: {

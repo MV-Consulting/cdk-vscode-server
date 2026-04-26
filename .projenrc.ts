@@ -39,11 +39,13 @@ const project = new MvcCdkConstructLibrary({
     ignore: ['aws-cdk-lib', 'aws-cdk', 'projen'],
     overrideConfig: {
       extends: ['config:recommended', ':preserveSemverRanges'],
+      platformAutomerge: true,
       packageRules: [
         {
           matchManagers: ['npm'],
           groupName: 'default',
           matchPackageNames: ['*', '!aws-cdk*', '!projen'],
+          automerge: true,
         },
       ],
       customManagers: [

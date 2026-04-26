@@ -11,6 +11,7 @@ jest.mock('@aws-sdk/client-ssm', () => ({
   GetCommandInvocationCommand: jest.fn((params) => params),
 }));
 
+// @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import type { OnEventRequest } from 'aws-cdk-lib/custom-resources/lib/provider-framework/types';
 import { Context } from 'aws-lambda';

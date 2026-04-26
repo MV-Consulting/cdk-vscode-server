@@ -9,6 +9,7 @@ jest.mock('@aws-sdk/client-secrets-manager', () => ({
   SecretsManager: spySSM,
 }));
 
+// @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import type { OnEventRequest } from 'aws-cdk-lib/custom-resources/lib/provider-framework/types';
 import { handler } from '../../src/secret-retriever/secret-retriever.lambda';

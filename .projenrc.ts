@@ -12,7 +12,7 @@ const project = new MvcCdkConstructLibrary({
   repositoryUrl: 'https://github.com/MV-Consulting/cdk-vscode-server.git',
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
   deps: [
-    '@mavogel/mvc-projen@^0.0.12',
+    '@mavogel/mvc-projen@^0.0.25',
     'constructs@^10.4.2',
   ],
   // If this module is not jsii-enabled, it must also be declared under bundledDependencie

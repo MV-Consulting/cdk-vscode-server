@@ -47,7 +47,6 @@
     "cdk-nag",
     "aws-cdk",
     "projen",
-    "hmarr/auto-approve-action",
     "actions/checkout",
     "actions/setup-node",
     "actions/upload-artifact",

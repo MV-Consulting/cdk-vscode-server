@@ -21,7 +21,8 @@
         "*",
         "!aws-cdk*",
         "!projen"
-      ]
+      ],
+      "automerge": true
     }
   ],
   "ignoreDeps": [
@@ -54,6 +55,7 @@
     "amannn/action-semantic-pull-request",
     "peter-evans/create-pull-request"
   ],
+  "platformAutomerge": true,
   "customManagers": [
     {
       "customType": "regex",

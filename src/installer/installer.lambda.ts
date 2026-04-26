@@ -4,11 +4,9 @@ import {
   SendCommandCommand,
   SSM,
 } from '@aws-sdk/client-ssm';
+// eslint-disable-next-line import/no-unresolved
 // @ts-ignore
-import type {
-  OnEventRequest,
-  OnEventResponse,
-} from 'aws-cdk-lib/custom-resources/lib/provider-framework/types';
+import type { OnEventRequest, OnEventResponse } from 'aws-cdk-lib/custom-resources/lib/provider-framework/types';
 import { Context } from 'aws-lambda';
 import { CloudFormationCustomResourceResourcePropertiesCommon } from 'aws-lambda/trigger/cloudformation-custom-resource';
 

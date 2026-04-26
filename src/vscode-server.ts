@@ -829,7 +829,7 @@ export class VSCodeServer extends Construct {
 
       // Associate Elastic IP with the instance
       new ec2.CfnEIPAssociation(this, 'eip-association', {
-        eip: eip.ref,
+        allocationId: eip.attrAllocationId,
         instanceId: this.instance.instanceId,
       });
 

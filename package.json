@@ -62,7 +62,7 @@
     "@stylistic/eslint-plugin": "^2",
     "@types/aws-lambda": "^8.10.161",
     "@types/jest": "^30.0.0",
-    "@types/jsdom": "^28.0.1",
+    "@types/jsdom": "^28.0.2",
     "@types/node": "^24",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
@@ -81,7 +81,7 @@
     "jsii-docgen": "^10.5.0",
     "jsii-pacmak": "^1.129.0",
     "jsii-rosetta": "~5.9.0",
-    "projen": "0.99.57",
+    "projen": "0.99.60",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"

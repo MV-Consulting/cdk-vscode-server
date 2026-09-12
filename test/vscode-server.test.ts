@@ -3,7 +3,7 @@ import * as path from 'path';
 import { App, Stack, Validations } from 'aws-cdk-lib';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { AwsSolutionsChecks } from 'cdk-nag';
-import { VSCodeServer, VSCodeServerProps } from '../src';
+import { VSCodeServer, VSCodeServerProps, LinuxFlavorType } from '../src';
 import { suppressCommonNags } from '../src/suppress-nags';
 
 describe('vscode-server', () => {
@@ -627,5 +627,59 @@ describe('vscode-server-custom-install-steps', () => {
 
     // Should create SSM document
     template.resourceCountIs('AWS::SSM::Document', 1);
+  });
+});
+
+describe('vscode-server-installer-kiro-cli', () => {
+  test('should install Kiro CLI, not Amazon Q Developer CLI, on Ubuntu', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    new VSCodeServer(stack, 'testVSCodeServer', {});
+
+    const template = Template.fromStack(stack);
+    const ssmDoc = Object.values(template.findResources('AWS::SSM::Document'))[0];
+    const mainSteps = ssmDoc.Properties.Content.mainSteps;
+
+    const kiroStep = mainSteps.find((step: any) => step.name === 'InstallKiroCLI');
+    expect(kiroStep).toBeDefined();
+    expect(kiroStep.inputs.runCommand.join('\n')).toContain('cli.kiro.dev/install');
+    expect(kiroStep.inputs.runCommand.join('\n')).toContain('kiro-cli --version');
+
+    const qStep = mainSteps.find((step: any) => step.name === 'InstallQCLI');
+    expect(qStep).toBeUndefined();
+    expect(JSON.stringify(mainSteps)).not.toContain('desktop-release.q.us-east-1.amazonaws.com');
+  });
+
+  test('should install Kiro CLI, not Amazon Q Developer CLI, on Amazon Linux 2023', () => {
+    const app = new App();
+    const stack = new Stack(app, 'testStack', {
+      env: {
+        region: 'us-east-1',
+        account: '1234',
+      },
+    });
+
+    new VSCodeServer(stack, 'testVSCodeServer', {
+      instanceOperatingSystem: LinuxFlavorType.AMAZON_LINUX_2023,
+    });
+
+    const template = Template.fromStack(stack);
+    const ssmDoc = Object.values(template.findResources('AWS::SSM::Document'))[0];
+    const mainSteps = ssmDoc.Properties.Content.mainSteps;
+
+    const kiroStep = mainSteps.find((step: any) => step.name === 'InstallKiroCLI');
+    expect(kiroStep).toBeDefined();
+    expect(kiroStep.inputs.runCommand.join('\n')).toContain('cli.kiro.dev/install');
+    expect(kiroStep.inputs.runCommand.join('\n')).toContain('kiro-cli --version');
+
+    const qStep = mainSteps.find((step: any) => step.name === 'InstallQCLI');
+    expect(qStep).toBeUndefined();
+    expect(JSON.stringify(mainSteps)).not.toContain('desktop-release.q.us-east-1.amazonaws.com');
   });
 });

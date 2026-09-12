@@ -7,7 +7,7 @@
     },
     {
       "name": "@aws-cdk/integ-tests-alpha",
-      "version": "2.261.0-alpha.0",
+      "version": "2.269.0-alpha.0",
       "type": "build"
     },
     {
@@ -82,7 +82,7 @@
     },
     {
       "name": "awslint",
-      "version": "2.261.0-alpha.0",
+      "version": "2.269.0-alpha.0",
       "type": "build"
     },
     {
@@ -167,7 +167,7 @@
     },
     {
       "name": "aws-cdk-lib",
-      "version": "^2.261.0",
+      "version": "^2.269.0",
       "type": "peer"
     },
     {

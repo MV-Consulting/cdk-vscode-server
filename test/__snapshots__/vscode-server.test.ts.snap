@@ -49,7 +49,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "9b8fce7ae7f25ef82fdbaf6b72523b99d0875c0c9c826642819fb51f11d9b125.zip",
         },
         "Handler": "index.handler",
@@ -76,7 +76,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "2f99f38311da357eaaea1284d67c759759324dec4a1cd11621d9c59eea9e81df.zip",
         },
         "Description": "src/installer/installer.lambda.ts",
@@ -109,7 +109,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":ssm:us-east-1:1234:document/vscode-server-ubuntu-testStack",
+                      ":ssm:us-east-1:123456789012:document/vscode-server-ubuntu-testStack",
                     ],
                   ],
                 },
@@ -121,7 +121,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":ssm:us-east-1:1234:document/AmazonCloudWatch-ManageAgent",
+                      ":ssm:us-east-1:123456789012:document/AmazonCloudWatch-ManageAgent",
                     ],
                   ],
                 },
@@ -133,7 +133,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":ec2:us-east-1:1234:instance/",
+                      ":ec2:us-east-1:123456789012:instance/",
                       {
                         "Ref": "testVSCodeServerserverinstance48076E15",
                       },
@@ -200,7 +200,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "e16ffb3b34af185b8b30c88fdb19faa13b6c42bb38580485c4e84b384ee48b63.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (testStack/testVSCodeServer/InstallerProvider)",
@@ -345,7 +345,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "e16ffb3b34af185b8b30c88fdb19faa13b6c42bb38580485c4e84b384ee48b63.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (testStack/testVSCodeServer/SecretRetrieveProvider)",
@@ -482,7 +482,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "781ab0ab74634cdaf61539ab208ab777829ef07097ac21f95b9e15a3b1eedc1b.zip",
         },
         "Description": "src/secret-retriever/secret-retriever.lambda.ts",
@@ -1018,7 +1018,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                     "iam:UpdateRoleDescription",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:iam::1234:role/cdk-*",
+                  "Resource": "arn:aws:iam::123456789012:role/cdk-*",
                   "Sid": "StsAccess",
                 },
                 {
@@ -1029,12 +1029,12 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                     },
                   },
                   "Effect": "Allow",
-                  "Resource": "arn:aws:iam::1234:role/cdk-*",
+                  "Resource": "arn:aws:iam::123456789012:role/cdk-*",
                 },
                 {
                   "Action": "cloudformation:*",
                   "Effect": "Allow",
-                  "Resource": "arn:aws:cloudformation:*:1234:stack/CDKToolkit/*",
+                  "Resource": "arn:aws:cloudformation:*:123456789012:stack/CDKToolkit/*",
                 },
                 {
                   "Action": [
@@ -1062,7 +1062,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                     "ecr:DeleteRepository",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:ecr:*:1234:repository/cdk-*",
+                  "Resource": "arn:aws:ecr:*:123456789012:repository/cdk-*",
                   "Sid": "ECRAccess",
                 },
                 {
@@ -1072,7 +1072,7 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                     "ssm:DeleteParameter*",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:ssm:*:1234:parameter/cdk-bootstrap/*",
+                  "Resource": "arn:aws:ssm:*:123456789012:parameter/cdk-bootstrap/*",
                 },
                 {
                   "Action": [
@@ -1092,12 +1092,12 @@ exports[`vscode-server vscode-server-custom-props 1`] = `
                     "codepipeline:UpdatePipeline",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:codepipeline:*:1234:*/*",
+                  "Resource": "arn:aws:codepipeline:*:123456789012:*/*",
                 },
                 {
                   "Action": "kms:Decrypt",
                   "Effect": "Allow",
-                  "Resource": "arn:aws:kms:*:1234:key/*",
+                  "Resource": "arn:aws:kms:*:123456789012:key/*",
                 },
               ],
               "Version": "2012-10-17",
@@ -1199,7 +1199,7 @@ EOF",
                   "echo 'PATH=$PATH:/home/participant/.local/bin' >> /home/participant/.bashrc",
                   "echo 'export PATH' >> /home/participant/.bashrc",
                   "echo 'export AWS_REGION=us-east-1' >> /home/participant/.bashrc",
-                  "echo 'export AWS_ACCOUNTID=1234' >> /home/participant/.bashrc",
+                  "echo 'export AWS_ACCOUNTID=123456789012' >> /home/participant/.bashrc",
                   "echo 'export NEXT_TELEMETRY_DISABLED=1' >> /home/participant/.bashrc",
                   "echo "export PS1='\\[\\033[01;32m\\]\\u:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '" >> /home/participant/.bashrc",
                   "chown -R participant:participant /home/participant",
@@ -1967,7 +1967,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "9b8fce7ae7f25ef82fdbaf6b72523b99d0875c0c9c826642819fb51f11d9b125.zip",
         },
         "Handler": "index.handler",
@@ -1994,7 +1994,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "2f99f38311da357eaaea1284d67c759759324dec4a1cd11621d9c59eea9e81df.zip",
         },
         "Description": "src/installer/installer.lambda.ts",
@@ -2027,7 +2027,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":ssm:us-east-1:1234:document/vscode-server-ubuntu-testStack",
+                      ":ssm:us-east-1:123456789012:document/vscode-server-ubuntu-testStack",
                     ],
                   ],
                 },
@@ -2039,7 +2039,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":ssm:us-east-1:1234:document/AmazonCloudWatch-ManageAgent",
+                      ":ssm:us-east-1:123456789012:document/AmazonCloudWatch-ManageAgent",
                     ],
                   ],
                 },
@@ -2051,7 +2051,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":ec2:us-east-1:1234:instance/",
+                      ":ec2:us-east-1:123456789012:instance/",
                       {
                         "Ref": "testVSCodeServerserverinstance48076E15",
                       },
@@ -2118,7 +2118,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "e16ffb3b34af185b8b30c88fdb19faa13b6c42bb38580485c4e84b384ee48b63.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (testStack/testVSCodeServer/InstallerProvider)",
@@ -2263,7 +2263,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "e16ffb3b34af185b8b30c88fdb19faa13b6c42bb38580485c4e84b384ee48b63.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (testStack/testVSCodeServer/SecretRetrieveProvider)",
@@ -2400,7 +2400,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "cdk-hnb659fds-assets-1234-us-east-1",
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "781ab0ab74634cdaf61539ab208ab777829ef07097ac21f95b9e15a3b1eedc1b.zip",
         },
         "Description": "src/secret-retriever/secret-retriever.lambda.ts",
@@ -2916,7 +2916,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                     "iam:UpdateRoleDescription",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:iam::1234:role/cdk-*",
+                  "Resource": "arn:aws:iam::123456789012:role/cdk-*",
                   "Sid": "StsAccess",
                 },
                 {
@@ -2927,12 +2927,12 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                     },
                   },
                   "Effect": "Allow",
-                  "Resource": "arn:aws:iam::1234:role/cdk-*",
+                  "Resource": "arn:aws:iam::123456789012:role/cdk-*",
                 },
                 {
                   "Action": "cloudformation:*",
                   "Effect": "Allow",
-                  "Resource": "arn:aws:cloudformation:*:1234:stack/CDKToolkit/*",
+                  "Resource": "arn:aws:cloudformation:*:123456789012:stack/CDKToolkit/*",
                 },
                 {
                   "Action": [
@@ -2960,7 +2960,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                     "ecr:DeleteRepository",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:ecr:*:1234:repository/cdk-*",
+                  "Resource": "arn:aws:ecr:*:123456789012:repository/cdk-*",
                   "Sid": "ECRAccess",
                 },
                 {
@@ -2970,7 +2970,7 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                     "ssm:DeleteParameter*",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:ssm:*:1234:parameter/cdk-bootstrap/*",
+                  "Resource": "arn:aws:ssm:*:123456789012:parameter/cdk-bootstrap/*",
                 },
                 {
                   "Action": [
@@ -2990,12 +2990,12 @@ exports[`vscode-server vscode-server-default-props 1`] = `
                     "codepipeline:UpdatePipeline",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:codepipeline:*:1234:*/*",
+                  "Resource": "arn:aws:codepipeline:*:123456789012:*/*",
                 },
                 {
                   "Action": "kms:Decrypt",
                   "Effect": "Allow",
-                  "Resource": "arn:aws:kms:*:1234:key/*",
+                  "Resource": "arn:aws:kms:*:123456789012:key/*",
                 },
               ],
               "Version": "2012-10-17",
@@ -3097,7 +3097,7 @@ EOF",
                   "echo 'PATH=$PATH:/home/participant/.local/bin' >> /home/participant/.bashrc",
                   "echo 'export PATH' >> /home/participant/.bashrc",
                   "echo 'export AWS_REGION=us-east-1' >> /home/participant/.bashrc",
-                  "echo 'export AWS_ACCOUNTID=1234' >> /home/participant/.bashrc",
+                  "echo 'export AWS_ACCOUNTID=123456789012' >> /home/participant/.bashrc",
                   "echo 'export NEXT_TELEMETRY_DISABLED=1' >> /home/participant/.bashrc",
                   "echo "export PS1='\\[\\033[01;32m\\]\\u:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '" >> /home/participant/.bashrc",
                   "chown -R participant:participant /home/participant",

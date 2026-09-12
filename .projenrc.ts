@@ -3,7 +3,7 @@ import { javascript } from 'projen';
 const project = new MvcCdkConstructLibrary({
   author: 'Manuel Vogel',
   authorAddress: 'info@manuel-vogel.de',
-  cdkVersion: '2.261.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib + https://www.npmjs.com/package/@aws-cdk/integ-runner
+  cdkVersion: '2.269.0', // Find the latest CDK version here: https://www.npmjs.com/package/aws-cdk-lib + https://www.npmjs.com/package/@aws-cdk/integ-runner
   defaultReleaseBranch: 'main',
   name: 'cdk-vscode-server',
   packageName: '@mavogel/cdk-vscode-server',

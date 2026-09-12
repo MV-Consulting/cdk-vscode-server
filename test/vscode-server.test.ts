@@ -12,7 +12,7 @@ describe('vscode-server', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -29,7 +29,7 @@ describe('vscode-server', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -52,7 +52,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -79,7 +79,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -110,7 +110,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -142,7 +142,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -179,7 +179,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -197,7 +197,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -218,7 +218,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -248,7 +248,7 @@ describe('vscode-server-custom-domain', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -272,7 +272,7 @@ describe('vscode-server-cdk-nag-AwsSolutions-Pack', () => {
     stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -385,7 +385,7 @@ describe('vscode-server-auto-stop', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -423,7 +423,7 @@ describe('vscode-server-auto-stop', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -451,7 +451,7 @@ describe('vscode-server-auto-stop', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -478,7 +478,7 @@ describe('vscode-server-auto-stop', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -506,7 +506,7 @@ describe('vscode-server-auto-stop', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -532,7 +532,7 @@ describe('vscode-server-custom-install-steps', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -594,7 +594,7 @@ describe('vscode-server-custom-install-steps', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -613,7 +613,7 @@ describe('vscode-server-custom-install-steps', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -636,7 +636,7 @@ describe('vscode-server-installer-kiro-cli', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 
@@ -661,7 +661,7 @@ describe('vscode-server-installer-kiro-cli', () => {
     const stack = new Stack(app, 'testStack', {
       env: {
         region: 'us-east-1',
-        account: '1234',
+        account: '123456789012',
       },
     });
 

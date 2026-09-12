@@ -101,4 +101,23 @@ const project = new MvcCdkConstructLibrary({
   gitignore: ['settings.local.json'],
 });
 
+// Verify CLAUDE.md/AGENTS.md and .claude/.agents skill mirrors stay in sync
+// (installed by /setup-rules; see scripts/sync-agent-assets.mjs).
+const buildWorkflow = project.github?.tryFindWorkflow('build');
+if (buildWorkflow) {
+  const buildJob = buildWorkflow.getJob('build');
+  if (buildJob && 'steps' in buildJob) {
+    buildWorkflow.updateJob('build', {
+      ...buildJob,
+      steps: [
+        ...buildJob.steps,
+        {
+          name: 'Verify agent asset sync',
+          run: 'node scripts/sync-agent-assets.mjs --check',
+        },
+      ],
+    });
+  }
+}
+
 project.synth();

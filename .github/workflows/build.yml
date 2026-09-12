@@ -69,6 +69,9 @@ jobs:
           name: build-artifact
           path: dist
           overwrite: true
+      - name: Verify agent asset sync
+        id: verify_agent_asset_sync
+        run: node scripts/sync-agent-assets.mjs --check
   self-mutation:
     needs: build
     runs-on: ubuntu-latest

@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code and Codex when working with code in this repository. `CLAUDE.md` imports it via `@AGENTS.md`.
 
 ## Repository Overview
 
@@ -111,7 +111,7 @@ Uses Lambda-backed custom resources via CDK Provider construct:
 **Problem Solved**: Race condition where IdleMonitor could stop instance during installation.
 
 **Solution Flow**:
-1. EventBridge rule created in **DISABLED** state (`src/idle-monitor/idle-monitor.ts:118`)
+1. EventBridge rule created in **DISABLED** state (`src/idle-monitor/idle-monitor.ts:117`)
 2. Installer runs and completes VS Code Server setup
 3. IdleMonitorEnabler custom resource **enables** the rule after installation succeeds
 4. IdleMonitor now safely monitors CloudFront metrics for idle detection
@@ -122,7 +122,7 @@ Uses Lambda-backed custom resources via CDK Provider construct:
 - `src/idle-monitor-enabler/idle-monitor-enabler.ts` - Custom resource construct
 - `src/idle-monitor-enabler/idle-monitor-enabler.lambda.ts` - Enables EventBridge rule via AWS SDK
 
-**Dependency Wiring** (`src/vscode-server.ts:984`):
+**Dependency Wiring** (`src/vscode-server.ts:1059`):
 ```typescript
 const installerCustomResource = this.node.findChild('SSMInstallerCustomResource');
 enabler.node.addDependency(installerCustomResource);
@@ -153,7 +153,7 @@ aws ssm get-parameters --names \
   --region us-east-1
 ```
 
-### Key Props (`src/vscode-server.ts:27-200`)
+### Key Props (`src/vscode-server.ts:53-295`)
 
 **Instance Configuration**:
 - `instanceClass`, `instanceSize`, `instanceVolumeSize`
@@ -321,8 +321,8 @@ When Ubuntu releases a new version (e.g., Ubuntu 26):
    ```
 
 3. **Update Installer** in `src/installer/installer.ts`:
-   - Add `LinuxFlavorType.UBUNTU_26` to the Ubuntu switch case in `createSSMDocument()` (line ~657)
-   - Update installer calls in `src/vscode-server.ts` to include new case (line ~930)
+   - Add `LinuxFlavorType.UBUNTU_26` to the Ubuntu switch case in `createSSMDocument()` (line ~673)
+   - Update installer calls in `src/vscode-server.ts` to include new case (line ~993)
 
 4. **Pass linuxFlavorType** in `src/vscode-server.ts`:
    ```typescript

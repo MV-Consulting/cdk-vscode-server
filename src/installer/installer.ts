@@ -458,25 +458,21 @@ fi`,
   }
 
   /**
-   * Creates the InstallQCLI step for SSM document
+   * Creates the InstallKiroCLI step for SSM document
    * This step is identical for both Ubuntu and Amazon Linux
    */
-  private createInstallQCLIStep(vsCodeUser: string): any {
+  private createInstallKiroCLIStep(vsCodeUser: string): any {
     return {
       action: 'aws:runShellScript',
-      name: 'InstallQCLI',
+      name: 'InstallKiroCLI',
       inputs: {
         runCommand: [
           '#!/bin/bash',
-          'curl --proto \'=https\' --tlsv1.2 -sSf "https://desktop-release.q.us-east-1.amazonaws.com/latest/q-$(uname -m)-linux.zip" -o /tmp/q.zip',
-          `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q.zip`,
-          'unzip -q -d /tmp /tmp/q.zip',
-          `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q`,
-          'chmod +x /tmp/q/install.sh',
-          `sudo -u ${vsCodeUser} /tmp/q/install.sh --no-confirm`,
-          'rm -rf /tmp/q',
-          'q --version',
-          'echo "Amazon Q CLI installed"',
+          `sudo -u ${vsCodeUser} --login curl -fsSL https://cli.kiro.dev/install -o /tmp/kiro_cli_install.sh`,
+          `sudo -u ${vsCodeUser} --login bash /tmp/kiro_cli_install.sh`,
+          'rm -f /tmp/kiro_cli_install.sh',
+          `sudo -u ${vsCodeUser} --login kiro-cli --version`,
+          'echo "Kiro CLI installed"',
         ],
       },
     };
@@ -806,7 +802,7 @@ EOF`,
                 },
               },
               this.createInstallCDKStep(),
-              this.createInstallQCLIStep(vsCodeUser),
+              this.createInstallKiroCLIStep(vsCodeUser),
               this.createInstalluvStep(vsCodeUser),
               {
                 action: 'aws:runShellScript',
@@ -1045,23 +1041,7 @@ EOF`,
                   ],
                 },
               },
-              {
-                action: 'aws:runShellScript',
-                name: 'InstallQCLI',
-                inputs: {
-                  runCommand: [
-                    '#!/bin/bash',
-                    'curl --proto \'=https\' --tlsv1.2 -sSf "https://desktop-release.q.us-east-1.amazonaws.com/latest/q-$(uname -m)-linux.zip" -o /tmp/q.zip',
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q.zip`,
-                    'unzip -q -d /tmp /tmp/q.zip',
-                    `chown -R ${vsCodeUser}:${vsCodeUser} /tmp/q`,
-                    'chmod +x /tmp/q/install.sh',
-                    `sudo -u ${vsCodeUser} /tmp/q/install.sh --no-confirm`,
-                    'rm -rf /tmp/q',
-                    'echo "Amazon Q CLI installed"',
-                  ],
-                },
-              },
+              this.createInstallKiroCLIStep(vsCodeUser),
               {
                 action: 'aws:runShellScript',
                 name: 'Installuv',

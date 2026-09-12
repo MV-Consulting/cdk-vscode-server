@@ -10,13 +10,14 @@ const project = new MvcCdkConstructLibrary({
   packageManager: javascript.NodePackageManager.NPM,
   projenrcTs: true,
   npmTrustedPublishing: true,
+  sampleCode: false,
   repositoryUrl: 'https://github.com/mavogel/cdk-vscode-server.git',
   keywords: ['aws', 'cdk', 'vscode', 'construct', 'server'],
   deps: [
-    '@mavogel/mvc-projen@^0.0.30',
-    'constructs@^10.4.2',
+    '@mavogel/mvc-projen@^0.0.35',
+    'constructs@^10.5.1',
   ],
-  // `@mavogel/mvc-projen` pins its own `projen` dependency (currently ^0.99.34).
+  // `@mavogel/mvc-projen` pins its own `projen` dependency (currently ^0.103.20).
   // The default UpgradeDependencies task bumps this project's top-level `projen`
   // devDependency independently (e.g. to 0.101.x), which drifts out of that range:
   // npm then installs a second, nested `projen` for mvc-projen's synthesis, so the
